@@ -523,6 +523,197 @@
     font-style: italic;
   }
 
+  /* ---------- Goal section ---------- */
+  .cefr-grid {
+    display: grid; gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    margin-bottom: 26px;
+  }
+  .cefr-card {
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: all .15s ease;
+    box-shadow: var(--shadow-sm);
+  }
+  .cefr-card:hover { border-color: var(--border-strong); }
+  .cefr-card.selected {
+    border-color: var(--accent);
+    background: var(--accent-softer);
+  }
+  .cefr-id {
+    display: inline-block;
+    font-family: var(--serif); font-size: 26px; font-weight: 600;
+    color: var(--accent); letter-spacing: -.5px;
+    line-height: 1;
+  }
+  .cefr-name {
+    font-size: 14px; color: var(--text); font-weight: 500;
+    margin-top: 4px;
+  }
+  .cefr-desc {
+    font-size: 12.5px; color: var(--text-dim);
+    line-height: 1.5;
+    margin-top: 8px;
+  }
+  .date-quick-row {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;
+  }
+  .date-quick {
+    padding: 9px 16px; border-radius: 999px;
+    background: var(--bg-surface); border: 1.5px solid var(--border);
+    color: var(--text-dim); font-size: 13.5px; font-weight: 500;
+    cursor: pointer; transition: all .15s ease;
+  }
+  .date-quick:hover { border-color: var(--border-strong); color: var(--text); }
+  .date-quick.active {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .date-input-wrap {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg-surface); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 10px 14px;
+    width: fit-content; min-width: 220px;
+  }
+  .date-input-wrap input {
+    border: none; background: transparent; color: var(--text);
+    font-size: 15px; flex: 1;
+  }
+  .date-input-wrap input:focus { outline: none; }
+
+  /* Goal dashboard */
+  .goal-banner {
+    background: linear-gradient(135deg, var(--accent), #d97757);
+    color: #fff;
+    border-radius: 18px;
+    padding: 26px 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+  .goal-banner-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+    opacity: .85; font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .goal-banner-title {
+    font-family: var(--serif); font-size: 28px;
+    font-weight: 500; letter-spacing: -.5px;
+    line-height: 1.2;
+  }
+  .goal-banner-date {
+    font-size: 14px; opacity: .9; margin-top: 6px;
+  }
+  .goal-banner-actions {
+    margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap;
+  }
+  .goal-banner-actions .btn {
+    background: rgba(255,255,255,.15); color: #fff;
+    border: 1px solid rgba(255,255,255,.3);
+  }
+  .goal-banner-actions .btn:hover { background: rgba(255,255,255,.25); }
+
+  .goal-stat-grid {
+    display: grid; gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    margin-bottom: 28px;
+  }
+  .goal-bar {
+    background: var(--bg-strong); border-radius: 999px; height: 12px;
+    overflow: hidden; margin-top: 12px;
+  }
+  .goal-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width .5s ease;
+    border-radius: 999px;
+  }
+
+  .plan-tier {
+    margin-bottom: 24px;
+  }
+  .plan-tier-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px;
+    font-family: var(--serif); font-size: 18px;
+    font-weight: 500; color: var(--text);
+    letter-spacing: -.2px;
+  }
+  .plan-tier-count {
+    font-size: 12px; color: var(--text-muted);
+    font-family: var(--sans); font-weight: 400;
+  }
+  .plan-list {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .plan-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer; transition: all .15s ease;
+    font-size: 14px;
+  }
+  .plan-item:hover { border-color: var(--accent); }
+  .plan-item.done {
+    background: var(--accent-softer); border-color: var(--accent-soft);
+  }
+  .plan-item-status {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--bg-strong); color: var(--text-muted);
+    font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .plan-item.done .plan-item-status {
+    background: var(--accent); color: #fff;
+  }
+  .plan-item-name { flex: 1; color: var(--text); font-weight: 500; }
+  .plan-item-section { font-size: 12px; color: var(--text-muted); }
+  .plan-item-stars {
+    font-size: 12px; color: var(--gold); display: flex; gap: 2px;
+  }
+
+  .next-up-card {
+    background: var(--bg-surface);
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 18px;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow);
+  }
+  .next-up-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; flex-shrink: 0;
+  }
+  .next-up-text { flex: 1; min-width: 200px; }
+  .next-up-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--accent-hover); font-weight: 600; margin-bottom: 4px;
+  }
+  .next-up-name {
+    font-family: var(--serif); font-size: 19px;
+    font-weight: 500; color: var(--text); letter-spacing: -.2px;
+    margin-bottom: 3px;
+  }
+  .next-up-meta { font-size: 13px; color: var(--text-dim); }
+
+  .pace-note {
+    background: var(--bg-subtle); border-left: 3px solid var(--accent);
+    padding: 12px 14px; border-radius: 8px;
+    font-size: 13.5px; color: var(--text); line-height: 1.55;
+    margin-bottom: 18px;
+  }
+  .pace-note strong { color: var(--accent-hover); }
+  .pace-note.warn { border-left-color: var(--gold); }
+  .pace-note.warn strong { color: var(--accent-hover); }
+
   /* ---------- Chapter tree (Lessons home) ---------- */
   .level-group { margin-bottom: 44px; }
   .level-header {
@@ -1555,6 +1746,7 @@
     </div>
 
     <button class="nav-item active" data-view="dashboard"><span class="nav-icon">🏠</span>Dashboard</button>
+    <button class="nav-item" data-view="goals"><span class="nav-icon">🎯</span>Goals</button>
     <button class="nav-item" data-view="lessons"><span class="nav-icon">📚</span>Lessons</button>
     <button class="nav-item" data-view="practice"><span class="nav-icon">✏️</span>Practice</button>
     <button class="nav-item" data-view="culture"><span class="nav-icon">🎭</span>Culture Quiz</button>
@@ -1622,6 +1814,9 @@
         </div>
       </div>
 
+      <h2>Goal</h2>
+      <div id="db-goal-widget"></div>
+
       <h2>Culture corner</h2>
       <div id="db-culture-tip" class="card" style="line-height:1.55;"></div>
 
@@ -1646,6 +1841,13 @@
 
       <h2>Achievements</h2>
       <div class="achievements-grid" id="db-achievements"></div>
+    </section>
+
+    <!-- Goals (target CEFR level + plan) -->
+    <section id="view-goals" class="view">
+      <h1>Your goal</h1>
+      <p class="subtitle" id="goals-subtitle">Set a target proficiency level and a date — we'll build a personalized plan with what to do next.</p>
+      <div id="goals-content"></div>
     </section>
 
     <!-- Lessons (Duolingo-style chapter tree) -->
@@ -4121,6 +4323,7 @@ function switchView(view) {
   if (view === "pronunciation") renderPronunciation();
   if (view === "expressions") renderExpressions();
   if (view === "practice") renderPracticeIntro();
+  if (view === "goals") renderGoals();
 }
 document.querySelectorAll(".nav-item").forEach(btn => {
   btn.addEventListener("click", () => {
@@ -4222,8 +4425,43 @@ function renderDashboard() {
     if (done > 0) $("db-lesson-hint").textContent = `${done} / ${totalLessons} lessons complete`;
   }
 
+  renderGoalWidget();
   renderHeatmap();
   renderAchievements();
+}
+
+function renderGoalWidget() {
+  const acc = me();
+  const el = $("db-goal-widget");
+  if (!el) return;
+  if (!acc || !acc.goal || acc.goal.language !== state.activeLanguage) {
+    el.innerHTML = `
+      <div class="card hover" onclick="switchView('goals')" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+        <div style="font-size:38px;">🎯</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-family:var(--serif);font-size:18px;font-weight:500;letter-spacing:-.2px;margin-bottom:4px;">No goal set yet</div>
+          <div style="color:var(--text-dim);font-size:13.5px;line-height:1.5;">Pick a target CEFR level (A1 → C2) and a date — we'll build a personalized plan with what to study next.</div>
+        </div>
+        <button class="btn primary">Set a goal →</button>
+      </div>
+    `;
+    return;
+  }
+  const goal = acc.goal;
+  const target = CEFR_LEVELS.find(l => l.id === goal.level);
+  const prog = computeGoalProgress(goal, acc);
+  const days = daysBetween(goal.targetDate);
+  const pct = Math.round(prog.pct * 100);
+  el.innerHTML = `
+    <div class="card hover" onclick="switchView('goals')" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+      <div style="width:54px;height:54px;border-radius:14px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:22px;font-weight:600;flex-shrink:0;">${escapeHtml(goal.level)}</div>
+      <div style="flex:1;min-width:200px;">
+        <div style="font-family:var(--serif);font-size:17px;font-weight:500;letter-spacing:-.2px;margin-bottom:4px;">${escapeHtml(target.name)} by ${new Date(goal.targetDate).toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})}</div>
+        <div style="color:var(--text-dim);font-size:13px;margin-bottom:8px;">${prog.done}/${prog.total} lessons · ${days} day${days===1?"":"s"} left</div>
+        <div class="goal-bar" style="margin-top:6px;"><div class="goal-bar-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>
+  `;
 }
 
 /* =================================================================
@@ -4547,6 +4785,339 @@ function nextDrillQuestion() {
     return;
   }
   renderDrillQuestion();
+}
+
+/* =================================================================
+   Goals — CEFR target + personalized plan
+   ================================================================= */
+const CEFR_LEVELS = [
+  { id: "A1", name: "Breakthrough",    desc: "Basic phrases, introducing yourself, simple needs.",
+    requirement: { allBeginner: 1 } },
+  { id: "A2", name: "Elementary",      desc: "Routine exchanges, everyday topics, simple direct conversations.",
+    requirement: { allBeginner: 2 } },
+  { id: "B1", name: "Intermediate",    desc: "Main points of clear input on work, school, and leisure.",
+    requirement: { allBeginner: 3, allIntermediate: 1 } },
+  { id: "B2", name: "Upper Inter.",    desc: "Fluent natural interaction, complex topics, your own opinions.",
+    requirement: { allBeginner: 3, allIntermediate: 2, halfAdvanced: 1 } },
+  { id: "C1", name: "Advanced",        desc: "Express yourself fluently and spontaneously on demanding topics.",
+    requirement: { allBeginner: 3, allIntermediate: 3, allAdvanced: 2 } },
+  { id: "C2", name: "Mastery",         desc: "Near-native: understand virtually everything heard or read.",
+    requirement: { allBeginner: 3, allIntermediate: 3, allAdvanced: 3 } }
+];
+
+function buildPlanTiers(targetLevelId, lang) {
+  const target = CEFR_LEVELS.find(l => l.id === targetLevelId);
+  if (!target) return [];
+  const req = target.requirement;
+  const chapters = CHAPTERS[lang] || [];
+  const tiers = [];
+
+  const getLessonsAtLevel = (lv) => {
+    const out = [];
+    chapters.filter(s => (s.level || "beginner") === lv).forEach(s =>
+      s.units.forEach(u => u.lessons.forEach(l => out.push({
+        section: s, unit: u, lesson: l, fullId: `${s.id}-${u.id}-${l.id}`
+      })))
+    );
+    return out;
+  };
+
+  if (req.allBeginner) {
+    tiers.push({ label: "Beginner foundation", icon: "🌱", minStars: req.allBeginner, lessons: getLessonsAtLevel("beginner") });
+  }
+  if (req.allIntermediate) {
+    tiers.push({ label: "Intermediate skills", icon: "📚", minStars: req.allIntermediate, lessons: getLessonsAtLevel("intermediate") });
+  }
+  if (req.halfAdvanced) {
+    const adv = getLessonsAtLevel("advanced");
+    tiers.push({ label: "Advanced (first half)", icon: "🎓", minStars: req.halfAdvanced, lessons: adv.slice(0, Math.ceil(adv.length / 2)) });
+  }
+  if (req.allAdvanced) {
+    tiers.push({ label: "Advanced complete", icon: "🎓", minStars: req.allAdvanced, lessons: getLessonsAtLevel("advanced") });
+  }
+  return tiers;
+}
+
+function computeGoalProgress(goal, account) {
+  const tiers = buildPlanTiers(goal.level, goal.language);
+  const progress = (account.chapterProgress?.[goal.language]) || {};
+  let total = 0, done = 0;
+  tiers.forEach(tier => {
+    tier.lessons.forEach(l => {
+      total++;
+      const stars = progress[l.fullId]?.stars || 0;
+      if (stars >= tier.minStars) done++;
+    });
+  });
+  return { tiers, total, done, pct: total > 0 ? done / total : 0 };
+}
+
+function daysBetween(dateStr) {
+  const target = new Date(dateStr);
+  const now = new Date();
+  const ms = target.setHours(23, 59, 59, 999) - now.getTime();
+  return Math.max(0, Math.ceil(ms / 86400000));
+}
+
+function renderGoals() {
+  const acc = me();
+  if (!acc) return;
+  const lang = currentLang();
+  $("goals-subtitle").innerHTML = acc.goal
+    ? `Tracking your progress toward ${lang.flag} ${lang.name}.`
+    : `Set a target proficiency level and a date — we'll build a personalized plan with what to do next.`;
+  if (!acc.goal || acc.goal.language !== state.activeLanguage) {
+    renderGoalSetup();
+  } else {
+    renderGoalDashboard();
+  }
+}
+
+let pendingGoal = null;
+
+function renderGoalSetup() {
+  const acc = me();
+  pendingGoal = pendingGoal || {
+    language: state.activeLanguage,
+    level: acc.goal?.level || "B1",
+    targetDate: acc.goal?.targetDate || null
+  };
+  // Sync language with current
+  pendingGoal.language = state.activeLanguage;
+
+  const lang = currentLang();
+  const today = new Date();
+  const fmt = (d) => d.toISOString().slice(0, 10);
+  const quickOptions = [
+    { label: "1 month",  days: 30 },
+    { label: "3 months", days: 90 },
+    { label: "6 months", days: 180 },
+    { label: "1 year",   days: 365 }
+  ];
+
+  // Determine which quick option is selected
+  let activeQuick = null;
+  if (pendingGoal.targetDate) {
+    const d = daysBetween(pendingGoal.targetDate);
+    const closest = quickOptions.reduce((best, q) => Math.abs(q.days - d) < Math.abs(best.days - d) ? q : best, quickOptions[0]);
+    if (Math.abs(closest.days - d) <= 7) activeQuick = closest.label;
+  }
+
+  $("goals-content").innerHTML = `
+    <div class="card" style="max-width:840px;margin-bottom:24px;">
+      <h2 style="margin-top:0;">1. What level do you want to reach?</h2>
+      <p style="color:var(--text-dim);font-size:14px;line-height:1.55;margin-bottom:18px;">CEFR levels are the European standard. Pick your target — we'll build a plan around the lessons in ${lang.flag} ${lang.name}.</p>
+      <div class="cefr-grid" id="cefr-grid">
+        ${CEFR_LEVELS.map(l => `
+          <button class="cefr-card ${l.id === pendingGoal.level ? "selected" : ""}" type="button" data-level="${l.id}">
+            <span class="cefr-id">${l.id}</span>
+            <div class="cefr-name">${escapeHtml(l.name)}</div>
+            <div class="cefr-desc">${escapeHtml(l.desc)}</div>
+          </button>
+        `).join("")}
+      </div>
+    </div>
+
+    <div class="card" style="max-width:840px;margin-bottom:24px;">
+      <h2 style="margin-top:0;">2. By when?</h2>
+      <p style="color:var(--text-dim);font-size:14px;line-height:1.55;margin-bottom:18px;">Pick a quick option or enter your own date.</p>
+      <div class="date-quick-row" id="date-quick-row">
+        ${quickOptions.map(q => `<button class="date-quick ${activeQuick === q.label ? "active" : ""}" type="button" data-days="${q.days}">${q.label}</button>`).join("")}
+      </div>
+      <div class="date-input-wrap">
+        <span style="color:var(--text-muted);">📅</span>
+        <input type="date" id="goal-date-input" min="${fmt(today)}" value="${pendingGoal.targetDate || ""}">
+      </div>
+    </div>
+
+    <button class="btn primary" style="font-size:15px;padding:13px 28px;" onclick="confirmGoal()">${acc.goal && acc.goal.language === state.activeLanguage ? "Update goal" : "Set this goal"}</button>
+    ${acc.goal ? `<button class="btn ghost" style="margin-left:8px;" onclick="cancelGoalSetup()">Cancel</button>` : ""}
+  `;
+
+  document.querySelectorAll("#cefr-grid .cefr-card").forEach(b => {
+    b.onclick = () => {
+      pendingGoal.level = b.dataset.level;
+      renderGoalSetup();
+    };
+  });
+  document.querySelectorAll("#date-quick-row .date-quick").forEach(b => {
+    b.onclick = () => {
+      const d = new Date();
+      d.setDate(d.getDate() + parseInt(b.dataset.days, 10));
+      pendingGoal.targetDate = d.toISOString().slice(0, 10);
+      renderGoalSetup();
+    };
+  });
+  $("goal-date-input").onchange = (e) => {
+    pendingGoal.targetDate = e.target.value;
+    renderGoalSetup();
+  };
+}
+
+function confirmGoal() {
+  const acc = me();
+  if (!pendingGoal.targetDate) { toast("Pick a target date first"); return; }
+  if (!pendingGoal.level) { toast("Pick a target level first"); return; }
+  acc.goal = {
+    language: pendingGoal.language,
+    level: pendingGoal.level,
+    targetDate: pendingGoal.targetDate,
+    createdAt: acc.goal?.createdAt || Date.now()
+  };
+  saveState();
+  pendingGoal = null;
+  toast(`🎯 Goal set: ${acc.goal.level} by ${new Date(acc.goal.targetDate).toLocaleDateString()}`);
+  renderGoals();
+  renderDashboard();
+}
+
+function cancelGoalSetup() {
+  pendingGoal = null;
+  renderGoals();
+}
+
+function renderGoalDashboard() {
+  const acc = me();
+  const goal = acc.goal;
+  const lang = currentLang();
+  const target = CEFR_LEVELS.find(l => l.id === goal.level);
+  const prog = computeGoalProgress(goal, acc);
+  const days = daysBetween(goal.targetDate);
+  const lessonsLeft = prog.total - prog.done;
+  const lessonsPerDay = days > 0 ? lessonsLeft / days : lessonsLeft;
+  const dateLabel = new Date(goal.targetDate).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+
+  // Pace recommendation
+  const lessonsPerWeek = lessonsPerDay * 7;
+  let pace;
+  if (lessonsLeft === 0) {
+    pace = `<div class="pace-note"><strong>🎉 Goal complete!</strong> You've met every requirement for ${target.id}. Set a higher goal to keep the streak alive.</div>`;
+  } else if (days === 0) {
+    pace = `<div class="pace-note warn"><strong>Goal date passed</strong> with ${lessonsLeft} lessons remaining. Update your target date or push hard for a few days to wrap it up.</div>`;
+  } else if (lessonsPerWeek <= 5) {
+    pace = `<div class="pace-note"><strong>Comfortable pace.</strong> About ${lessonsPerWeek.toFixed(1)} lessons / week — you can absorb material without rushing. ${lessonsLeft} lesson${lessonsLeft === 1 ? "" : "s"} left across ${days} day${days === 1 ? "" : "s"}.</div>`;
+  } else if (lessonsPerWeek <= 12) {
+    pace = `<div class="pace-note"><strong>Steady pace.</strong> Around ${lessonsPerWeek.toFixed(1)} lessons / week (≈ ${Math.ceil(lessonsPerDay)} per day). Realistic with consistent effort. ${lessonsLeft} lessons in ${days} days.</div>`;
+  } else if (lessonsPerWeek <= 20) {
+    pace = `<div class="pace-note warn"><strong>Aggressive pace.</strong> ${lessonsPerWeek.toFixed(1)} lessons / week. Doable for a focused student but expect to spend ~30-45 min/day. Consider pushing the date back if life gets busy.</div>`;
+  } else {
+    pace = `<div class="pace-note warn"><strong>Very tight.</strong> You'd need ${lessonsPerWeek.toFixed(1)} lessons / week (${Math.ceil(lessonsPerDay)} per day) — that's a lot. We recommend extending the date by a few weeks for sustainability.</div>`;
+  }
+
+  // Find next-up lesson
+  let nextUp = null;
+  for (const tier of prog.tiers) {
+    for (const item of tier.lessons) {
+      const stars = (acc.chapterProgress?.[goal.language]?.[item.fullId]?.stars) || 0;
+      if (stars < tier.minStars) { nextUp = { ...item, requiredStars: tier.minStars, currentStars: stars }; break; }
+    }
+    if (nextUp) break;
+  }
+
+  const progressPctText = Math.round(prog.pct * 100);
+
+  $("goals-content").innerHTML = `
+    <div class="goal-banner">
+      <div class="goal-banner-label">Active goal</div>
+      <div class="goal-banner-title">Reach ${goal.level} ${target.name} in ${lang.flag} ${lang.name}</div>
+      <div class="goal-banner-date">By ${dateLabel} · ${days === 0 ? "today" : days + " day" + (days === 1 ? "" : "s") + " left"}</div>
+      <div class="goal-banner-actions">
+        <button class="btn small" onclick="editGoal()">Edit goal</button>
+        <button class="btn small" onclick="clearGoal()">Cancel goal</button>
+      </div>
+    </div>
+
+    <div class="goal-stat-grid">
+      <div class="stat">
+        <div class="stat-label">Progress</div>
+        <div class="stat-value">${progressPctText}<span style="font-size:14px;color:var(--text-dim);">%</span></div>
+        <div class="goal-bar"><div class="goal-bar-fill" style="width:${progressPctText}%"></div></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Lessons</div>
+        <div class="stat-value">${prog.done}<span style="font-size:14px;color:var(--text-dim);">/${prog.total}</span></div>
+        <div class="stat-meta">${lessonsLeft} remaining</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Days left</div>
+        <div class="stat-value">${days}</div>
+        <div class="stat-meta">until ${dateLabel.split(",")[0]}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Daily pace</div>
+        <div class="stat-value">${lessonsPerDay > 0 && lessonsLeft > 0 ? Math.max(0.1, lessonsPerDay).toFixed(1) : "0"}</div>
+        <div class="stat-meta">lessons / day</div>
+      </div>
+    </div>
+
+    ${pace}
+
+    ${nextUp ? `
+      <div class="next-up-card" onclick="startPlayerLesson('${nextUp.section.id}','${nextUp.unit.id}','${nextUp.lesson.id}')">
+        <div class="next-up-icon">${nextUp.lesson.icon || "📘"}</div>
+        <div class="next-up-text">
+          <div class="next-up-label">Recommended next</div>
+          <div class="next-up-name">${escapeHtml(nextUp.lesson.name)}</div>
+          <div class="next-up-meta">${escapeHtml(nextUp.section.name)} · ${escapeHtml(nextUp.unit.name)} · need ${nextUp.requiredStars}★ (you have ${nextUp.currentStars}★)</div>
+        </div>
+        <button class="btn primary">Start →</button>
+      </div>
+    ` : ""}
+
+    <h2>Your plan</h2>
+
+    ${prog.tiers.map(tier => {
+      const tierTotal = tier.lessons.length;
+      const tierDone = tier.lessons.filter(l => ((acc.chapterProgress?.[goal.language]?.[l.fullId]?.stars) || 0) >= tier.minStars).length;
+      return `
+        <div class="plan-tier">
+          <div class="plan-tier-header">
+            ${tier.icon} ${escapeHtml(tier.label)}
+            <span class="plan-tier-count">· need ${tier.minStars}★ · ${tierDone}/${tierTotal} done</span>
+          </div>
+          <div class="plan-list">
+            ${tier.lessons.map(l => {
+              const stars = (acc.chapterProgress?.[goal.language]?.[l.fullId]?.stars) || 0;
+              const isDone = stars >= tier.minStars;
+              return `
+                <div class="plan-item ${isDone ? "done" : ""}" onclick="startPlayerLesson('${l.section.id}','${l.unit.id}','${l.lesson.id}')">
+                  <div class="plan-item-status">${isDone ? "✓" : ""}</div>
+                  <div style="flex:1;min-width:0;">
+                    <div class="plan-item-name">${escapeHtml(l.lesson.name)}</div>
+                    <div class="plan-item-section">${escapeHtml(l.section.name)} · ${escapeHtml(l.unit.name)}</div>
+                  </div>
+                  <div class="plan-item-stars">
+                    ${"★".repeat(stars)}${"☆".repeat(Math.max(0, tier.minStars - stars))}
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }).join("")}
+  `;
+}
+
+function editGoal() {
+  pendingGoal = null;
+  const acc = me();
+  pendingGoal = {
+    language: acc.goal.language,
+    level: acc.goal.level,
+    targetDate: acc.goal.targetDate
+  };
+  renderGoalSetup();
+}
+
+function clearGoal() {
+  if (!confirm("Cancel your current goal? Your lesson progress is kept.")) return;
+  const acc = me();
+  delete acc.goal;
+  saveState();
+  pendingGoal = null;
+  renderGoals();
+  renderDashboard();
 }
 
 /* =================================================================
