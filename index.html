@@ -4302,13 +4302,17 @@ function buildDrillPool() {
     return [...(langCloze[drillConfig.level] || [])];
   } else {
     // vocab / reverse — pull from CHAPTERS, filter by level
+    // Tag each word with its source so distractors can stay topical
     const chapters = CHAPTERS[lang] || [];
     const filtered = drillConfig.level === "mixed"
       ? chapters
       : chapters.filter(s => (s.level || "beginner") === drillConfig.level);
     const words = [];
     filtered.forEach(s => s.units.forEach(u => u.lessons.forEach(l =>
-      l.vocab.forEach(([t, e]) => words.push({ target: t, english: e }))
+      l.vocab.forEach(([t, e]) => words.push({
+        target: t, english: e,
+        _sectionId: s.id, _unitId: u.id, _lessonId: l.id
+      }))
     )));
     return words;
   }
@@ -4387,16 +4391,22 @@ function renderMCQuestion() {
   const promptText = item[promptKey];
   const correctAnswer = item[answerKey];
 
-  // Build distractors from pool: 3 other entries with different correctAnswer
-  const distractorPool = ds.pool.filter(p => p[answerKey] !== correctAnswer);
+  // Build distractors with topical proximity: same lesson > same unit > same section > others
+  const sameLesson = ds.pool.filter(p => p[answerKey] !== correctAnswer && p._sectionId === item._sectionId && p._unitId === item._unitId && p._lessonId === item._lessonId);
+  const sameUnit = ds.pool.filter(p => p[answerKey] !== correctAnswer && p._sectionId === item._sectionId && p._unitId === item._unitId && p._lessonId !== item._lessonId);
+  const sameSection = ds.pool.filter(p => p[answerKey] !== correctAnswer && p._sectionId === item._sectionId && p._unitId !== item._unitId);
+  const others = ds.pool.filter(p => p[answerKey] !== correctAnswer && p._sectionId !== item._sectionId);
+  const ordered = [
+    ...sameLesson.sort(() => Math.random() - 0.5),
+    ...sameUnit.sort(() => Math.random() - 0.5),
+    ...sameSection.sort(() => Math.random() - 0.5),
+    ...others.sort(() => Math.random() - 0.5)
+  ];
   const distractors = [];
   const used = new Set();
-  while (distractors.length < 3 && distractors.length < distractorPool.length) {
-    const pick = distractorPool[Math.floor(Math.random() * distractorPool.length)];
-    if (!used.has(pick[answerKey])) {
-      used.add(pick[answerKey]);
-      distractors.push(pick[answerKey]);
-    }
+  for (const p of ordered) {
+    if (distractors.length >= 3) break;
+    if (!used.has(p[answerKey])) { used.add(p[answerKey]); distractors.push(p[answerKey]); }
   }
   const options = [...distractors, correctAnswer].sort(() => Math.random() - 0.5);
 
@@ -4727,18 +4737,53 @@ function renderExercise() {
 }
 
 function buildOptions(correctAnswer, kind) {
-  // Pull all vocab from CHAPTERS for distractor sampling
+  // Pick distractors that are SEMANTICALLY CLOSE to the correct answer:
+  // tier 1 = same lesson (most thematic, e.g. other question words for "qué")
+  // tier 2 = same unit (still topical)
+  // tier 3 = same section (broadly topical)
+  // tier 4 = same difficulty level (last resort)
+  // tier 5 = anything else (truly desperate)
   const lang = state.activeLanguage;
-  const allWords = [];
-  (CHAPTERS[lang] || []).forEach(s => s.units.forEach(u => u.lessons.forEach(l => l.vocab.forEach(v => allWords.push(v)))));
   const idx = kind === "english" ? 1 : 0;
-  const candidates = allWords.map(w => w[idx]).filter(w => w !== correctAnswer);
-  const distractors = [];
-  const used = new Set();
-  while (distractors.length < 3 && distractors.length < candidates.length) {
-    const pick = candidates[Math.floor(Math.random() * candidates.length)];
-    if (!used.has(pick)) { used.add(pick); distractors.push(pick); }
+  const ps = playerState;
+
+  const seen = new Set([correctAnswer]);
+  const candidates = [];
+  const addFrom = (lessons) => {
+    lessons.forEach(l => l.vocab.forEach(w => {
+      const v = w[idx];
+      if (!seen.has(v)) { seen.add(v); candidates.push(v); }
+    }));
+  };
+
+  // Tier 1: same lesson
+  if (ps && ps.lesson) addFrom([ps.lesson]);
+  // Tier 2: same unit (other lessons in this unit)
+  if (candidates.length < 3 && ps && ps.unit) {
+    addFrom(ps.unit.lessons.filter(l => !ps.lesson || l.id !== ps.lesson.id));
   }
+  // Tier 3: same section
+  if (candidates.length < 3 && ps && ps.section) {
+    ps.section.units.forEach(u => {
+      if (!ps.unit || u.id !== ps.unit.id) addFrom(u.lessons);
+    });
+  }
+  // Tier 4: same difficulty level
+  if (candidates.length < 3 && ps && ps.section) {
+    const myLevel = ps.section.level || "beginner";
+    (CHAPTERS[lang] || []).forEach(s => {
+      if (s.id === ps.section.id) return;
+      if ((s.level || "beginner") !== myLevel) return;
+      s.units.forEach(u => addFrom(u.lessons));
+    });
+  }
+  // Tier 5: global fallback
+  if (candidates.length < 3) {
+    (CHAPTERS[lang] || []).forEach(s => s.units.forEach(u => addFrom(u.lessons)));
+  }
+
+  // Shuffle and pick 3
+  const distractors = candidates.sort(() => Math.random() - 0.5).slice(0, 3);
   return [...distractors, correctAnswer].sort(() => Math.random() - 0.5);
 }
 
