@@ -1,0 +1,16 @@
+{
+  "name": "Polyglot Quest",
+  "short_name": "Polyglot",
+  "description": "Learn languages with flashcards, pronunciation training, idioms, and an AI tutor.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FAF6ED",
+  "theme_color": "#C15F3C",
+  "orientation": "portrait",
+  "lang": "en",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

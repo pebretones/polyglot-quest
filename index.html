@@ -2,7 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FAF6ED" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1F1B15" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Polyglot">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Learn Spanish, French, Japanese, German, or Italian with flashcards, pronunciation training, cultural quizzes, idioms, and an AI tutor.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%23C15F3C'/><text x='50%25' y='50%25' text-anchor='middle' dy='.35em' font-size='110' font-family='-apple-system,Segoe UI,sans-serif'>🌍</text></svg>">
 <title>Polyglot Quest — Learn languages with stories, films, and an AI tutor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -754,16 +763,26 @@
     display: none;
     position: fixed; inset: 0;
     background: rgba(31,27,21,.45);
+    backdrop-filter: blur(2px);
     z-index: 40;
     opacity: 0;
     transition: opacity .25s ease;
   }
   .sidebar-backdrop.show { display: block; opacity: 1; }
+  body.no-scroll { overflow: hidden; }
+
+  /* Disable parasitic hover states on touch devices */
+  @media (hover: none) {
+    .card.hover:hover { transform: none; box-shadow: var(--shadow-sm); border-color: var(--border); }
+    .media-card:hover, .expr-card:hover { transform: none; box-shadow: var(--shadow-sm); }
+    .achievement:hover { transform: none; }
+    .heatmap-cell:hover { transform: none; }
+  }
 
   /* ---------- Mobile / tablet (≤880px) ---------- */
   @media (max-width: 880px) {
     html, body { overflow: auto; }
-    #app { display: block; height: auto; min-height: 100vh; }
+    #app { display: block; height: auto; min-height: 100dvh; }
 
     .mobile-bar {
       display: flex; align-items: center; gap: 12px;
@@ -771,90 +790,119 @@
       background: var(--bg-surface);
       border-bottom: 1px solid var(--border);
       padding: 10px 16px;
+      padding-top: max(10px, env(safe-area-inset-top));
       box-shadow: var(--shadow-sm);
     }
     .mobile-menu-btn {
-      width: 40px; height: 40px; border-radius: 10px;
+      width: 44px; height: 44px; border-radius: 12px;
       background: transparent; border: 1px solid var(--border);
-      color: var(--text); font-size: 20px;
+      color: var(--text); font-size: 22px;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
-    .mobile-menu-btn:hover { background: var(--bg-subtle); }
+    .mobile-menu-btn:active { background: var(--bg-subtle); transform: scale(.96); }
     .mobile-brand {
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: 10px;
       font-family: var(--serif); font-size: 18px;
       font-weight: 600; letter-spacing: -.2px;
       color: var(--text);
     }
     .mobile-brand-mark {
-      width: 28px; height: 28px; border-radius: 8px;
+      width: 30px; height: 30px; border-radius: 8px;
       background: var(--accent);
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
+      font-size: 17px;
     }
 
     .sidebar {
       position: fixed; left: 0; top: 0; bottom: 0;
-      width: 280px; max-width: 85vw;
+      width: 286px; max-width: 86vw;
       transform: translateX(-100%);
-      transition: transform .28s ease;
+      transition: transform .28s cubic-bezier(.4,0,.2,1);
       z-index: 50;
       box-shadow: var(--shadow-lg);
-      height: 100vh;
+      height: 100dvh;
+      padding-top: max(28px, env(safe-area-inset-top));
+      padding-bottom: max(22px, env(safe-area-inset-bottom));
     }
     .sidebar.open { transform: none; }
 
     .content {
-      padding: 24px 20px 60px;
+      padding: 22px 18px 80px;
+      padding-left: max(18px, env(safe-area-inset-left));
+      padding-right: max(18px, env(safe-area-inset-right));
+      padding-bottom: max(80px, calc(60px + env(safe-area-inset-bottom)));
       overflow-y: visible;
       height: auto;
     }
 
-    h1 { font-size: 30px; }
+    h1 { font-size: 30px; letter-spacing: -.7px; }
     h2 { font-size: 22px; margin: 32px 0 14px; }
-    .subtitle { font-size: 14.5px; margin-bottom: 28px; }
+    .subtitle { font-size: 14.5px; margin-bottom: 26px; line-height: 1.55; }
 
-    .stat-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .stat-row { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 24px; }
     .stat { padding: 14px 16px; }
     .stat-value { font-size: 26px; }
 
     .grid-3 { grid-template-columns: 1fr; }
     .grid-4 { grid-template-columns: repeat(2, 1fr); }
 
+    /* Touch-friendly buttons: 44px min height */
+    .btn { min-height: 44px; padding: 10px 18px; }
+    .btn.small { min-height: 36px; padding: 7px 14px; font-size: 13px; }
+    .nav-item { padding: 12px 14px; min-height: 44px; }
+
     /* Flashcards */
-    .flashcard { padding: 36px 20px; border-radius: 16px; }
-    .flashcard .target { font-size: 36px; }
-    .flashcard .reveal { font-size: 16px; }
-    .flashcard .hint { display: none; } /* keyboard shortcuts irrelevant on phone */
+    .flashcard { padding: 38px 22px; border-radius: 18px; }
+    .flashcard .target {
+      font-size: 38px; word-break: break-word; overflow-wrap: break-word;
+      hyphens: auto;
+    }
+    .flashcard .reveal { font-size: 16.5px; }
+    .flashcard .hint { display: none; }
+    .speak-btn { width: 52px; height: 52px; }
 
     /* Quiz */
-    .quiz-question { font-size: 20px; }
-    .quiz-option { padding: 13px 16px; font-size: 14.5px; }
+    .quiz-question { font-size: 21px; line-height: 1.4; }
+    .quiz-option { padding: 14px 16px; font-size: 15px; min-height: 50px; }
 
     /* Practice */
-    .cloze-sentence { font-size: 22px; }
-    .cloze-input { min-width: 100px; padding: 4px 10px; }
+    .cloze-sentence { font-size: 22px; line-height: 1.55; }
+    .cloze-input { min-width: 110px; padding: 5px 12px; min-height: 36px; font-size: 17px; }
+    .cloze-english { font-size: 14px; }
 
     /* Tabs */
-    .tabs { gap: 6px; }
-    .tab { padding: 7px 13px; font-size: 12.5px; }
+    .tabs { gap: 6px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab { padding: 9px 14px; font-size: 13px; flex-shrink: 0; }
 
     /* Pronunciation */
-    .sound-card { padding: 18px; border-radius: 14px; }
-    .sound-name { font-size: 20px; }
-    .sound-head { gap: 8px; }
-    .sound-head > div[style*="margin-left:auto"] { margin-left: 0 !important; width: 100%; }
+    .sound-card { padding: 20px; border-radius: 14px; }
+    .sound-head {
+      flex-direction: column; align-items: flex-start; gap: 10px;
+    }
+    .sound-name { font-size: 21px; }
+    .sound-head > div[style*="margin-left:auto"] {
+      margin-left: 0 !important; width: 100%;
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .sound-head > div[style*="margin-left:auto"] > .btn,
+    .sound-head > div[style*="margin-left:auto"] > .mic-btn { flex: 1; min-width: 0; }
+    .sound-word { padding: 9px 14px; min-height: 38px; font-size: 14.5px; }
+    .mic-btn { padding: 9px 14px; font-size: 13.5px; min-height: 40px; }
 
     /* Expressions */
-    .expr-phrase { font-size: 18px; }
+    .expr-card { padding: 18px; }
+    .expr-phrase { font-size: 19px; line-height: 1.35; }
 
     /* Chat */
-    .chat-wrap { height: calc(100vh - 240px); max-width: 100%; }
-    .chat-input-row textarea { font-size: 15px; }
+    .chat-wrap { height: calc(100dvh - 220px); max-width: 100%; }
+    .chat-input-row textarea { font-size: 15px; min-height: 48px; }
+    .chat-input-row .btn { min-width: 70px; }
     .msg { max-width: 88%; }
 
-    /* Leaderboard — drop the weekly column */
+    /* Leaderboard */
     .lb-row {
       grid-template-columns: 36px 1fr auto auto;
       gap: 8px; padding: 12px 14px; font-size: 13.5px;
@@ -863,38 +911,77 @@
     .lb-rank { font-size: 18px; }
 
     /* Achievements: 2 cols */
-    .achievements-grid { grid-template-columns: repeat(2, 1fr); }
+    .achievements-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .achievement { padding: 12px; }
+    .achievement-icon { font-size: 28px; }
 
-    /* Heatmap stays scrollable */
-    .heatmap { padding-bottom: 4px; }
+    /* Heatmap */
+    .heatmap { padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
 
-    /* Modals */
-    .modal { padding: 22px 18px; }
-    .modal h3 { font-size: 20px; }
+    /* Modals → bottom sheet on mobile */
+    .modal-bg {
+      align-items: flex-end;
+      padding: 0;
+    }
+    .modal {
+      max-width: 100%; width: 100%;
+      border-radius: 20px 20px 0 0;
+      padding: 24px 22px;
+      padding-bottom: max(24px, env(safe-area-inset-bottom));
+      animation: slideUp .28s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: none; } }
+    .modal h3 { font-size: 21px; }
 
     /* Auth screen */
-    .auth-card { padding: 30px 22px; }
-    .auth-title { font-size: 24px; }
+    .auth-screen { padding: 16px; }
+    .auth-card {
+      padding: 30px 22px 26px;
+      padding-top: max(30px, calc(env(safe-area-inset-top) + 20px));
+    }
+    .auth-title { font-size: 26px; }
+    .auth-tagline { font-size: 14px; }
     .auth-brand-mark { width: 56px; height: 56px; font-size: 28px; }
+    .auth-field input { font-size: 16px; min-height: 48px; }  /* 16px prevents iOS zoom-on-focus */
+    .auth-submit { min-height: 50px; }
 
-    /* Toast bottom-center on mobile so it's not under the keyboard */
-    .toast { left: 16px; right: 16px; bottom: 16px; text-align: center; }
+    /* All inputs: 16px to prevent iOS zoom */
+    input[type="text"], input[type="password"], input[type="email"], textarea, select {
+      font-size: 16px;
+    }
 
-    /* Dashboard quick cards: more compact */
+    /* Toast bottom-center, above safe area */
+    .toast {
+      left: 16px; right: 16px; text-align: center;
+      bottom: max(16px, calc(env(safe-area-inset-bottom) + 8px));
+    }
+
     .card { padding: 18px; }
   }
 
   /* ---------- Phone-only (≤480px) ---------- */
   @media (max-width: 480px) {
-    .stat-row { grid-template-columns: 1fr 1fr; }
-    .grid-4 { grid-template-columns: 1fr; }
-    h1 { font-size: 26px; letter-spacing: -.6px; }
-    h2 { font-size: 20px; }
-    .content { padding: 20px 16px 60px; }
-    .flashcard .target { font-size: 30px; }
-    .achievements-grid { grid-template-columns: 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+    h1 { font-size: 27px; letter-spacing: -.6px; }
+    h2 { font-size: 20px; margin: 28px 0 12px; }
+    .content { padding: 20px 16px 80px; }
+    .flashcard { padding: 32px 18px; }
+    .flashcard .target { font-size: 32px; }
     .quiz-question { font-size: 19px; }
+    .cloze-sentence { font-size: 20px; }
+    .achievements-grid { grid-template-columns: 1fr 1fr; }
     .auth-language { grid-template-columns: repeat(5, 1fr); }
+    .auth-language button { font-size: 20px; padding: 8px 4px; }
+    .auth-card { padding: 26px 18px; }
+    .mobile-brand { font-size: 16px; }
+    .mobile-brand-mark { width: 26px; height: 26px; font-size: 14px; }
+  }
+
+  /* ---------- Very narrow (≤360px, old phones) ---------- */
+  @media (max-width: 360px) {
+    .stat-row { grid-template-columns: 1fr; }
+    h1 { font-size: 24px; }
+    .flashcard .target { font-size: 28px; }
   }
 
   /* Scrollbar polish */
@@ -2522,6 +2609,9 @@ function switchView(view) {
   $(`view-${view}`).classList.add("active");
   const nav = document.querySelector(`.nav-item[data-view="${view}"]`);
   if (nav) nav.classList.add("active");
+  // Scroll back to top on view change (mobile-friendly)
+  if (window.innerWidth <= 880) window.scrollTo({ top: 0, behavior: "instant" });
+  else { const c = document.querySelector(".content"); if (c) c.scrollTop = 0; }
   if (view === "dashboard") renderDashboard();
   if (view === "lessons") renderLessonPicker();
   if (view === "culture") renderCultureIntro();
@@ -2544,10 +2634,12 @@ document.querySelectorAll(".nav-item").forEach(btn => {
 function openMobileSidebar() {
   $("sidebar").classList.add("open");
   $("sidebar-backdrop").classList.add("show");
+  document.body.classList.add("no-scroll");
 }
 function closeMobileSidebar() {
   $("sidebar").classList.remove("open");
   $("sidebar-backdrop").classList.remove("show");
+  document.body.classList.remove("no-scroll");
 }
 $("mobile-menu-btn").addEventListener("click", () => {
   if ($("sidebar").classList.contains("open")) closeMobileSidebar();
