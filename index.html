@@ -1,0 +1,3427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polyglot Quest — Learn languages with stories, films, and an AI tutor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Warm paper palette — inspired by Anthropic/Claude */
+    --bg: #FAF6ED;
+    --bg-surface: #FFFFFF;
+    --bg-subtle: #F2EBDB;
+    --bg-strong: #E8DFC9;
+    --border: #E3D9C2;
+    --border-strong: #C8BCA0;
+
+    --text: #1F1B15;
+    --text-dim: #6B5F52;
+    --text-muted: #9A8C78;
+
+    --accent: #C15F3C;
+    --accent-hover: #A74E2E;
+    --accent-soft: #F5E5DC;
+    --accent-softer: #FAEFE7;
+
+    --success: #607E40;
+    --success-soft: #EAF0DC;
+    --danger: #B54E2E;
+    --danger-soft: #F5DDD1;
+    --warning: #B4872E;
+    --gold: #B4872E;
+
+    /* Legacy aliases so inline-style references keep working */
+    --bg-2: var(--bg-surface);
+    --bg-3: var(--bg-subtle);
+    --accent-2: var(--accent);
+
+    --serif: "Fraunces", Georgia, "Times New Roman", serif;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    --shadow-sm: 0 1px 2px rgba(47,36,24,.04);
+    --shadow: 0 2px 8px rgba(47,36,24,.06), 0 1px 2px rgba(47,36,24,.04);
+    --shadow-lg: 0 12px 32px rgba(47,36,24,.09), 0 2px 4px rgba(47,36,24,.04);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "ss01";
+  }
+  button { font-family: inherit; cursor: pointer; border: none; }
+  input, textarea, select { font-family: inherit; }
+
+  #app { display: flex; height: 100vh; }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    width: 272px;
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border);
+    padding: 28px 18px 22px;
+    display: flex; flex-direction: column;
+    gap: 3px;
+    overflow-y: auto;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 12px;
+    font-family: var(--serif);
+    font-size: 22px; font-weight: 600;
+    letter-spacing: -.3px;
+    padding: 4px 4px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+  .brand span { font-family: var(--sans); }
+  .brand-mark {
+    width: 40px; height: 40px; border-radius: 11px;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .lang-picker {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-bottom: 18px;
+  }
+  .lang-picker label {
+    font-size: 10.5px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 1px; font-weight: 500;
+  }
+  .lang-picker select {
+    width: 100%; margin-top: 6px; padding: 8px 10px;
+    background: var(--bg-surface); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 14px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px; border-radius: 10px;
+    color: var(--text-dim); background: transparent;
+    text-align: left; width: 100%; font-size: 14px;
+    transition: background .15s ease, color .15s ease;
+  }
+  .nav-item:hover { background: var(--bg-subtle); color: var(--text); }
+  .nav-item.active {
+    background: var(--accent-soft);
+    color: var(--accent-hover);
+    font-weight: 500;
+  }
+  .nav-icon { font-size: 15px; width: 20px; text-align: center; }
+
+  .profile-box {
+    margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-dim);
+  }
+  .profile-row {
+    display: flex; justify-content: space-between;
+    padding: 5px 2px;
+  }
+  .profile-row strong { color: var(--text); font-weight: 600; }
+
+  /* ---------- Main ---------- */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 52px 64px 80px;
+  }
+  section.view { display: none; }
+  section.view.active { display: block; animation: fade .3s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  h1 {
+    margin: 0 0 8px;
+    font-family: var(--serif);
+    font-size: 40px; font-weight: 500;
+    letter-spacing: -1px; line-height: 1.1;
+    color: var(--text);
+  }
+  h2 {
+    margin: 40px 0 18px;
+    font-family: var(--serif);
+    font-size: 24px; font-weight: 500;
+    letter-spacing: -.4px;
+    color: var(--text);
+  }
+  h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    letter-spacing: -.2px;
+  }
+  .subtitle { color: var(--text-dim); margin: 0 0 36px; font-size: 16px; line-height: 1.55; max-width: 680px; }
+
+  /* ---------- Cards / grids ---------- */
+  .grid { display: grid; gap: 16px; }
+  .grid-3 { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .grid-4 { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+  }
+  .card.hover { transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease; cursor: pointer; }
+  .card.hover:hover { transform: translateY(-2px); border-color: var(--border-strong); box-shadow: var(--shadow); }
+
+  /* ---------- Dashboard widgets ---------- */
+  .stat-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 14px; margin-bottom: 32px;
+  }
+  .stat {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 500; }
+  .stat-value { font-family: var(--serif); font-size: 34px; font-weight: 500; margin-top: 8px; color: var(--text); letter-spacing: -1px; }
+  .stat-meta { font-size: 12.5px; color: var(--text-dim); margin-top: 4px; }
+
+  .daily-goal-bar {
+    background: var(--bg-strong); border-radius: 999px; height: 6px; overflow: hidden;
+    margin-top: 12px;
+  }
+  .daily-goal-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width .4s ease;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    padding: 10px 20px; border-radius: 999px;
+    background: var(--bg-surface); color: var(--text);
+    border: 1px solid var(--border);
+    font-size: 14px; font-weight: 500;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+    letter-spacing: .1px;
+  }
+  .btn:hover { border-color: var(--border-strong); background: var(--bg-subtle); }
+  .btn.primary {
+    background: var(--accent);
+    color: #FFFFFF;
+    border: 1px solid var(--accent);
+  }
+  .btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn.success { background: var(--success); color: #FFFFFF; border: 1px solid var(--success); }
+  .btn.success:hover { filter: brightness(.95); }
+  .btn.danger { background: var(--danger); color: #FFFFFF; border: 1px solid var(--danger); }
+  .btn.danger:hover { filter: brightness(.95); }
+  .btn.ghost { background: transparent; border-color: transparent; color: var(--text-dim); }
+  .btn.ghost:hover { background: var(--bg-subtle); color: var(--text); }
+  .btn.small { padding: 6px 14px; font-size: 12.5px; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+  /* ---------- Flashcard ---------- */
+  .flashcard {
+    max-width: 600px; margin: 0 auto;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 52px 40px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .flashcard .progress {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 1.2px; font-weight: 500;
+    margin-bottom: 32px;
+  }
+  .flashcard .target {
+    font-family: var(--serif);
+    font-size: 48px; font-weight: 500; letter-spacing: -1.2px;
+    color: var(--text);
+    margin: 12px 0 10px;
+    line-height: 1.1;
+  }
+  .flashcard .reveal {
+    color: var(--text-muted); font-size: 18px; min-height: 30px;
+    margin-bottom: 28px;
+    font-style: italic;
+  }
+  .flashcard .reveal.shown { color: var(--accent); font-style: normal; font-weight: 500; }
+  .flashcard .hint {
+    font-size: 12.5px; color: var(--text-muted); margin: 10px 0 22px;
+  }
+  .speak-btn {
+    background: var(--bg-subtle); border: 1px solid var(--border);
+    color: var(--text);
+    width: 48px; height: 48px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    transition: all .15s ease;
+  }
+  .speak-btn:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+
+  .lesson-end { text-align: center; padding: 48px 20px; }
+  .lesson-end h2 { font-size: 38px; margin-bottom: 12px; }
+  .xp-gain {
+    display: inline-block; padding: 10px 22px; border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent-hover); font-weight: 600; margin: 16px 0 28px;
+    font-size: 14px; letter-spacing: .3px;
+  }
+
+  /* ---------- Quiz ---------- */
+  .quiz-question {
+    font-family: var(--serif);
+    font-size: 26px; font-weight: 500; margin-bottom: 28px;
+    line-height: 1.35;
+    color: var(--text);
+    letter-spacing: -.4px;
+  }
+  .quiz-option {
+    display: block; width: 100%; text-align: left;
+    padding: 14px 20px; margin-bottom: 10px;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 12px; color: var(--text); font-size: 15px;
+    transition: all .15s ease;
+  }
+  .quiz-option:hover { border-color: var(--border-strong); background: var(--bg-subtle); }
+  .quiz-option.correct { background: var(--success-soft); border-color: var(--success); color: var(--success); font-weight: 500; }
+  .quiz-option.wrong { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
+  .quiz-explain {
+    margin-top: 18px; padding: 16px 18px;
+    background: var(--bg-subtle); border-radius: 12px;
+    font-size: 14px; color: var(--text); line-height: 1.6;
+  }
+
+  /* ---------- Chat ---------- */
+  .chat-wrap {
+    display: flex; flex-direction: column;
+    height: calc(100vh - 200px); max-width: 820px;
+  }
+  .chat-messages {
+    flex: 1; overflow-y: auto;
+    padding: 4px; display: flex; flex-direction: column; gap: 14px;
+  }
+  .msg {
+    max-width: 78%; padding: 13px 16px; border-radius: 16px;
+    font-size: 14.5px; line-height: 1.6;
+    white-space: pre-wrap; word-wrap: break-word;
+  }
+  .msg.user {
+    align-self: flex-end;
+    background: var(--accent);
+    color: #FFFFFF;
+    border-bottom-right-radius: 4px;
+  }
+  .msg.bot {
+    align-self: flex-start;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    color: var(--text);
+    border-bottom-left-radius: 4px;
+    box-shadow: var(--shadow-sm);
+  }
+  .msg.system {
+    align-self: center; font-size: 12px; color: var(--text-muted);
+    background: transparent; text-align: center;
+  }
+  .msg .translate-btn {
+    display: inline-block; margin-top: 8px; margin-right: 10px;
+    font-size: 12px; color: var(--accent);
+    background: transparent; border: none; padding: 0;
+    cursor: pointer; text-decoration: underline;
+  }
+  .msg.user .translate-btn { color: rgba(255,255,255,.9); }
+  .chat-input-row {
+    display: flex; gap: 10px; margin-top: 16px;
+    padding-top: 16px; border-top: 1px solid var(--border);
+  }
+  .chat-input-row textarea {
+    flex: 1; resize: none; background: var(--bg-surface);
+    border: 1px solid var(--border); border-radius: 12px;
+    color: var(--text); padding: 12px 14px; font-size: 14px;
+    min-height: 48px; max-height: 140px;
+  }
+  .chat-input-row textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  /* ---------- Media ---------- */
+  .media-card {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px;
+    display: flex; flex-direction: column; gap: 8px;
+    box-shadow: var(--shadow-sm);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .media-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .media-type {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--accent); font-weight: 600;
+  }
+  .media-title { font-family: var(--serif); font-size: 18px; font-weight: 500; color: var(--text); letter-spacing: -.2px; line-height: 1.3; }
+  .media-meta { font-size: 12.5px; color: var(--text-muted); }
+  .media-desc { font-size: 13.5px; color: var(--text-dim); line-height: 1.6; margin-top: 4px; }
+
+  .tabs { display: flex; gap: 6px; margin-bottom: 22px; flex-wrap: wrap; }
+  .tab {
+    padding: 8px 16px; border-radius: 999px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-dim); font-size: 13px; font-weight: 500;
+    transition: all .15s ease;
+  }
+  .tab:hover { background: var(--bg-subtle); color: var(--text); }
+  .tab.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  /* ---------- Leaderboard ---------- */
+  .lb-row {
+    display: grid; grid-template-columns: 48px 1fr 100px 100px 100px;
+    align-items: center; padding: 14px 20px;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 12px; margin-bottom: 8px;
+    font-size: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .lb-row.me { border-color: var(--accent); background: var(--accent-softer); }
+  .lb-rank { font-family: var(--serif); font-size: 24px; font-weight: 500; color: var(--text-muted); }
+  .lb-rank.g { color: var(--gold); }
+  .lb-rank.s { color: #8C7C63; }
+  .lb-rank.b { color: #A06A3E; }
+  .lb-name { font-weight: 500; }
+
+  /* ---------- Modals ---------- */
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(31,27,21,.4);
+    backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100;
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px;
+    max-width: 480px; width: 90%;
+    box-shadow: var(--shadow-lg);
+  }
+  .modal h3 { margin: 0 0 10px; font-size: 22px; }
+  .modal p { color: var(--text-dim); font-size: 14.5px; line-height: 1.6; }
+  .modal input {
+    width: 100%; padding: 11px 14px;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text); font-size: 14px;
+    margin-top: 12px;
+  }
+  .modal input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  /* ---------- Misc ---------- */
+  .pill {
+    display: inline-block; padding: 3px 10px;
+    border-radius: 999px; font-size: 11px; font-weight: 500;
+    background: var(--bg-subtle); color: var(--text-dim);
+    border: 1px solid var(--border);
+    margin-right: 6px;
+    letter-spacing: .3px;
+  }
+  .pill.hot { background: var(--accent-soft); color: var(--accent-hover); border-color: transparent; }
+  .pill.done { background: var(--success-soft); color: var(--success); border-color: transparent; }
+  .empty {
+    color: var(--text-muted); text-align: center; padding: 48px 20px;
+    border: 2px dashed var(--border); border-radius: 14px;
+    background: var(--bg-subtle);
+  }
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--text); color: var(--bg);
+    padding: 12px 18px; border-radius: 10px;
+    font-size: 14px; z-index: 200;
+    opacity: 0; transform: translateY(10px);
+    transition: all .2s ease;
+    box-shadow: var(--shadow-lg);
+  }
+  .toast.show { opacity: 1; transform: none; }
+
+  /* Pronunciation cards */
+  .sound-card {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px; margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .sound-head {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .sound-name { font-family: var(--serif); font-size: 24px; font-weight: 500; color: var(--text); letter-spacing: -.3px; }
+  .sound-ipa {
+    font-family: "Segoe UI Symbol", "Lucida Sans Unicode", serif;
+    font-size: 14px; color: var(--accent);
+    background: var(--accent-softer); padding: 3px 10px; border-radius: 6px;
+    font-weight: 500;
+  }
+  .sound-how { font-size: 15px; line-height: 1.7; color: var(--text); }
+  .sound-tip {
+    margin-top: 14px; padding: 12px 14px;
+    background: var(--bg-subtle); border-left: 3px solid var(--accent);
+    font-size: 13.5px; color: var(--text-dim); line-height: 1.6;
+    border-radius: 6px;
+  }
+  .sound-tip strong { color: var(--text); }
+  .sound-examples {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
+  }
+  .sound-word {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; background: var(--bg-subtle);
+    border: 1px solid var(--border); border-radius: 999px;
+    font-size: 14px; color: var(--text);
+    transition: all .15s ease;
+  }
+  .sound-word:hover { border-color: var(--accent); background: var(--accent-softer); color: var(--accent-hover); }
+
+  /* Expression cards */
+  .expr-card {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px;
+    display: flex; flex-direction: column; gap: 10px;
+    box-shadow: var(--shadow-sm);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .expr-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .expr-phrase {
+    font-family: var(--serif);
+    font-size: 20px; font-weight: 500; color: var(--text);
+    display: flex; align-items: center; gap: 8px;
+    letter-spacing: -.2px; line-height: 1.3;
+  }
+  .expr-speak {
+    background: transparent; border: none; color: var(--text-muted);
+    cursor: pointer; font-size: 15px; padding: 2px 4px;
+    transition: color .15s ease;
+  }
+  .expr-speak:hover { color: var(--accent); }
+  .expr-literal {
+    font-size: 12.5px; color: var(--text-muted); font-style: italic;
+  }
+  .expr-meaning {
+    font-size: 14px; color: var(--text); line-height: 1.55;
+    padding-top: 8px; border-top: 1px solid var(--border);
+  }
+  .expr-example {
+    font-size: 13px; color: var(--accent-hover); line-height: 1.55;
+    background: var(--accent-softer); padding: 10px 12px; border-radius: 8px;
+    font-style: italic;
+  }
+
+  /* ---------- Cloze (fill-in-the-blank) ---------- */
+  .cloze-english {
+    color: var(--text-muted); font-size: 14px;
+    font-style: italic; margin-bottom: 14px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--border);
+  }
+  .cloze-sentence {
+    font-family: var(--serif);
+    font-size: 26px; line-height: 1.55;
+    color: var(--text); letter-spacing: -.2px;
+    margin-bottom: 18px;
+  }
+  .cloze-input {
+    display: inline-block;
+    min-width: 140px; padding: 4px 12px;
+    background: var(--accent-softer);
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    color: var(--text); font: inherit;
+    text-align: center;
+    margin: 0 4px;
+  }
+  .cloze-input:focus { outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+  .cloze-input.correct { background: var(--success-soft); border-color: var(--success); color: var(--success); }
+  .cloze-input.wrong { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
+  .cloze-feedback {
+    margin-top: 12px; padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 14px; line-height: 1.55;
+    display: none;
+  }
+  .cloze-feedback.show { display: block; }
+  .cloze-feedback.success { background: var(--success-soft); color: var(--success); }
+  .cloze-feedback.fail { background: var(--danger-soft); color: var(--danger); }
+
+  /* ---------- Heatmap ---------- */
+  .heatmap {
+    display: grid;
+    grid-template-rows: repeat(7, 14px);
+    grid-auto-flow: column;
+    grid-auto-columns: 14px;
+    gap: 4px;
+    overflow-x: auto;
+  }
+  .heatmap-cell {
+    width: 14px; height: 14px; border-radius: 3px;
+    background: var(--bg-strong);
+    transition: transform .15s ease;
+  }
+  .heatmap-cell[data-l="1"] { background: #F1C9B5; }
+  .heatmap-cell[data-l="2"] { background: #E59B79; }
+  .heatmap-cell[data-l="3"] { background: #C97552; }
+  .heatmap-cell[data-l="4"] { background: var(--accent-hover); }
+  .heatmap-cell:hover { transform: scale(1.4); cursor: default; }
+  .heatmap-legend {
+    display: flex; gap: 3px;
+  }
+  .heatmap-legend .heatmap-cell { width: 11px; height: 11px; }
+
+  /* ---------- Achievements ---------- */
+  .achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+  }
+  .achievement {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px;
+    text-align: center;
+    transition: transform .15s ease;
+    box-shadow: var(--shadow-sm);
+  }
+  .achievement:hover { transform: translateY(-2px); }
+  .achievement.locked { opacity: .4; filter: grayscale(.7); }
+  .achievement-icon {
+    font-size: 32px; margin-bottom: 6px;
+    display: block;
+  }
+  .achievement-name {
+    font-family: var(--serif);
+    font-size: 14px; font-weight: 500;
+    color: var(--text); letter-spacing: -.1px;
+  }
+  .achievement-desc {
+    font-size: 11.5px; color: var(--text-dim);
+    margin-top: 4px; line-height: 1.4;
+  }
+  .achievement.unlocked .achievement-name { color: var(--accent-hover); }
+
+  /* ---------- Mic / speech recognition ---------- */
+  .mic-btn {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 12.5px; font-weight: 500;
+    cursor: pointer;
+    transition: all .15s ease;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .mic-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .mic-btn.listening {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(193,95,60,.5); }
+    50% { box-shadow: 0 0 0 8px rgba(193,95,60,0); }
+  }
+  .mic-result {
+    margin-top: 14px; padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 13.5px; line-height: 1.5;
+    display: none;
+  }
+  .mic-result.show { display: block; }
+  .mic-result.success { background: var(--success-soft); color: var(--success); border: 1px solid var(--success); }
+  .mic-result.partial { background: var(--accent-softer); color: var(--accent-hover); border: 1px solid var(--accent-soft); }
+  .mic-result.fail { background: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger); }
+
+  /* ---------- Auth screen ---------- */
+  .auth-screen {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 1000;
+    padding: 24px;
+    overflow-y: auto;
+  }
+  .auth-screen.show { display: flex; }
+  .auth-card {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 40px 36px;
+    max-width: 460px; width: 100%;
+    box-shadow: var(--shadow-lg);
+  }
+  .auth-brand {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 14px; margin-bottom: 28px; text-align: center;
+  }
+  .auth-brand-mark {
+    width: 64px; height: 64px; border-radius: 18px;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    box-shadow: var(--shadow);
+  }
+  .auth-title {
+    font-family: var(--serif); font-size: 30px;
+    font-weight: 500; letter-spacing: -.6px;
+    color: var(--text);
+  }
+  .auth-tagline {
+    color: var(--text-dim); font-size: 14.5px;
+    line-height: 1.55; max-width: 320px;
+  }
+  .auth-tabs {
+    display: flex; gap: 4px; padding: 4px;
+    background: var(--bg-subtle); border-radius: 999px;
+    margin-bottom: 24px;
+  }
+  .auth-tab {
+    flex: 1; padding: 9px; border-radius: 999px;
+    background: transparent; border: none;
+    color: var(--text-dim); font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: all .15s ease;
+  }
+  .auth-tab.active {
+    background: var(--bg-surface); color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
+  .auth-field { margin-bottom: 14px; }
+  .auth-field label {
+    display: block; margin-bottom: 6px;
+    font-size: 12px; color: var(--text-dim); font-weight: 500;
+    letter-spacing: .2px;
+  }
+  .auth-field input {
+    width: 100%; padding: 11px 14px;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text); font-size: 14.5px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .auth-field input:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .auth-error {
+    color: var(--danger); font-size: 13px;
+    padding: 10px 14px; background: var(--danger-soft);
+    border-radius: 8px; margin-bottom: 14px; display: none;
+    border: 1px solid var(--danger);
+  }
+  .auth-error.show { display: block; }
+  .auth-submit {
+    width: 100%; padding: 13px 20px;
+    margin-top: 8px; font-size: 15px;
+  }
+  .auth-footer {
+    text-align: center; color: var(--text-muted); font-size: 12.5px;
+    margin-top: 22px; line-height: 1.6;
+  }
+  .auth-language {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+  .auth-language button {
+    padding: 10px 8px; border-radius: 10px;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    font-size: 22px;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .auth-language button:hover { border-color: var(--border-strong); }
+  .auth-language button.selected {
+    border-color: var(--accent); background: var(--accent-soft);
+  }
+  .auth-migration {
+    background: var(--accent-softer); border: 1px solid var(--accent-soft);
+    padding: 12px 14px; border-radius: 10px; margin-bottom: 16px;
+    font-size: 13px; color: var(--accent-hover); line-height: 1.55;
+  }
+  .auth-migration strong { color: var(--accent-hover); }
+
+  /* Sign out button in sidebar */
+  .signout-btn {
+    width: 100%; margin-top: 14px;
+    padding: 8px 12px; border-radius: 10px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-dim); font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all .15s ease;
+  }
+  .signout-btn:hover { background: var(--bg-subtle); color: var(--text); border-color: var(--border-strong); }
+
+  /* Scrollbar polish */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: var(--bg-strong); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+  ::-webkit-scrollbar-track { background: transparent; }
+</style>
+</head>
+<body>
+
+<!-- Auth screen (shown when not logged in) -->
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="auth-brand-mark">🌍</div>
+      <div class="auth-title">Polyglot Quest</div>
+      <div class="auth-tagline">Sign in to track your progress, keep your streak, and compete on the leaderboard.</div>
+    </div>
+
+    <div class="auth-migration" id="auth-migration" style="display:none;">
+      <strong>Welcome back!</strong> We found existing progress on this device. Create an account below to keep it — it'll move into your new account automatically.
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" type="button" data-mode="signin">Sign in</button>
+      <button class="auth-tab" type="button" data-mode="signup">Create account</button>
+    </div>
+
+    <div class="auth-error" id="auth-error"></div>
+
+    <form id="signin-form" onsubmit="event.preventDefault();handleSignIn();">
+      <div class="auth-field">
+        <label for="signin-username">Username</label>
+        <input type="text" id="signin-username" autocomplete="username" required>
+      </div>
+      <div class="auth-field">
+        <label for="signin-password">Password</label>
+        <input type="password" id="signin-password" autocomplete="current-password" required>
+      </div>
+      <button class="btn primary auth-submit" type="submit">Sign in</button>
+    </form>
+
+    <form id="signup-form" onsubmit="event.preventDefault();handleSignUp();" style="display:none;">
+      <div class="auth-field">
+        <label for="signup-username">Username</label>
+        <input type="text" id="signup-username" autocomplete="username" required pattern="[a-zA-Z0-9_-]{3,20}" title="3 to 20 characters: letters, numbers, _, -">
+      </div>
+      <div class="auth-field">
+        <label for="signup-displayname">Display name <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+        <input type="text" id="signup-displayname" autocomplete="name" maxlength="30">
+      </div>
+      <div class="auth-field">
+        <label for="signup-password">Password</label>
+        <input type="password" id="signup-password" autocomplete="new-password" required minlength="6" placeholder="At least 6 characters">
+      </div>
+      <div class="auth-field">
+        <label for="signup-password2">Confirm password</label>
+        <input type="password" id="signup-password2" autocomplete="new-password" required>
+      </div>
+      <div class="auth-field">
+        <label>Pick a language to start with</label>
+        <div class="auth-language" id="auth-language-pick"></div>
+      </div>
+      <button class="btn primary auth-submit" type="submit">Create account</button>
+    </form>
+
+    <div class="auth-footer">
+      Your account stays on this device — passwords are hashed locally.<br>
+      Nothing leaves your computer (except optional Claude API calls if you connect a key).
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">🌍</div>
+      <div>Polyglot<br><span style="font-size:11px;color:var(--text-dim);font-weight:400;">Quest</span></div>
+    </div>
+
+    <div class="lang-picker">
+      <label>Learning</label>
+      <select id="langSelect"></select>
+    </div>
+
+    <button class="nav-item active" data-view="dashboard"><span class="nav-icon">🏠</span>Dashboard</button>
+    <button class="nav-item" data-view="lessons"><span class="nav-icon">📚</span>Lessons</button>
+    <button class="nav-item" data-view="practice"><span class="nav-icon">✏️</span>Practice</button>
+    <button class="nav-item" data-view="culture"><span class="nav-icon">🎭</span>Culture Quiz</button>
+    <button class="nav-item" data-view="pronunciation"><span class="nav-icon">👄</span>Pronunciation</button>
+    <button class="nav-item" data-view="expressions"><span class="nav-icon">💡</span>Expressions</button>
+    <button class="nav-item" data-view="chat"><span class="nav-icon">💬</span>AI Tutor</button>
+    <button class="nav-item" data-view="media"><span class="nav-icon">🎬</span>Films & Books</button>
+    <button class="nav-item" data-view="leaderboard"><span class="nav-icon">🏆</span>Leaderboard</button>
+    <button class="nav-item" data-view="settings"><span class="nav-icon">⚙️</span>Settings</button>
+
+    <div class="profile-box">
+      <div class="profile-row"><span>Player</span><strong id="sb-name">—</strong></div>
+      <div class="profile-row"><span>Total XP</span><strong id="sb-xp">0</strong></div>
+      <div class="profile-row"><span>Streak</span><strong id="sb-streak">0 🔥</strong></div>
+      <button class="signout-btn" onclick="signOut()">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <!-- Dashboard -->
+    <section id="view-dashboard" class="view active">
+      <h1>Welcome back, <span id="db-name">traveler</span> 👋</h1>
+      <p class="subtitle" id="db-subtitle">Let's keep your streak alive.</p>
+
+      <div class="stat-row">
+        <div class="stat">
+          <div class="stat-label">Streak</div>
+          <div class="stat-value"><span id="db-streak">0</span> 🔥</div>
+          <div class="stat-meta" id="db-streak-meta">Study today to extend it</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Total XP</div>
+          <div class="stat-value" id="db-xp">0</div>
+          <div class="stat-meta" id="db-level">Level 1 · Novice</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Words learned</div>
+          <div class="stat-value" id="db-words">0</div>
+          <div class="stat-meta" id="db-lang">in Spanish</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Daily goal</div>
+          <div class="stat-value"><span id="db-goal-xp">0</span><span style="font-size:14px;color:var(--text-dim)">/<span id="db-goal-target">30</span> XP</span></div>
+          <div class="daily-goal-bar"><div class="daily-goal-fill" id="db-goal-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <h2>Jump back in</h2>
+      <div class="grid grid-3">
+        <div class="card hover" onclick="switchView('lessons')">
+          <div style="font-size:28px;margin-bottom:8px;">📚</div>
+          <div style="font-weight:600;margin-bottom:4px;">Continue lessons</div>
+          <div style="color:var(--text-dim);font-size:13px;" id="db-lesson-hint">Pick up where you left off</div>
+        </div>
+        <div class="card hover" onclick="startDailyChallenge()">
+          <div style="font-size:28px;margin-bottom:8px;">⚡</div>
+          <div style="font-weight:600;margin-bottom:4px;">Daily Challenge</div>
+          <div style="color:var(--text-dim);font-size:13px;">5 rapid questions · 2× XP</div>
+        </div>
+        <div class="card hover" onclick="switchView('chat')">
+          <div style="font-size:28px;margin-bottom:8px;">💬</div>
+          <div style="font-weight:600;margin-bottom:4px;">Chat with AI tutor</div>
+          <div style="color:var(--text-dim);font-size:13px;">Practice real conversations</div>
+        </div>
+      </div>
+
+      <h2>Culture corner</h2>
+      <div id="db-culture-tip" class="card" style="line-height:1.55;"></div>
+
+      <h2>Activity</h2>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div style="color:var(--text-dim);font-size:13.5px;" id="db-heatmap-summary">Last 84 days</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);">
+            Less
+            <div class="heatmap-legend">
+              <div class="heatmap-cell" data-l="0"></div>
+              <div class="heatmap-cell" data-l="1"></div>
+              <div class="heatmap-cell" data-l="2"></div>
+              <div class="heatmap-cell" data-l="3"></div>
+              <div class="heatmap-cell" data-l="4"></div>
+            </div>
+            More
+          </div>
+        </div>
+        <div class="heatmap" id="db-heatmap"></div>
+      </div>
+
+      <h2>Achievements</h2>
+      <div class="achievements-grid" id="db-achievements"></div>
+    </section>
+
+    <!-- Lessons -->
+    <section id="view-lessons" class="view">
+      <h1>Lessons</h1>
+      <p class="subtitle">Flashcards with real pronunciation. Tap the speaker to hear a native voice (if your system has one installed).</p>
+
+      <div id="lesson-picker">
+        <div class="tabs" id="lesson-tabs"></div>
+        <div class="grid grid-3" id="lesson-list"></div>
+      </div>
+
+      <div id="lesson-session" style="display:none;">
+        <div class="flashcard" id="flashcard"></div>
+      </div>
+    </section>
+
+    <!-- Culture Quiz -->
+    <section id="view-culture" class="view">
+      <h1>Culture Quiz</h1>
+      <p class="subtitle">Learn the culture behind the language: history, cuisine, art, festivals, cinema.</p>
+
+      <div id="quiz-start" class="card" style="max-width:560px;">
+        <div style="font-size:42px;margin-bottom:10px;">🎭</div>
+        <div style="font-weight:600;font-size:18px;margin-bottom:6px;" id="quiz-intro-title">Culture of Spain & Latin America</div>
+        <p style="color:var(--text-dim);font-size:14px;margin:0 0 16px;">10 random questions. +15 XP per correct answer. Streak bonus on the 5th and 10th in a row.</p>
+        <button class="btn primary" onclick="startQuiz()">Start quiz</button>
+      </div>
+
+      <div id="quiz-play" style="display:none;max-width:640px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:16px;font-size:13px;color:var(--text-dim);">
+          <span id="quiz-progress">Question 1 / 10</span>
+          <span id="quiz-score">Score: 0</span>
+        </div>
+        <div class="card">
+          <div class="quiz-question" id="quiz-q"></div>
+          <div id="quiz-options"></div>
+          <div id="quiz-explain"></div>
+          <div class="btn-row">
+            <button class="btn primary" id="quiz-next" style="display:none;" onclick="nextQuizQuestion()">Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="quiz-done" style="display:none;" class="lesson-end"></div>
+    </section>
+
+    <!-- Chat -->
+    <section id="view-chat" class="view">
+      <h1>AI Tutor</h1>
+      <p class="subtitle">Practice real conversations. Your tutor adapts to your level and gently corrects mistakes.</p>
+
+      <div id="chat-setup" class="card" style="max-width:560px;">
+        <h3 style="margin:0 0 8px;">Connect to Claude</h3>
+        <p style="color:var(--text-dim);font-size:14px;line-height:1.5;margin:0 0 8px;">
+          The tutor runs on Claude. Paste your Anthropic API key — it's stored only in this browser (localStorage) and sent straight to Anthropic's API.
+        </p>
+        <p style="color:var(--text-dim);font-size:12px;line-height:1.5;margin:0 0 10px;">
+          Get a key at <span style="color:var(--accent-2);">console.anthropic.com</span> · No key? You can still use a simple offline demo tutor below.
+        </p>
+        <input id="api-key-input" type="password" placeholder="sk-ant-..." style="width:100%;padding:10px 12px;background:var(--bg-3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;">
+        <div class="btn-row">
+          <button class="btn primary" onclick="saveApiKey()">Save & start</button>
+          <button class="btn ghost" onclick="startOfflineTutor()">Use offline demo</button>
+        </div>
+      </div>
+
+      <div id="chat-area" style="display:none;">
+        <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+          <select id="chat-level" style="padding:6px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;">
+            <option value="beginner">Beginner (A1-A2)</option>
+            <option value="intermediate" selected>Intermediate (B1-B2)</option>
+            <option value="advanced">Advanced (C1+)</option>
+          </select>
+          <select id="chat-scenario" style="padding:6px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;">
+            <option value="free">Free conversation</option>
+            <option value="cafe">Ordering at a café</option>
+            <option value="directions">Asking for directions</option>
+            <option value="hotel">Checking into a hotel</option>
+            <option value="interview">Job interview</option>
+            <option value="debate">Debate a topic</option>
+          </select>
+          <button class="btn small" onclick="resetChat()">Reset</button>
+          <button class="btn small ghost" onclick="forgetApiKey()">Change key</button>
+        </div>
+
+        <div class="chat-wrap">
+          <div class="chat-messages" id="chat-messages"></div>
+          <div class="chat-input-row">
+            <textarea id="chat-input" placeholder="Type in your target language... (Enter to send, Shift+Enter for newline)"></textarea>
+            <button class="btn primary" onclick="sendChatMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Media -->
+    <section id="view-media" class="view">
+      <h1>Films, books & music</h1>
+      <p class="subtitle">Immerse yourself through stories. Curated by difficulty.</p>
+      <div class="tabs" id="media-tabs">
+        <button class="tab active" data-media="film">🎬 Films</button>
+        <button class="tab" data-media="book">📖 Books</button>
+        <button class="tab" data-media="music">🎵 Music</button>
+      </div>
+      <div class="grid grid-3" id="media-list"></div>
+    </section>
+
+    <!-- Leaderboard -->
+    <section id="view-leaderboard" class="view">
+      <h1>Leaderboard</h1>
+      <p class="subtitle">Compete with yourself, your family, or your friends on this device. Add profiles in Settings.</p>
+
+      <div class="tabs">
+        <button class="tab active" data-lb="xp">Total XP</button>
+        <button class="tab" data-lb="streak">Streak</button>
+        <button class="tab" data-lb="weekly">This week</button>
+      </div>
+
+      <div id="lb-list"></div>
+    </section>
+
+    <!-- Practice (cloze / fill-in-the-blank) -->
+    <section id="view-practice" class="view">
+      <h1>Practice</h1>
+      <p class="subtitle">Fill-in-the-blank sentences. The fastest way to lock vocabulary in long-term memory.</p>
+
+      <div id="practice-start" class="card" style="max-width:560px;">
+        <div style="font-size:42px;margin-bottom:10px;">✏️</div>
+        <div style="font-family:var(--serif);font-weight:500;font-size:22px;letter-spacing:-.3px;margin-bottom:6px;" id="practice-intro-title">Cloze drill</div>
+        <p style="color:var(--text-dim);font-size:14.5px;line-height:1.55;margin:0 0 16px;">Type the missing word in a real sentence. +5 XP per correct answer, +5 streak bonus every 3 in a row. Accents optional.</p>
+        <button class="btn primary" onclick="startCloze()">Start drill</button>
+      </div>
+
+      <div id="practice-play" style="display:none;max-width:640px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:16px;font-size:13px;color:var(--text-dim);">
+          <span id="practice-progress">Question 1 / 10</span>
+          <span id="practice-score">Streak: 0</span>
+        </div>
+        <div class="card">
+          <div class="cloze-english" id="cloze-english"></div>
+          <div class="cloze-sentence" id="cloze-sentence"></div>
+          <div id="cloze-feedback"></div>
+          <div class="btn-row">
+            <button class="btn" onclick="skipCloze()" id="cloze-skip">Skip</button>
+            <button class="btn primary" id="cloze-next" style="display:none;" onclick="nextCloze()">Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="practice-done" style="display:none;" class="lesson-end"></div>
+    </section>
+
+    <!-- Pronunciation -->
+    <section id="view-pronunciation" class="view">
+      <h1>Pronunciation Lab</h1>
+      <p class="subtitle">The sounds that trip learners up — and how to physically produce them. Click any example to hear it.</p>
+      <div id="pronunciation-list"></div>
+    </section>
+
+    <!-- Expressions -->
+    <section id="view-expressions" class="view">
+      <h1>Native Expressions & Idioms</h1>
+      <p class="subtitle">Phrases that sound natural — the stuff textbooks leave out. The literal translations are often hilarious.</p>
+      <div id="expressions-list" class="grid grid-3"></div>
+    </section>
+
+    <!-- Settings -->
+    <section id="view-settings" class="view">
+      <h1>Settings</h1>
+
+      <h2>Account</h2>
+      <div id="profiles-list" style="margin-bottom:14px;"></div>
+
+      <h2>Daily goal</h2>
+      <div class="card" style="max-width:420px;">
+        <p style="margin:0 0 10px;color:var(--text-dim);font-size:14px;">XP per day to maintain your streak.</p>
+        <select id="goal-select" onchange="updateGoal()" style="padding:8px 10px;background:var(--bg-3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;">
+          <option value="15">Casual · 15 XP / day</option>
+          <option value="30" selected>Regular · 30 XP / day</option>
+          <option value="60">Serious · 60 XP / day</option>
+          <option value="120">Intense · 120 XP / day</option>
+        </select>
+      </div>
+
+      <h2>Voice</h2>
+      <div class="card" style="max-width:420px;">
+        <p style="margin:0 0 10px;color:var(--text-dim);font-size:14px;">Pronunciation uses your system voices. Native voices depend on your OS.</p>
+        <select id="voice-select" style="padding:8px 10px;background:var(--bg-3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;width:100%;"></select>
+      </div>
+
+      <h2>Data</h2>
+      <div class="btn-row">
+        <button class="btn" onclick="exportData()">Export progress (JSON)</button>
+        <button class="btn danger" onclick="resetAllData()">Reset all data</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =================================================================
+   Polyglot Quest — content data
+   ================================================================= */
+const LANGUAGES = {
+  es: {
+    name: "Spanish",
+    flag: "🇪🇸",
+    voice: "es-ES",
+    greet: "¡Hola!",
+    tip: "Spanish is spoken by ~500M people. Latin American and Castilian variants share a core — 'vosotros' is mostly a Spain thing.",
+    cultureTips: [
+      "La siesta isn't laziness — it's a heat-adapted rhythm from agrarian southern Spain.",
+      "Reggaeton was born in Puerto Rico in the 1990s, fusing Jamaican dancehall with Latin rhythms.",
+      "The word 'ojalá' comes from Arabic 'inshallah' — 800 years of Al-Andalus left traces everywhere.",
+      "Argentina's tango originated in working-class Buenos Aires around 1880."
+    ]
+  },
+  fr: {
+    name: "French",
+    flag: "🇫🇷",
+    voice: "fr-FR",
+    greet: "Bonjour !",
+    tip: "French is spoken on five continents. 'Le français québécois' keeps older forms Paris has dropped.",
+    cultureTips: [
+      "The French Academy (Académie française) has been policing vocabulary since 1635. They still ban 'email' — use 'courriel'.",
+      "The baguette got UNESCO heritage status in 2022. The shape was supposedly standardized by Napoleonic bakers.",
+      "Le goûter, the 4pm snack, is sacred for French kids — usually bread with chocolate.",
+      "'La bise' (cheek kiss) count varies by region: 2 in Paris, 3 in Montpellier, 4 in Nantes."
+    ]
+  },
+  ja: {
+    name: "Japanese",
+    flag: "🇯🇵",
+    voice: "ja-JP",
+    greet: "こんにちは！",
+    tip: "Japanese uses three scripts: hiragana (native sounds), katakana (foreign words), and kanji (Chinese-origin characters).",
+    cultureTips: [
+      "Bowing depth matters: 15° for casual, 30° for business, 45° for deep apology.",
+      "Hanami (cherry blossom viewing) has been a tradition since the 8th century — originally for plum blossoms.",
+      "Anime's golden age is traced to 1963's 'Astro Boy' by Osamu Tezuka, the father of modern manga.",
+      "Wabi-sabi is the aesthetic of accepting imperfection — a cracked bowl becomes more beautiful, not less."
+    ]
+  },
+  de: {
+    name: "German",
+    flag: "🇩🇪",
+    voice: "de-DE",
+    greet: "Hallo!",
+    tip: "German loves compound words. 'Rindfleischetikettierungsüberwachungsaufgabenübertragungsgesetz' was a real law.",
+    cultureTips: [
+      "Oktoberfest actually starts in September — it ran 16-18 days ending first Sunday of October.",
+      "The Autobahn has no general speed limit on ~70% of its network, though advisory is 130 km/h.",
+      "Germany invented the printing press (Gutenberg, ~1440), the MP3 (Fraunhofer, 1993), and the modern kindergarten.",
+      "'Feierabend' — the moment you stop working — is a sacred concept with no English equivalent."
+    ]
+  },
+  it: {
+    name: "Italian",
+    flag: "🇮🇹",
+    voice: "it-IT",
+    greet: "Ciao!",
+    tip: "Modern Italian is essentially Tuscan, thanks to Dante. Regional dialects can be mutually unintelligible.",
+    cultureTips: [
+      "Cappuccino after 11am? Italians consider this a culinary crime. Espresso only after meals.",
+      "Italy has 58 UNESCO World Heritage Sites — more than any other country.",
+      "Pizza Margherita was created in Naples in 1889 for Queen Margherita — red tomato, white mozzarella, green basil = Italian flag.",
+      "The phrase 'dolce far niente' (the sweetness of doing nothing) is a genuine philosophy, not laziness."
+    ]
+  }
+};
+
+const LESSONS = {
+  es: [
+    {
+      id: "es-basics", level: "Beginner", title: "Greetings & essentials",
+      words: [
+        ["hola","hello"], ["adiós","goodbye"], ["buenos días","good morning"],
+        ["buenas noches","good night"], ["gracias","thank you"], ["por favor","please"],
+        ["sí","yes"], ["no","no"], ["perdón","sorry / excuse me"], ["de nada","you're welcome"]
+      ]
+    },
+    {
+      id: "es-people", level: "Beginner", title: "People & family",
+      words: [
+        ["amigo","friend (m)"], ["amiga","friend (f)"], ["familia","family"],
+        ["madre","mother"], ["padre","father"], ["hermano","brother"],
+        ["hermana","sister"], ["hijo","son"], ["hija","daughter"], ["abuelo","grandfather"]
+      ]
+    },
+    {
+      id: "es-food", level: "Beginner", title: "Food & drink",
+      words: [
+        ["agua","water"], ["pan","bread"], ["café","coffee"],
+        ["vino","wine"], ["cerveza","beer"], ["queso","cheese"],
+        ["pescado","fish"], ["carne","meat"], ["fruta","fruit"], ["desayuno","breakfast"]
+      ]
+    },
+    {
+      id: "es-phrases", level: "Intermediate", title: "Useful phrases",
+      words: [
+        ["¿Cómo estás?","How are you?"],
+        ["Me llamo...","My name is..."],
+        ["¿Cuánto cuesta?","How much does it cost?"],
+        ["No entiendo","I don't understand"],
+        ["¿Dónde está el baño?","Where's the bathroom?"],
+        ["Tengo hambre","I'm hungry"],
+        ["Hasta luego","See you later"],
+        ["¿Puede repetirlo?","Can you repeat that?"],
+        ["Buen provecho","Enjoy your meal"],
+        ["Encantado","Nice to meet you"]
+      ]
+    },
+    {
+      id: "es-adv", level: "Advanced", title: "Nuance & connectors",
+      words: [
+        ["sin embargo","however"], ["además","moreover"], ["aunque","although"],
+        ["mientras","while"], ["bastante","quite"], ["suficiente","enough"],
+        ["sorprendente","surprising"], ["recordar","to remember"],
+        ["desarrollar","to develop"], ["cualquier","any"]
+      ]
+    }
+  ],
+  fr: [
+    {
+      id: "fr-basics", level: "Beginner", title: "Greetings & essentials",
+      words: [
+        ["bonjour","hello"], ["au revoir","goodbye"], ["bonsoir","good evening"],
+        ["bonne nuit","good night"], ["merci","thank you"], ["s'il vous plaît","please"],
+        ["oui","yes"], ["non","no"], ["pardon","sorry / excuse me"], ["de rien","you're welcome"]
+      ]
+    },
+    {
+      id: "fr-people", level: "Beginner", title: "People & family",
+      words: [
+        ["ami","friend (m)"], ["amie","friend (f)"], ["famille","family"],
+        ["mère","mother"], ["père","father"], ["frère","brother"],
+        ["sœur","sister"], ["fils","son"], ["fille","daughter"], ["grand-père","grandfather"]
+      ]
+    },
+    {
+      id: "fr-food", level: "Beginner", title: "Food & drink",
+      words: [
+        ["eau","water"], ["pain","bread"], ["café","coffee"],
+        ["vin","wine"], ["bière","beer"], ["fromage","cheese"],
+        ["poisson","fish"], ["viande","meat"], ["fruit","fruit"], ["petit-déjeuner","breakfast"]
+      ]
+    },
+    {
+      id: "fr-phrases", level: "Intermediate", title: "Useful phrases",
+      words: [
+        ["Comment allez-vous ?","How are you?"],
+        ["Je m'appelle...","My name is..."],
+        ["C'est combien ?","How much?"],
+        ["Je ne comprends pas","I don't understand"],
+        ["Où sont les toilettes ?","Where's the bathroom?"],
+        ["J'ai faim","I'm hungry"],
+        ["À plus tard","See you later"],
+        ["Pouvez-vous répéter ?","Can you repeat?"],
+        ["Bon appétit","Enjoy your meal"],
+        ["Enchanté","Nice to meet you"]
+      ]
+    },
+    {
+      id: "fr-adv", level: "Advanced", title: "Nuance & connectors",
+      words: [
+        ["cependant","however"], ["en outre","moreover"], ["bien que","although"],
+        ["pendant","while"], ["assez","quite / enough"], ["presque","almost"],
+        ["étonnant","surprising"], ["se souvenir","to remember"],
+        ["développer","to develop"], ["n'importe quel","any"]
+      ]
+    }
+  ],
+  ja: [
+    {
+      id: "ja-basics", level: "Beginner", title: "Greetings & essentials",
+      words: [
+        ["こんにちは","hello (daytime)"], ["さようなら","goodbye"], ["おはよう","good morning"],
+        ["おやすみ","good night"], ["ありがとう","thank you"], ["お願いします","please"],
+        ["はい","yes"], ["いいえ","no"], ["すみません","sorry / excuse me"], ["どういたしまして","you're welcome"]
+      ]
+    },
+    {
+      id: "ja-people", level: "Beginner", title: "People & family",
+      words: [
+        ["友達","friend (tomodachi)"], ["家族","family (kazoku)"], ["母","mother (haha)"],
+        ["父","father (chichi)"], ["兄","older brother (ani)"], ["姉","older sister (ane)"],
+        ["弟","younger brother (otouto)"], ["妹","younger sister (imouto)"],
+        ["息子","son (musuko)"], ["娘","daughter (musume)"]
+      ]
+    },
+    {
+      id: "ja-food", level: "Beginner", title: "Food & drink",
+      words: [
+        ["水","water (mizu)"], ["パン","bread (pan)"], ["コーヒー","coffee (koohii)"],
+        ["お茶","tea (ocha)"], ["ビール","beer (biiru)"], ["ご飯","rice / meal (gohan)"],
+        ["魚","fish (sakana)"], ["肉","meat (niku)"], ["果物","fruit (kudamono)"], ["朝ごはん","breakfast (asagohan)"]
+      ]
+    },
+    {
+      id: "ja-phrases", level: "Intermediate", title: "Useful phrases",
+      words: [
+        ["お元気ですか？","How are you? (ogenki desu ka)"],
+        ["私の名前は...です","My name is... (watashi no namae wa...)"],
+        ["いくらですか？","How much? (ikura desu ka)"],
+        ["わかりません","I don't understand (wakarimasen)"],
+        ["トイレはどこですか？","Where's the bathroom? (toire wa doko desu ka)"],
+        ["お腹がすいた","I'm hungry (onaka ga suita)"],
+        ["また後で","See you later (mata ato de)"],
+        ["もう一度お願いします","One more time please (mou ichido onegai shimasu)"],
+        ["いただきます","(said before eating — itadakimasu)"],
+        ["はじめまして","Nice to meet you (hajimemashite)"]
+      ]
+    },
+    {
+      id: "ja-adv", level: "Advanced", title: "Expressive vocabulary",
+      words: [
+        ["しかし","however (shikashi)"], ["さらに","furthermore (sarani)"],
+        ["けれども","although (keredomo)"], ["間","while (aida)"],
+        ["かなり","quite (kanari)"], ["ほとんど","almost (hotondo)"],
+        ["驚くべき","surprising (odoroku-beki)"], ["覚える","to remember (oboeru)"],
+        ["発展させる","to develop (hatten saseru)"], ["どんな","any / what kind (donna)"]
+      ]
+    }
+  ],
+  de: [
+    {
+      id: "de-basics", level: "Beginner", title: "Greetings & essentials",
+      words: [
+        ["Hallo","hello"], ["Auf Wiedersehen","goodbye"], ["Guten Morgen","good morning"],
+        ["Gute Nacht","good night"], ["Danke","thank you"], ["Bitte","please / you're welcome"],
+        ["Ja","yes"], ["Nein","no"], ["Entschuldigung","sorry / excuse me"], ["Tschüss","bye (casual)"]
+      ]
+    },
+    {
+      id: "de-people", level: "Beginner", title: "People & family",
+      words: [
+        ["Freund","friend (m)"], ["Freundin","friend (f)"], ["Familie","family"],
+        ["Mutter","mother"], ["Vater","father"], ["Bruder","brother"],
+        ["Schwester","sister"], ["Sohn","son"], ["Tochter","daughter"], ["Großvater","grandfather"]
+      ]
+    },
+    {
+      id: "de-food", level: "Beginner", title: "Food & drink",
+      words: [
+        ["Wasser","water"], ["Brot","bread"], ["Kaffee","coffee"],
+        ["Wein","wine"], ["Bier","beer"], ["Käse","cheese"],
+        ["Fisch","fish"], ["Fleisch","meat"], ["Obst","fruit"], ["Frühstück","breakfast"]
+      ]
+    },
+    {
+      id: "de-phrases", level: "Intermediate", title: "Useful phrases",
+      words: [
+        ["Wie geht es Ihnen?","How are you? (formal)"],
+        ["Ich heiße...","My name is..."],
+        ["Wie viel kostet das?","How much?"],
+        ["Ich verstehe nicht","I don't understand"],
+        ["Wo ist die Toilette?","Where's the bathroom?"],
+        ["Ich habe Hunger","I'm hungry"],
+        ["Bis später","See you later"],
+        ["Können Sie das wiederholen?","Can you repeat?"],
+        ["Guten Appetit","Enjoy your meal"],
+        ["Freut mich","Nice to meet you"]
+      ]
+    },
+    {
+      id: "de-adv", level: "Advanced", title: "Nuance & connectors",
+      words: [
+        ["jedoch","however"], ["außerdem","moreover"], ["obwohl","although"],
+        ["während","while"], ["ziemlich","quite"], ["fast","almost"],
+        ["erstaunlich","surprising"], ["sich erinnern","to remember"],
+        ["entwickeln","to develop"], ["irgendein","any"]
+      ]
+    }
+  ],
+  it: [
+    {
+      id: "it-basics", level: "Beginner", title: "Greetings & essentials",
+      words: [
+        ["ciao","hi / bye (casual)"], ["arrivederci","goodbye (formal)"], ["buongiorno","good morning"],
+        ["buonanotte","good night"], ["grazie","thank you"], ["per favore","please"],
+        ["sì","yes"], ["no","no"], ["scusa","sorry / excuse me"], ["prego","you're welcome"]
+      ]
+    },
+    {
+      id: "it-people", level: "Beginner", title: "People & family",
+      words: [
+        ["amico","friend (m)"], ["amica","friend (f)"], ["famiglia","family"],
+        ["madre","mother"], ["padre","father"], ["fratello","brother"],
+        ["sorella","sister"], ["figlio","son"], ["figlia","daughter"], ["nonno","grandfather"]
+      ]
+    },
+    {
+      id: "it-food", level: "Beginner", title: "Food & drink",
+      words: [
+        ["acqua","water"], ["pane","bread"], ["caffè","coffee"],
+        ["vino","wine"], ["birra","beer"], ["formaggio","cheese"],
+        ["pesce","fish"], ["carne","meat"], ["frutta","fruit"], ["colazione","breakfast"]
+      ]
+    },
+    {
+      id: "it-phrases", level: "Intermediate", title: "Useful phrases",
+      words: [
+        ["Come stai?","How are you?"],
+        ["Mi chiamo...","My name is..."],
+        ["Quanto costa?","How much?"],
+        ["Non capisco","I don't understand"],
+        ["Dov'è il bagno?","Where's the bathroom?"],
+        ["Ho fame","I'm hungry"],
+        ["A dopo","See you later"],
+        ["Può ripetere?","Can you repeat?"],
+        ["Buon appetito","Enjoy your meal"],
+        ["Piacere","Nice to meet you"]
+      ]
+    },
+    {
+      id: "it-adv", level: "Advanced", title: "Nuance & connectors",
+      words: [
+        ["tuttavia","however"], ["inoltre","moreover"], ["sebbene","although"],
+        ["mentre","while"], ["abbastanza","quite / enough"], ["quasi","almost"],
+        ["sorprendente","surprising"], ["ricordare","to remember"],
+        ["sviluppare","to develop"], ["qualsiasi","any"]
+      ]
+    }
+  ]
+};
+
+const CULTURE_QUIZ = {
+  es: [
+    { q: "What is the capital of Spain?", opts: ["Barcelona","Madrid","Seville","Valencia"], ans: 1, why: "Madrid has been the capital since 1561, when Philip II moved the court there." },
+    { q: "La Tomatina is a festival featuring...", opts: ["Bullfighting","A tomato fight","A flower parade","A wine battle"], ans: 1, why: "Held in Buñol every August — thousands of people hurl tomatoes in the streets." },
+    { q: "Who painted 'Guernica'?", opts: ["Salvador Dalí","Diego Velázquez","Pablo Picasso","Francisco Goya"], ans: 2, why: "Picasso's 1937 anti-war masterpiece, commissioned for the Spanish Pavilion in Paris." },
+    { q: "Which country did NOT have Spanish as a colonial language?", opts: ["Mexico","Argentina","Brazil","Peru"], ans: 2, why: "Brazil was colonized by Portugal, not Spain — hence Portuguese, not Spanish." },
+    { q: "What is 'siesta' originally a response to?", opts: ["Religious tradition","Midday heat","Royal decree","Long workdays"], ans: 1, why: "Agricultural southern Spain adapted work hours around the intense midday sun." },
+    { q: "Flamenco originated in which region?", opts: ["Catalonia","Basque Country","Andalusia","Galicia"], ans: 2, why: "Flamenco emerged in 18th-century Andalusia from Romani, Moorish, and Jewish musical roots." },
+    { q: "Who wrote 'Cien años de soledad'?", opts: ["Mario Vargas Llosa","Gabriel García Márquez","Jorge Luis Borges","Isabel Allende"], ans: 1, why: "The 1967 masterpiece of magical realism, set in the fictional town of Macondo." },
+    { q: "The tango originated in...", opts: ["Madrid","Havana","Buenos Aires","Mexico City"], ans: 2, why: "In the working-class docks of Buenos Aires around the 1880s." },
+    { q: "Paella traditionally comes from which Spanish region?", opts: ["Catalonia","Valencia","Andalusia","Galicia"], ans: 1, why: "Born in the rice fields of Valencia — originally with rabbit and snails, not seafood." },
+    { q: "What does the word 'ojalá' come from?", opts: ["Latin","Greek","Arabic","Basque"], ans: 2, why: "From Arabic 'inshallah' (God willing) — a trace of 800 years of Al-Andalus." },
+    { q: "Who directed 'Pan's Labyrinth'?", opts: ["Pedro Almodóvar","Alejandro Iñárritu","Guillermo del Toro","Alfonso Cuarón"], ans: 2, why: "Del Toro's 2006 dark fantasy set during post-Civil War Spain." },
+    { q: "What language is spoken in Barcelona alongside Spanish?", opts: ["Basque","Galician","Catalan","Aragonese"], ans: 2, why: "Catalan — a distinct Romance language with around 10 million speakers." }
+  ],
+  fr: [
+    { q: "When is Bastille Day?", opts: ["June 14","July 4","July 14","August 14"], ans: 2, why: "July 14, 1789 — the storming of the Bastille prison. National holiday since 1880." },
+    { q: "Who painted 'Water Lilies'?", opts: ["Édouard Manet","Claude Monet","Paul Cézanne","Henri Matisse"], ans: 1, why: "Monet painted the series at his garden in Giverny — 250 paintings over 30 years." },
+    { q: "Which French region is famous for champagne?", opts: ["Burgundy","Provence","Champagne","Loire"], ans: 2, why: "By EU law, only sparkling wine from this specific region can legally be called 'champagne'." },
+    { q: "Who wrote 'Les Misérables'?", opts: ["Émile Zola","Victor Hugo","Gustave Flaubert","Alexandre Dumas"], ans: 1, why: "Victor Hugo's 1862 epic about post-revolutionary France, written partly in exile." },
+    { q: "What does 'la bise' refer to?", opts: ["A pastry","A cheek kiss greeting","A dance","A type of wine"], ans: 1, why: "The cheek-kiss greeting — number varies by region (2 in Paris, 4 in Nantes)." },
+    { q: "The Eiffel Tower was built for which event?", opts: ["1889 World's Fair","1900 Olympics","Napoleon's coronation","Louis XIV's jubilee"], ans: 0, why: "Built as a temporary entrance arch for the 1889 Exposition Universelle — meant to be dismantled." },
+    { q: "Cannes Film Festival is held in which country?", opts: ["Italy","France","Monaco","Belgium"], ans: 1, why: "On the French Riviera — since 1946, it's cinema's most prestigious festival." },
+    { q: "'L'Étranger' was written by...", opts: ["Jean-Paul Sartre","Albert Camus","André Gide","Marcel Proust"], ans: 1, why: "Camus' 1942 existentialist novella — his most famous work." },
+    { q: "Which of these is NOT a French-speaking country?", opts: ["Senegal","Haiti","Romania","Madagascar"], ans: 2, why: "Romania's language is Romanian (Romance), but French is only a learned foreign language there." },
+    { q: "The phrase 'laissez-faire' refers to...", opts: ["Military strategy","Non-intervention","A dessert","Royal etiquette"], ans: 1, why: "Originally an economic doctrine of minimal government intervention." },
+    { q: "Croissants actually originated in...", opts: ["Paris","Lyon","Vienna","Marseille"], ans: 2, why: "The kipferl was a Viennese pastry — brought to Paris in the 1830s by August Zang." },
+    { q: "Who composed 'Clair de Lune'?", opts: ["Maurice Ravel","Claude Debussy","Erik Satie","Georges Bizet"], ans: 1, why: "Debussy's impressionist piece, part of Suite bergamasque (1890)." }
+  ],
+  ja: [
+    { q: "What is the capital of Japan?", opts: ["Kyoto","Osaka","Tokyo","Nagoya"], ans: 2, why: "Tokyo became capital in 1868 when the emperor moved from Kyoto during the Meiji Restoration." },
+    { q: "What does 'sakura' mean?", opts: ["Tea ceremony","Cherry blossom","Silk","Temple"], ans: 1, why: "Cherry blossoms — their brief bloom is a metaphor for the beauty of impermanence." },
+    { q: "Who directed 'Spirited Away'?", opts: ["Isao Takahata","Hayao Miyazaki","Satoshi Kon","Makoto Shinkai"], ans: 1, why: "Miyazaki's 2001 film — the first non-English animated film to win an Oscar." },
+    { q: "Japan's current era (since 2019) is called...", opts: ["Heisei","Reiwa","Showa","Meiji"], ans: 1, why: "Reiwa — 'beautiful harmony' — began when Emperor Naruhito ascended the throne." },
+    { q: "What is 'wabi-sabi'?", opts: ["A martial art","An aesthetic of imperfection","A tea","A type of fish"], ans: 1, why: "The worldview that finds beauty in imperfection, impermanence, and incompleteness." },
+    { q: "Sushi originated as a way to...", opts: ["Showcase rice","Preserve fish","Honor the emperor","Serve tea"], ans: 1, why: "Narezushi fermented fish in rice for months — the modern nigiri style is from 1820s Edo." },
+    { q: "The tallest mountain in Japan is...", opts: ["Mt. Aso","Mt. Fuji","Mt. Koya","Mt. Takao"], ans: 1, why: "Mt. Fuji — 3,776 m. An active stratovolcano last erupted in 1707." },
+    { q: "Which is NOT one of Japan's writing systems?", opts: ["Hiragana","Katakana","Kanji","Mandarin"], ans: 3, why: "Japanese uses three scripts mixed together: hiragana, katakana, and kanji (of Chinese origin)." },
+    { q: "'Norwegian Wood' was written by...", opts: ["Yukio Mishima","Haruki Murakami","Yasunari Kawabata","Banana Yoshimoto"], ans: 1, why: "Murakami's 1987 breakout novel — named after the Beatles song." },
+    { q: "The Japanese bow's depth signals...", opts: ["Wealth","Age","Respect level","Family rank"], ans: 2, why: "Deeper bows indicate more respect. 15° casual, 30° business, 45° formal apology." },
+    { q: "'Kaizen' means...", opts: ["Honor","Continuous improvement","Tradition","Peace"], ans: 1, why: "A philosophy of small, continuous improvement — adopted globally in management thinking." },
+    { q: "Which art form folds paper into shapes?", opts: ["Ikebana","Origami","Kintsugi","Shodo"], ans: 1, why: "Origami — 'ori' (fold) + 'kami' (paper). Traditional shapes include the crane and samurai helmet." }
+  ],
+  de: [
+    { q: "When did the Berlin Wall fall?", opts: ["1987","1989","1991","1993"], ans: 1, why: "November 9, 1989 — a bureaucratic miscommunication led to crowds overwhelming the border." },
+    { q: "Which composer was born in Bonn?", opts: ["Bach","Mozart","Beethoven","Wagner"], ans: 2, why: "Beethoven (1770-1827) was born in Bonn but spent his career in Vienna." },
+    { q: "Oktoberfest is held in which city?", opts: ["Berlin","Hamburg","Munich","Cologne"], ans: 2, why: "Munich, Bavaria. Started in 1810 as a royal wedding celebration — now draws 6+ million people." },
+    { q: "Who wrote 'Faust'?", opts: ["Friedrich Schiller","Johann Wolfgang von Goethe","Heinrich Heine","Thomas Mann"], ans: 1, why: "Goethe worked on Faust for 60+ years, publishing Part II shortly before his death in 1832." },
+    { q: "The Autobahn is famous for having...", opts: ["Toll booths","No general speed limit","Only left-hand drive","Solar panels"], ans: 1, why: "Around 70% of the network has no mandatory speed limit, though 130 km/h is advisory." },
+    { q: "Which car brand is based in Wolfsburg?", opts: ["BMW","Mercedes","Audi","Volkswagen"], ans: 3, why: "VW was founded in 1937 — Wolfsburg was built around the factory." },
+    { q: "Germany's highest mountain is...", opts: ["Matterhorn","Zugspitze","Mont Blanc","Brocken"], ans: 1, why: "Zugspitze, 2,962 m — in the Bavarian Alps on the Austrian border." },
+    { q: "Gutenberg invented...", opts: ["The typewriter","Movable-type printing","The steam engine","The light bulb"], ans: 1, why: "Around 1440, his press launched the European printing revolution." },
+    { q: "'Schadenfreude' means...", opts: ["Deep longing","Joy at others' misfortune","Sunday walk","Harvest feast"], ans: 1, why: "Literally 'harm-joy' — a feeling so specific other languages borrowed the word." },
+    { q: "Bauhaus was a movement in...", opts: ["Music","Design and architecture","Cinema","Literature"], ans: 1, why: "Founded by Walter Gropius in 1919 — shaped modernist design worldwide." },
+    { q: "Which is the longest river entirely in Germany?", opts: ["Rhine","Danube","Elbe","Main"], ans: 2, why: "The Elbe is the longest river that runs its course primarily through Germany and the Czech Republic." },
+    { q: "'Kindergarten' was invented by...", opts: ["Friedrich Fröbel","Rudolf Steiner","Maria Montessori","Otto von Bismarck"], ans: 0, why: "Fröbel opened the first Kindergarten in 1837 — the idea and the word are German exports." }
+  ],
+  it: [
+    { q: "The capital of Italy is...", opts: ["Milan","Rome","Naples","Florence"], ans: 1, why: "Rome has been the capital since 1871, when unification was completed." },
+    { q: "Who painted the Sistine Chapel ceiling?", opts: ["Leonardo da Vinci","Michelangelo","Raphael","Botticelli"], ans: 1, why: "Michelangelo, 1508-1512. He famously painted it lying on scaffolding, neck bent back." },
+    { q: "Which city is famous for its canals?", opts: ["Genoa","Naples","Venice","Turin"], ans: 2, why: "Venice is built across 118 small islands, connected by over 400 bridges." },
+    { q: "Who wrote the 'Divine Comedy'?", opts: ["Petrarch","Dante Alighieri","Boccaccio","Machiavelli"], ans: 1, why: "Dante's early-14th-century epic essentially shaped modern Italian." },
+    { q: "Pizza Margherita's colors represent...", opts: ["Queen Margherita's dress","The Italian flag","Harvest seasons","Roman emperors"], ans: 1, why: "Red tomato, white mozzarella, green basil — green, white, red of Italy. Created in Naples, 1889." },
+    { q: "The Leaning Tower is in which city?", opts: ["Florence","Pisa","Siena","Bologna"], ans: 1, why: "Pisa. It began tilting during construction (1173) due to unstable foundation soil." },
+    { q: "Which Italian explorer reached the Americas in 1492?", opts: ["Amerigo Vespucci","Marco Polo","Christopher Columbus","Giovanni Caboto"], ans: 2, why: "Cristoforo Colombo, Genoese — though he was sailing for Spain." },
+    { q: "The Renaissance originated in...", opts: ["Rome","Venice","Florence","Naples"], ans: 2, why: "Florence, 14th-15th centuries — under Medici patronage." },
+    { q: "'La Dolce Vita' was directed by...", opts: ["Vittorio De Sica","Federico Fellini","Michelangelo Antonioni","Roberto Rossellini"], ans: 1, why: "Fellini's 1960 masterpiece gave the world the word 'paparazzi' (the photographer's name)." },
+    { q: "Which is a traditional Italian aperitivo?", opts: ["Sangria","Aperol Spritz","Mojito","Pisco Sour"], ans: 1, why: "Aperol Spritz — orange bitter liqueur + prosecco + soda — a Venetian classic since 1950s." },
+    { q: "How many UNESCO World Heritage Sites does Italy have (most of any country)?", opts: ["30","45","58","72"], ans: 2, why: "58 as of 2024 — tied with China. From the Colosseum to the Dolomites." },
+    { q: "Cappuccino drunk after which meal is a culinary faux pas?", opts: ["Breakfast","Lunch or dinner","Weekend brunch","Late-night snack"], ans: 1, why: "Italians consider milk too heavy after meals — espresso is the post-meal standard." }
+  ]
+};
+
+const MEDIA = {
+  es: {
+    film: [
+      { title: "El laberinto del fauno (Pan's Labyrinth)", meta: "2006 · Guillermo del Toro", level: "Intermediate", desc: "Dark fantasy set in post-Civil War Spain. Strong visuals, clear Castilian." },
+      { title: "Roma", meta: "2018 · Alfonso Cuarón", level: "Intermediate", desc: "Black-and-white autobiographical drama set in 1970s Mexico City." },
+      { title: "Volver", meta: "2006 · Pedro Almodóvar", level: "Advanced", desc: "Rural La Mancha women, family secrets, vibrant dialogue. Manchego accent is a workout." },
+      { title: "Diarios de motocicleta", meta: "2004 · Walter Salles", level: "Intermediate", desc: "Young Che Guevara's road trip across South America. Multiple accents." },
+      { title: "Relatos salvajes", meta: "2014 · Damián Szifron", level: "Advanced", desc: "Six Argentinian revenge stories. Rapid-fire Rioplatense Spanish." }
+    ],
+    book: [
+      { title: "Cien años de soledad", meta: "Gabriel García Márquez", level: "Advanced", desc: "The magical realism masterpiece. Start with a family tree bookmark." },
+      { title: "El Principito (Spanish translation)", meta: "Antoine de Saint-Exupéry", level: "Beginner", desc: "Gentle prose — a great first novel in Spanish." },
+      { title: "La sombra del viento", meta: "Carlos Ruiz Zafón", level: "Intermediate", desc: "Post-war Barcelona, a mysterious book, atmospheric prose." },
+      { title: "Pedro Páramo", meta: "Juan Rulfo", level: "Advanced", desc: "Short, haunting, ghostly — foundational for Latin American literature." }
+    ],
+    music: [
+      { title: "Rosalía", meta: "Flamenco-pop fusion (Spain)", level: "Any", desc: "Modern flamenco, trap, reggaeton. Start with 'Malamente'." },
+      { title: "Jorge Drexler", meta: "Singer-songwriter (Uruguay)", level: "Any", desc: "Thoughtful lyrics, Oscar-winning for 'Al otro lado del río'." },
+      { title: "Manu Chao", meta: "Folk-rock (France/Spain)", level: "Any", desc: "Multilingual anthems. 'Clandestino' is a grounding classic." },
+      { title: "Silvio Rodríguez", meta: "Nueva Trova (Cuba)", level: "Intermediate", desc: "Poetic, politically charged folk. 'Ojalá' is essential." }
+    ]
+  },
+  fr: {
+    film: [
+      { title: "Amélie", meta: "2001 · Jean-Pierre Jeunet", level: "Intermediate", desc: "Whimsical Montmartre fable. Clear narration, moderate pace." },
+      { title: "Les Intouchables", meta: "2011 · Olivier Nakache & Eric Toledano", level: "Intermediate", desc: "True-story friendship between a quadriplegic aristocrat and his caregiver." },
+      { title: "La Haine", meta: "1995 · Mathieu Kassovitz", level: "Advanced", desc: "Paris banlieue slang — raw, urgent, essential." },
+      { title: "Portrait de la jeune fille en feu", meta: "2019 · Céline Sciamma", level: "Intermediate", desc: "Quiet, luminous period romance. Elegant, restrained French." },
+      { title: "À bout de souffle", meta: "1960 · Jean-Luc Godard", level: "Advanced", desc: "The film that launched the French New Wave." }
+    ],
+    book: [
+      { title: "Le Petit Prince", meta: "Antoine de Saint-Exupéry", level: "Beginner", desc: "The gentlest way into literary French. Deceptively deep." },
+      { title: "L'Étranger", meta: "Albert Camus", level: "Intermediate", desc: "Spare, existential, short. Written in the passé composé — great for learners." },
+      { title: "Madame Bovary", meta: "Gustave Flaubert", level: "Advanced", desc: "The prose is surgical; every word earns its place." },
+      { title: "Kiffe kiffe demain", meta: "Faïza Guène", level: "Intermediate", desc: "Teenage narrator in the Paris suburbs — living, current French." }
+    ],
+    music: [
+      { title: "Stromae", meta: "Pop (Belgium)", level: "Any", desc: "Clever wordplay, danceable melancholy. 'Papaoutai' is a rite of passage." },
+      { title: "Édith Piaf", meta: "Chanson (France)", level: "Intermediate", desc: "'Non, je ne regrette rien' — the voice of 20th-century France." },
+      { title: "Angèle", meta: "Pop (Belgium)", level: "Any", desc: "Witty, modern, breezy. 'Balance ton quoi' captures a generation." },
+      { title: "Serge Gainsbourg", meta: "Pop / Chanson (France)", level: "Advanced", desc: "Provocative, layered wordplay — a lyrical masterclass." }
+    ]
+  },
+  ja: {
+    film: [
+      { title: "千と千尋の神隠し (Spirited Away)", meta: "2001 · Hayao Miyazaki", level: "Intermediate", desc: "Miyazaki's most famous work. Clear, expressive speech." },
+      { title: "君の名は。 (Your Name)", meta: "2016 · Makoto Shinkai", level: "Intermediate", desc: "Modern romance with body-swap twist. Contemporary teen Japanese." },
+      { title: "七人の侍 (Seven Samurai)", meta: "1954 · Akira Kurosawa", level: "Advanced", desc: "The template for every heist-crew movie since." },
+      { title: "万引き家族 (Shoplifters)", meta: "2018 · Hirokazu Kore-eda", level: "Advanced", desc: "Tender, deliberately paced family drama. Cannes Palme d'Or." },
+      { title: "東京物語 (Tokyo Story)", meta: "1953 · Yasujirō Ozu", level: "Advanced", desc: "Postwar family drama. Considered one of the greatest films ever made." }
+    ],
+    book: [
+      { title: "ノルウェイの森 (Norwegian Wood)", meta: "Haruki Murakami", level: "Intermediate", desc: "Murakami's most accessible work. Coming-of-age in 1960s Tokyo." },
+      { title: "吾輩は猫である (I Am a Cat)", meta: "Natsume Sōseki", level: "Advanced", desc: "Satirical Meiji-era novel narrated by a cat. Classical style." },
+      { title: "キッチン (Kitchen)", meta: "Banana Yoshimoto", level: "Intermediate", desc: "Short, contemporary, emotionally sharp." },
+      { title: "コンビニ人間 (Convenience Store Woman)", meta: "Sayaka Murata", level: "Intermediate", desc: "Deadpan portrait of modern Japanese social pressure." }
+    ],
+    music: [
+      { title: "宇多田ヒカル (Hikaru Utada)", meta: "J-pop", level: "Any", desc: "Defining voice of 2000s J-pop. 'First Love' is the entry point." },
+      { title: "YOASOBI", meta: "J-pop duo", level: "Any", desc: "Songs adapted from short stories. 'Yoru ni kakeru' launched them." },
+      { title: "坂本龍一 (Ryuichi Sakamoto)", meta: "Electronic / film scores", level: "Any", desc: "Yellow Magic Orchestra founder. Film scores for 'Merry Christmas, Mr. Lawrence' and 'The Revenant'." },
+      { title: "久石譲 (Joe Hisaishi)", meta: "Film composer", level: "Any", desc: "Wrote the music for nearly every Miyazaki film." }
+    ]
+  },
+  de: {
+    film: [
+      { title: "Das Leben der Anderen (The Lives of Others)", meta: "2006 · Florian Henckel von Donnersmarck", level: "Intermediate", desc: "Stasi surveillance in 1984 East Berlin. Oscar winner." },
+      { title: "Lola rennt (Run Lola Run)", meta: "1998 · Tom Tykwer", level: "Intermediate", desc: "Kinetic three-timeline thriller. Relatively short dialogue chunks." },
+      { title: "Der Untergang (Downfall)", meta: "2004 · Oliver Hirschbiegel", level: "Advanced", desc: "Hitler's final days. Yes — the meme clip source. Historically rigorous." },
+      { title: "Good Bye, Lenin!", meta: "2003 · Wolfgang Becker", level: "Intermediate", desc: "Warm comedy about a son faking that East Germany still exists." },
+      { title: "Das Boot", meta: "1981 · Wolfgang Petersen", level: "Advanced", desc: "Claustrophobic WWII U-boat epic." }
+    ],
+    book: [
+      { title: "Die Verwandlung (The Metamorphosis)", meta: "Franz Kafka", level: "Intermediate", desc: "Short, disturbing, foundational modernist text." },
+      { title: "Der Vorleser (The Reader)", meta: "Bernhard Schlink", level: "Intermediate", desc: "Postwar German guilt, told through a teenage affair." },
+      { title: "Faust", meta: "Johann Wolfgang von Goethe", level: "Advanced", desc: "The German literary peak — in verse. Read with a translation alongside." },
+      { title: "Tschick", meta: "Wolfgang Herrndorf", level: "Intermediate", desc: "Modern teen road trip novel. Lively, contemporary German." }
+    ],
+    music: [
+      { title: "Kraftwerk", meta: "Electronic pioneers", level: "Any", desc: "Invented modern electronic music. Start with 'Autobahn' or 'Radio-Aktivität'." },
+      { title: "Rammstein", meta: "Industrial metal", level: "Intermediate", desc: "Clear enunciation (deliberate!) makes lyrics trackable. 'Du hast' is the gateway." },
+      { title: "Nena", meta: "80s pop", level: "Beginner", desc: "'99 Luftballons' — memorize the chorus, then the verses." },
+      { title: "AnnenMayKantereit", meta: "Indie folk-rock", level: "Intermediate", desc: "Gravelly vocals, clear German, singalong melodies." }
+    ]
+  },
+  it: {
+    film: [
+      { title: "La vita è bella (Life Is Beautiful)", meta: "1997 · Roberto Benigni", level: "Intermediate", desc: "A father's heartbreaking comedy in a concentration camp. Three Oscars." },
+      { title: "Cinema Paradiso", meta: "1988 · Giuseppe Tornatore", level: "Intermediate", desc: "Nostalgic love letter to cinema and childhood in Sicily." },
+      { title: "La grande bellezza (The Great Beauty)", meta: "2013 · Paolo Sorrentino", level: "Advanced", desc: "Decadent Rome, a writer's crisis. Oscar for Best Foreign Film." },
+      { title: "Ladri di biciclette (Bicycle Thieves)", meta: "1948 · Vittorio De Sica", level: "Intermediate", desc: "Defining Italian neorealist film. Simple, devastating." },
+      { title: "Perfetti sconosciuti", meta: "2016 · Paolo Genovese", level: "Advanced", desc: "Dinner party where friends share their phones. Remade 20+ times worldwide." }
+    ],
+    book: [
+      { title: "Il nome della rosa (The Name of the Rose)", meta: "Umberto Eco", level: "Advanced", desc: "Medieval murder mystery packed with theology and semiotics." },
+      { title: "La coscienza di Zeno", meta: "Italo Svevo", level: "Advanced", desc: "A pioneering psychoanalytic novel. Dry Trieste humor." },
+      { title: "L'amica geniale (My Brilliant Friend)", meta: "Elena Ferrante", level: "Intermediate", desc: "Neapolitan tetralogy — female friendship across decades." },
+      { title: "Il barone rampante (The Baron in the Trees)", meta: "Italo Calvino", level: "Intermediate", desc: "A nobleman who refuses to come down from the trees. Pure joy." }
+    ],
+    music: [
+      { title: "Måneskin", meta: "Rock (Italy)", level: "Intermediate", desc: "Eurovision 2021 winners. 'Zitti e buoni' is anthemic." },
+      { title: "Lucio Battisti", meta: "Pop / rock (Italy)", level: "Intermediate", desc: "Italian pop's great songwriter. 'Il mio canto libero' endures." },
+      { title: "Andrea Bocelli", meta: "Opera / pop crossover", level: "Any", desc: "'Con te partirò' became a global phenomenon." },
+      { title: "Fabrizio De André", meta: "Cantautore", level: "Advanced", desc: "The poet of Italian song. 'La canzone di Marinella' is essential." }
+    ]
+  }
+};
+
+const PRONUNCIATION = {
+  es: [
+    {
+      sound: "The rolled R (erre)", ipa: "/r/ trill",
+      how: "Place the tip of your tongue on the alveolar ridge — the bumpy ridge just behind your upper front teeth. Your tongue should be relaxed, not tense. Exhale strongly: the airflow makes the tongue flap rapidly against the ridge, producing the trill. The sound is NOT made in the throat.",
+      tip: "Start by whispering 'butter butter butter' fast and loose — feel where your tongue taps. Then exhale harder to turn the taps into a trill. Most people take weeks — don't give up.",
+      examples: ["perro","carro","tierra","arroz","ferrocarril"]
+    },
+    {
+      sound: "Ñ", ipa: "/ɲ/",
+      how: "Press the entire middle of your tongue against the roof of your mouth (hard palate) — not just the tip. Release into a vowel. English 'ny' in 'canyon' is two sounds in sequence; ñ is a single, simultaneous sound.",
+      examples: ["niño","España","mañana","señor"]
+    },
+    {
+      sound: "J / G (before e, i)", ipa: "/x/",
+      how: "A raspy sound made by raising the back of your tongue toward the soft palate (velum) and forcing air through. Like clearing your throat gently, or the Scottish 'loch'. In Latin America it's softer — more like a strong English H.",
+      examples: ["jamón","gente","mujer","ejemplo","general"]
+    },
+    {
+      sound: "B / V (identical in Spanish)", ipa: "/b/, /β/",
+      how: "At the start of an utterance or after m/n: a soft /b/ — lips meet. Everywhere else: a fricative /β/ — lips ALMOST touch, letting air leak through. So 'vaca' starts with a real 'b' sound, but the 'b' in 'Cuba' is the leaky version.",
+      tip: "Never pronounce Spanish V like English V (top teeth on bottom lip). That marks a learner instantly.",
+      examples: ["vaca","lobo","Cuba","viaje","había"]
+    },
+    {
+      sound: "C / Z (Castilian θ, Latin American s)", ipa: "/θ/ or /s/",
+      how: "In Spain, before e/i (c) and always (z), the sound is /θ/ — tongue between the teeth like English 'think'. In Latin America both become /s/. Neither is 'wrong' — pick one and stay consistent.",
+      examples: ["cerveza","cielo","zapato","corazón"]
+    }
+  ],
+  fr: [
+    {
+      sound: "The French R", ipa: "/ʁ/",
+      how: "Uvular — made at the very back of the mouth. Raise the back of your tongue toward the uvula (the dangly thing) and constrict the airflow to create friction. It's a bit like a soft gargle without water.",
+      tip: "Start with 'ag' as in 'bag' — feel where the back of the tongue touches. Now soften that to a buzz. Whisper 'khr' slowly, then voice it. Do NOT roll the tongue tip like Spanish R.",
+      examples: ["rouge","Paris","rire","rendez-vous","arbre"]
+    },
+    {
+      sound: "U (as in 'tu')", ipa: "/y/",
+      how: "Shape your lips as if whistling — tight, rounded, pushed forward. Keep them locked in that position and try to say 'ee'. The sound is the collision of 'oo' lips with 'ee' tongue.",
+      tip: "If it comes out as 'oo' like 'tout', your tongue isn't forward enough. If it comes out as 'ee' like 'tit', your lips aren't rounded.",
+      examples: ["tu","sur","nature","lune","rue"]
+    },
+    {
+      sound: "Nasal vowels (on, an, in, un)", ipa: "/ɔ̃ ɑ̃ ɛ̃ œ̃/",
+      how: "Air flows through the nose simultaneously with the vowel — but there is NO 'n' consonant. 'Bon' is ONE sound (a nasal 'o'), not 'b-o-n'. Your soft palate drops to open the nasal passage.",
+      tip: "Pinch your nose while saying 'bon'. If nothing comes out, you nailed it — the air was meant to come out the nose.",
+      examples: ["bon","pain","un","vin","temps","montagne"]
+    },
+    {
+      sound: "The 'je' sound / J", ipa: "/ʒ/",
+      how: "A voiced sibilant — like the 's' in 'measure' or 'pleasure'. Tongue arched toward the roof of the mouth, lips slightly rounded, vocal cords buzzing. Not English J (which is /dʒ/ — starts with a 't'-like burst).",
+      tip: "Say 'measure' and isolate the middle consonant. That's it. Now attach vowels: zhuh, zhoor, zhah-mey.",
+      examples: ["je","jour","jamais","bonjour","gentil"]
+    },
+    {
+      sound: "Silent final consonants", ipa: "—",
+      how: "Most final consonants in French are silent. 'Paris' ends in /i/; 'Nantes' ends in a nasal vowel. The consonants written at the end are grammatical ghosts.",
+      tip: "Mnemonic — the letters usually pronounced are CaReFuL: C, R, F, L. Everything else at the end tends to be silent.",
+      examples: ["Paris","chaud","trop","Nantes","nez"]
+    },
+    {
+      sound: "Liaison", ipa: "—",
+      how: "A normally-silent final consonant gets pronounced when the next word starts with a vowel. 'Les amis' sounds like 'lay-zah-mee'. This keeps speech flowing and is NOT optional in many cases (articles + nouns, pronoun + verb).",
+      examples: ["les amis","vous avez","un homme","mon ami"]
+    }
+  ],
+  ja: [
+    {
+      sound: "The Japanese R (ra, ri, ru, re, ro)", ipa: "/ɾ/",
+      how: "Neither English R nor L. A quick tap of the tip of the tongue against the alveolar ridge — essentially the same sound as the American English 't' in 'butter' or 'water'. Light, single tap.",
+      tip: "Say 'butter' the American way. The 'tt' you just made — that's the Japanese R. Now say 'budda' with the same tap: that's 'rada'.",
+      examples: ["ramen","arigatou","sora","kuruma","tori"]
+    },
+    {
+      sound: "Tsu (つ)", ipa: "/tsu/",
+      how: "The 'ts' sound exists in English but only at the end of syllables ('cats'). In Japanese, it starts a syllable. Say 'cats', then immediately say 'oo' — then drop the 'ca': 'ts-oo'. The 'u' is unrounded — lips not pushed forward.",
+      examples: ["tsunami","natsu","mitsu","tsukue"]
+    },
+    {
+      sound: "Fu (ふ)", ipa: "/ɸu/",
+      how: "Not the English F (upper teeth on lower lip). Instead, round your lips as if saying 'oo' and blow air gently through them — no teeth involved. It sounds halfway between 'h' and 'f'.",
+      examples: ["fuji","fune","tofu","fuyu"]
+    },
+    {
+      sound: "Long vs short vowels", ipa: "V vs Vː",
+      how: "Japanese vowel length is phonemic — it changes meaning. Hold a long vowel for twice the duration. 'Obasan' (aunt) vs 'obaasan' (grandmother). 'Kite' (come) vs 'kiite' (listen).",
+      tip: "Imagine clapping two beats instead of one for the long vowel. Metronome practice genuinely helps.",
+      examples: ["obaasan","okaasan","byouin","yuuki"]
+    },
+    {
+      sound: "Pitch accent", ipa: "H/L patterns",
+      how: "Japanese uses pitch (high vs low) rather than stress. 'Hashi' with high-then-low pitch means chopsticks; low-then-high means bridge. Most English speakers naturally stress syllables, which sounds unnatural in Japanese.",
+      tip: "Speak in a flatter, more level tone than feels natural to you. Let pitch do gentle hills rather than English's sharp stress peaks.",
+      examples: ["hashi","ame","kami","hana"]
+    }
+  ],
+  de: [
+    {
+      sound: "Ich-Laut (ch after i, e, ä, ö, ü, l, n, r)", ipa: "/ç/",
+      how: "A soft hiss made with the tongue near the hard palate. Say 'yes' slowly, then hold the 'y' position and blow air through without voicing it. It's NOT /ʃ/ (shh) and NOT /k/.",
+      tip: "Smile slightly, put the tongue where you would for 'y' in 'yes', then whisper. The hiss should be gentle — not throaty.",
+      examples: ["ich","mich","nicht","Milch","Mädchen"]
+    },
+    {
+      sound: "Ach-Laut (ch after a, o, u, au)", ipa: "/x/",
+      how: "A raspy back-of-throat sound. Raise the back of your tongue toward the soft palate and force air through — like Scottish 'loch' or Spanish 'j'. Same sound as Spanish 'jamón'.",
+      examples: ["Bach","doch","Buch","Nacht","auch"]
+    },
+    {
+      sound: "Ü", ipa: "/y/",
+      how: "Identical to French U. Round your lips tightly as for 'oo' and try to say 'ee'. Lock the lips, move the tongue.",
+      examples: ["über","Tür","müde","Glück","fünf"]
+    },
+    {
+      sound: "Ö", ipa: "/ø/",
+      how: "Round your lips as for 'oh' and try to say 'eh' (as in 'bed'). Lip shape from 'o', tongue from 'e'.",
+      examples: ["schön","hören","können","böse","König"]
+    },
+    {
+      sound: "R (uvular, softens at end)", ipa: "/ʁ/ → /ɐ/",
+      how: "At the start of syllables, German R is uvular like French R — a back-of-mouth buzz. But at the END of syllables (and after long vowels), it weakens into a short 'ah'-like vowel. 'Mutter' sounds like 'MUT-tah', not 'mutt-errr'.",
+      examples: ["rot","Rad","Mutter","Vater","Bier"]
+    },
+    {
+      sound: "Z, W, V (false-friend consonants)", ipa: "/ts/, /v/, /f/",
+      how: "German Z = English 'ts' (Zeit → 'tsait'). German W = English V (Wasser → 'vasser'). German V = English F (Vater → 'fater'). Don't let the spelling trick you.",
+      examples: ["Zeit","Zug","Wasser","Wein","Vater","voll"]
+    },
+    {
+      sound: "ß (sharp S)", ipa: "/s/",
+      how: "Always an unvoiced /s/, like in English 'hiss'. Used after long vowels or diphthongs. Never a 'b' or 'B' — the shape is historical.",
+      examples: ["Straße","weiß","Fuß","groß"]
+    }
+  ],
+  it: [
+    {
+      sound: "The rolled R", ipa: "/r/ trill",
+      how: "Same as Spanish. Tongue tip on the alveolar ridge, let airflow flap it rapidly. Italian tends to trill slightly more vigorously than Spanish in single R, and double RR is held noticeably longer.",
+      examples: ["Roma","caro","Ferrari","arrivederci","birra"]
+    },
+    {
+      sound: "Gli", ipa: "/ʎ/",
+      how: "A palatal L — press the middle of your tongue against the hard palate and voice it. Like English 'lli' in 'million' but softer and more forward. Not 'glee'.",
+      examples: ["famiglia","figlio","gli","voglio","meglio"]
+    },
+    {
+      sound: "Gn", ipa: "/ɲ/",
+      how: "Same as Spanish ñ or French 'gn'. Middle of tongue against the hard palate, nasal airflow. Single simultaneous sound, not 'g-n' in sequence.",
+      examples: ["gnocchi","lasagne","signora","sogno","bagno"]
+    },
+    {
+      sound: "Double consonants", ipa: "Cː",
+      how: "Italian double consonants are HELD. 'Casa' (house) vs 'cassa' (cash register): the S in 'cassa' is held about twice as long. The preceding vowel is shorter.",
+      tip: "Pretend a tiny pause happens INSIDE the consonant. 'Pizza' is almost 'pit-tsa'. 'Nonno' is almost 'non-no'. Failing to double changes meaning: 'pena' (pain) vs 'penna' (pen).",
+      examples: ["nonno","pizza","tutto","anno","donna"]
+    },
+    {
+      sound: "Sc (before e, i)", ipa: "/ʃ/",
+      how: "Like English 'sh'. Sc + e/i = sh. Everywhere else sc = sk. 'Pesce' (fish) = 'peshe'. 'Scuola' (school) = 'skwola'.",
+      examples: ["pesce","sciare","uscita","scena","scegliere"]
+    },
+    {
+      sound: "Ch / Ghi (hard K / hard G)", ipa: "/k/, /g/",
+      how: "The 'h' is a silencer that hardens c or g before e/i. Without it, c+e = 'che' (as in chess); with it, ch+e = 'ke'. Same for 'gh'.",
+      examples: ["chiesa","che","chi","ghiaccio","spaghetti"]
+    },
+    {
+      sound: "Open vs closed E and O", ipa: "/e/ vs /ɛ/",
+      how: "Italian has two E sounds and two O sounds. Closed E is like English 'ay' without the glide (vero); open E is like English 'eh' (bello). Regional accents vary, so don't stress over perfection.",
+      examples: ["vero","bello","sole","uomo","perché"]
+    }
+  ]
+};
+
+const EXPRESSIONS = {
+  es: [
+    { expr: "Estar en las nubes", literal: "To be in the clouds", meaning: "To be daydreaming; not paying attention.", example: "Perdón, estaba en las nubes. (Sorry, I was spacing out.)" },
+    { expr: "No tener pelos en la lengua", literal: "To have no hairs on the tongue", meaning: "To speak frankly, without filter.", example: "Mi abuela no tiene pelos en la lengua. (My grandma doesn't mince words.)" },
+    { expr: "Ser pan comido", literal: "To be eaten bread", meaning: "To be a piece of cake / super easy.", example: "El examen fue pan comido. (The exam was a breeze.)" },
+    { expr: "Costar un ojo de la cara", literal: "To cost an eye off your face", meaning: "To cost a fortune.", example: "Este coche me costó un ojo de la cara." },
+    { expr: "Estar como una cabra", literal: "To be like a goat", meaning: "To be crazy / a bit nuts (affectionate).", example: "¡Estás como una cabra!" },
+    { expr: "Dar en el clavo", literal: "To hit the nail", meaning: "To be exactly right.", example: "Diste en el clavo con ese comentario." },
+    { expr: "Meter la pata", literal: "To stick your paw in", meaning: "To put your foot in your mouth / screw up.", example: "Metí la pata en la reunión." },
+    { expr: "Tirar la toalla", literal: "To throw the towel", meaning: "To give up.", example: "No tires la toalla todavía." },
+    { expr: "Estar hasta las narices", literal: "To be up to the noses", meaning: "To be fed up.", example: "Estoy hasta las narices del trabajo." },
+    { expr: "Ponerse las pilas", literal: "To put in one's batteries", meaning: "To get your act together / step it up.", example: "Ponte las pilas — el examen es mañana." },
+    { expr: "Hablar por los codos", literal: "To speak through the elbows", meaning: "To talk nonstop.", example: "Mi tío habla por los codos." },
+    { expr: "No hay mal que por bien no venga", literal: "There's no bad that doesn't come for a good", meaning: "Every cloud has a silver lining.", example: "—" }
+  ],
+  fr: [
+    { expr: "Coup de foudre", literal: "Lightning strike", meaning: "Love at first sight.", example: "C'était un coup de foudre." },
+    { expr: "Poser un lapin", literal: "To place a rabbit", meaning: "To stand someone up.", example: "Il m'a posé un lapin hier." },
+    { expr: "Avoir le cafard", literal: "To have the cockroach", meaning: "To feel down / blue.", example: "J'ai le cafard aujourd'hui." },
+    { expr: "Ne pas être dans son assiette", literal: "Not to be in one's plate", meaning: "To not feel well / feel off.", example: "Je ne suis pas dans mon assiette." },
+    { expr: "Raconter des salades", literal: "To tell salads", meaning: "To tell lies / nonsense.", example: "Arrête de raconter des salades !" },
+    { expr: "La moutarde me monte au nez", literal: "Mustard is rising to my nose", meaning: "I'm getting angry.", example: "Doucement, la moutarde me monte au nez." },
+    { expr: "Tomber dans les pommes", literal: "To fall in the apples", meaning: "To faint.", example: "Elle est tombée dans les pommes." },
+    { expr: "Avoir un chat dans la gorge", literal: "To have a cat in the throat", meaning: "To be hoarse.", example: "J'ai un chat dans la gorge." },
+    { expr: "L'habit ne fait pas le moine", literal: "The robe doesn't make the monk", meaning: "Don't judge by appearances.", example: "—" },
+    { expr: "Ce n'est pas la mer à boire", literal: "It's not the sea to drink", meaning: "It's not that hard.", example: "Allez, ce n'est pas la mer à boire !" },
+    { expr: "Donner sa langue au chat", literal: "To give one's tongue to the cat", meaning: "To give up guessing.", example: "Je donne ma langue au chat — dis-moi !" },
+    { expr: "Avoir le coup de barre", literal: "To have the bar-hit", meaning: "Sudden exhaustion / energy crash.", example: "J'ai un coup de barre après déjeuner." }
+  ],
+  ja: [
+    { expr: "猿も木から落ちる", literal: "Even monkeys fall from trees (saru mo ki kara ochiru)", meaning: "Even experts make mistakes.", example: "—" },
+    { expr: "出る杭は打たれる", literal: "The nail that sticks out gets hammered down (deru kui wa utareru)", meaning: "Conformity is safer than standing out.", example: "—" },
+    { expr: "七転び八起き", literal: "Fall seven, rise eight (nanakorobi yaoki)", meaning: "Perseverance through setbacks.", example: "七転び八起きの精神で頑張ります。" },
+    { expr: "花より団子", literal: "Dumplings over flowers (hana yori dango)", meaning: "Practicality over aesthetics.", example: "—" },
+    { expr: "一期一会", literal: "One time, one meeting (ichigo ichie)", meaning: "Treasure this moment — it will never happen again.", example: "—" },
+    { expr: "頑張って", literal: "Persist! (ganbatte)", meaning: "All-purpose 'do your best / you got this'.", example: "明日のテスト、頑張って！" },
+    { expr: "お疲れ様です", literal: "You are honorably tired (otsukaresama desu)", meaning: "Acknowledgement of someone's work. Used as greeting and farewell at work.", example: "お疲れ様です！" },
+    { expr: "よろしくお願いします", literal: "Please treat me favorably (yoroshiku onegai shimasu)", meaning: "Versatile 'please' — introductions, requests, onboarding.", example: "初めまして。よろしくお願いします。" },
+    { expr: "いただきます", literal: "I humbly receive (itadakimasu)", meaning: "Said before eating — gratitude to everyone involved in the meal.", example: "—" },
+    { expr: "ごちそうさまでした", literal: "It was a feast (gochisousama deshita)", meaning: "Said after eating — thanks for the meal.", example: "—" },
+    { expr: "仕方がない", literal: "There is no way (shikata ga nai)", meaning: "It can't be helped. Deep cultural resignation.", example: "雨だから仕方がない。" },
+    { expr: "空気を読む", literal: "To read the air (kuuki wo yomu)", meaning: "To sense the social mood and act appropriately.", example: "—" }
+  ],
+  de: [
+    { expr: "Tomaten auf den Augen haben", literal: "To have tomatoes on the eyes", meaning: "To fail to see the obvious.", example: "Du hast ja Tomaten auf den Augen!" },
+    { expr: "Ich verstehe nur Bahnhof", literal: "I only understand train station", meaning: "I don't understand a word.", example: "Das war zu technisch — ich verstehe nur Bahnhof." },
+    { expr: "Das ist mir Wurst", literal: "That is sausage to me", meaning: "I don't care either way.", example: "Pizza oder Pasta? Das ist mir Wurst." },
+    { expr: "Die Daumen drücken", literal: "To press the thumbs", meaning: "To wish someone luck (German equivalent of crossing fingers).", example: "Ich drücke dir die Daumen!" },
+    { expr: "Jetzt geht's um die Wurst", literal: "Now it's about the sausage", meaning: "Now it's crunch time / do or die.", example: "—" },
+    { expr: "Den Nagel auf den Kopf treffen", literal: "Hit the nail on the head", meaning: "Exactly right.", example: "Du hast den Nagel auf den Kopf getroffen." },
+    { expr: "Die Katze im Sack kaufen", literal: "To buy the cat in the bag", meaning: "Buy something blindly / sight unseen.", example: "—" },
+    { expr: "Schwein haben", literal: "To have a pig", meaning: "To be lucky.", example: "Da hast du aber Schwein gehabt!" },
+    { expr: "Um den heißen Brei herumreden", literal: "To talk around the hot porridge", meaning: "To beat around the bush.", example: "Rede nicht um den heißen Brei herum." },
+    { expr: "Eine Extrawurst bekommen", literal: "To get an extra sausage", meaning: "To get special treatment.", example: "Du willst immer eine Extrawurst!" },
+    { expr: "Fix und fertig sein", literal: "To be fixed and finished", meaning: "Completely exhausted.", example: "Nach der Arbeit bin ich fix und fertig." },
+    { expr: "Morgenstund hat Gold im Mund", literal: "Morning hour has gold in mouth", meaning: "The early bird catches the worm.", example: "—" }
+  ],
+  it: [
+    { expr: "In bocca al lupo", literal: "In the wolf's mouth", meaning: "Good luck! (Theatre superstition.) Correct reply: 'Crepi il lupo!' (May the wolf die).", example: "In bocca al lupo per l'esame! — Crepi!" },
+    { expr: "Non tutte le ciambelle riescono col buco", literal: "Not all doughnuts come out with a hole", meaning: "Things don't always work out the way you hope.", example: "—" },
+    { expr: "Avere le mani in pasta", literal: "To have hands in the dough", meaning: "To be heavily involved in something.", example: "Ha le mani in pasta in tanti progetti." },
+    { expr: "Essere al verde", literal: "To be at the green", meaning: "To be broke.", example: "Non posso uscire — sono al verde." },
+    { expr: "Prendere due piccioni con una fava", literal: "Catch two pigeons with one fava bean", meaning: "Kill two birds with one stone.", example: "—" },
+    { expr: "Chi dorme non piglia pesci", literal: "Who sleeps catches no fish", meaning: "The early bird gets the worm.", example: "—" },
+    { expr: "Avere la testa tra le nuvole", literal: "To have the head among the clouds", meaning: "Head in the clouds / absent-minded.", example: "Oggi hai la testa tra le nuvole." },
+    { expr: "Non vedo l'ora", literal: "I don't see the hour", meaning: "I can't wait.", example: "Non vedo l'ora di vederti!" },
+    { expr: "Magari!", literal: "Maybe!", meaning: "If only! — expressing a strong wish.", example: "Vincere alla lotteria? Magari!" },
+    { expr: "Fare la bella figura", literal: "To make the beautiful figure", meaning: "To make a good impression. A serious Italian social value.", example: "Voglio fare bella figura alla cena." },
+    { expr: "Tocca ferro", literal: "Touch iron", meaning: "Knock on wood / for luck.", example: "Tutto va bene — tocca ferro!" },
+    { expr: "Che pizza!", literal: "What a pizza!", meaning: "How boring!", example: "Questo film è una pizza." }
+  ]
+};
+
+const CLOZE = {
+  es: [
+    { sentence: "Quiero un vaso de {agua}.",         english: "I want a glass of water." },
+    { sentence: "Mi {familia} es muy grande.",       english: "My family is very big." },
+    { sentence: "¿Dónde está el {baño}?",            english: "Where is the bathroom?" },
+    { sentence: "Por la mañana tomo un {café}.",     english: "In the morning I have a coffee." },
+    { sentence: "Mi {amigo} se llama Pablo.",        english: "My friend's name is Pablo." },
+    { sentence: "La {casa} tiene un jardín bonito.", english: "The house has a pretty garden." },
+    { sentence: "Tengo {hambre}, ¿comemos?",         english: "I'm hungry, shall we eat?" },
+    { sentence: "{Buenos} días, ¿cómo está?",        english: "Good morning, how are you?" },
+    { sentence: "No {entiendo} la pregunta.",        english: "I don't understand the question." },
+    { sentence: "¿Cuánto {cuesta} este libro?",      english: "How much does this book cost?" },
+    { sentence: "Hace mucho {sol} hoy.",             english: "It's very sunny today." },
+    { sentence: "Mi {hermana} es médica.",           english: "My sister is a doctor." }
+  ],
+  fr: [
+    { sentence: "Je voudrais un verre d'{eau}.",        english: "I'd like a glass of water." },
+    { sentence: "Ma {famille} habite à Paris.",         english: "My family lives in Paris." },
+    { sentence: "Où sont les {toilettes} ?",            english: "Where's the bathroom?" },
+    { sentence: "Le matin, je prends un {café}.",       english: "In the morning, I have a coffee." },
+    { sentence: "Mon {ami} s'appelle Pierre.",          english: "My friend's name is Pierre." },
+    { sentence: "La {maison} a un grand jardin.",       english: "The house has a big garden." },
+    { sentence: "J'ai {faim}. On mange ?",              english: "I'm hungry. Shall we eat?" },
+    { sentence: "{Bonjour}, comment allez-vous ?",      english: "Hello, how are you?" },
+    { sentence: "Je ne {comprends} pas la question.",   english: "I don't understand the question." },
+    { sentence: "Ça {coûte} combien ?",                 english: "How much does it cost?" },
+    { sentence: "Il fait {beau} aujourd'hui.",          english: "The weather is nice today." },
+    { sentence: "Ma {sœur} est médecin.",               english: "My sister is a doctor." }
+  ],
+  ja: [
+    { sentence: "{Mizu} o kudasai.",                          english: "Water, please." },
+    { sentence: "Watashi no {kazoku} wa Tokyo ni sundeimasu.", english: "My family lives in Tokyo." },
+    { sentence: "{Toire} wa doko desu ka?",                   english: "Where's the bathroom?" },
+    { sentence: "Asa, {koohii} o nomimasu.",                  english: "In the morning, I drink coffee." },
+    { sentence: "{Tomodachi} no namae wa Ken desu.",          english: "My friend's name is Ken." },
+    { sentence: "Watashi no {ie} wa ookii desu.",             english: "My house is big." },
+    { sentence: "Onaka ga {suita}.",                          english: "I'm hungry." },
+    { sentence: "{Konnichiwa}, ogenki desu ka?",              english: "Hello, how are you?" },
+    { sentence: "{Wakarimasen}.",                             english: "I don't understand." },
+    { sentence: "{Ikura} desu ka?",                           english: "How much is it?" },
+    { sentence: "Kyou wa ii {tenki} desu.",                   english: "The weather is nice today." },
+    { sentence: "{Imouto} wa isha desu.",                     english: "My younger sister is a doctor." }
+  ],
+  de: [
+    { sentence: "Ein Glas {Wasser}, bitte.",         english: "A glass of water, please." },
+    { sentence: "Meine {Familie} wohnt in Berlin.",  english: "My family lives in Berlin." },
+    { sentence: "Wo ist die {Toilette}?",            english: "Where's the bathroom?" },
+    { sentence: "Morgens trinke ich einen {Kaffee}.", english: "In the morning I drink coffee." },
+    { sentence: "Mein {Freund} heißt Hans.",         english: "My friend's name is Hans." },
+    { sentence: "Das {Haus} hat einen Garten.",      english: "The house has a garden." },
+    { sentence: "Ich habe {Hunger}. Essen wir?",     english: "I'm hungry. Shall we eat?" },
+    { sentence: "{Guten} Morgen, wie geht es Ihnen?", english: "Good morning, how are you?" },
+    { sentence: "Ich {verstehe} die Frage nicht.",   english: "I don't understand the question." },
+    { sentence: "Wie viel {kostet} das?",            english: "How much does it cost?" },
+    { sentence: "Heute scheint die {Sonne}.",        english: "The sun is shining today." },
+    { sentence: "Meine {Schwester} ist Ärztin.",     english: "My sister is a doctor." }
+  ],
+  it: [
+    { sentence: "Un bicchiere d'{acqua}, per favore.", english: "A glass of water, please." },
+    { sentence: "La mia {famiglia} vive a Roma.",      english: "My family lives in Rome." },
+    { sentence: "Dov'è il {bagno}?",                   english: "Where's the bathroom?" },
+    { sentence: "La mattina bevo un {caffè}.",         english: "In the morning I drink coffee." },
+    { sentence: "Il mio {amico} si chiama Marco.",     english: "My friend's name is Marco." },
+    { sentence: "La {casa} ha un giardino.",           english: "The house has a garden." },
+    { sentence: "Ho {fame}, mangiamo?",                english: "I'm hungry, shall we eat?" },
+    { sentence: "{Buongiorno}, come sta?",             english: "Good morning, how are you?" },
+    { sentence: "Non {capisco} la domanda.",           english: "I don't understand the question." },
+    { sentence: "Quanto {costa} questo libro?",        english: "How much does this book cost?" },
+    { sentence: "Oggi c'è il {sole}.",                 english: "It's sunny today." },
+    { sentence: "Mia {sorella} è medico.",             english: "My sister is a doctor." }
+  ]
+};
+
+const ACHIEVEMENTS = [
+  { id: "first_steps",  icon: "👶", name: "First steps",     desc: "Complete your first lesson",
+    test: a => Object.values(a.lessonProgress || {}).some(lp => Object.keys(lp).filter(k => k !== "lastLesson").length > 0) },
+  { id: "century",      icon: "💯", name: "Century",         desc: "Earn 100 total XP",
+    test: a => (a.xp || 0) >= 100 },
+  { id: "marathoner",   icon: "🏃", name: "Marathoner",      desc: "Earn 1,000 total XP",
+    test: a => (a.xp || 0) >= 1000 },
+  { id: "week_warrior", icon: "🔥", name: "Week warrior",    desc: "Maintain a 7-day streak",
+    test: a => (a.streak || 0) >= 7 },
+  { id: "monthly",      icon: "🏆", name: "Monthly devotion", desc: "Maintain a 30-day streak",
+    test: a => (a.streak || 0) >= 30 },
+  { id: "scholar",      icon: "📚", name: "Scholar",         desc: "Score 100% on a culture quiz",
+    test: a => a.perfectQuiz === true },
+  { id: "vocab_100",    icon: "📖", name: "Vocabulary",      desc: "Learn 100 words across all languages",
+    test: a => totalWordsLearned(a) >= 100 },
+  { id: "vocab_500",    icon: "🧠", name: "Lexicon",         desc: "Learn 500 words across all languages",
+    test: a => totalWordsLearned(a) >= 500 },
+  { id: "polyglot",     icon: "🌍", name: "Polyglot",        desc: "Learn 10+ words in 3 different languages",
+    test: a => Object.values(a.wordsLearned || {}).filter(arr => (arr || []).length >= 10).length >= 3 },
+  { id: "speaker",      icon: "🎤", name: "Speaker",         desc: "Pronounce 10 words aloud successfully",
+    test: a => (a.spokenWords || 0) >= 10 },
+  { id: "chatterbox",   icon: "💬", name: "Chatterbox",      desc: "Send 50 messages to the AI tutor",
+    test: a => (a.chatMessages || 0) >= 50 },
+  { id: "early_bird",   icon: "🌅", name: "Early bird",      desc: "Practice before 8 AM",
+    test: a => a.earlyPractice === true },
+  { id: "night_owl",    icon: "🌙", name: "Night owl",       desc: "Practice after 10 PM",
+    test: a => a.latePractice === true },
+  { id: "perfectionist", icon: "✨", name: "Perfectionist",   desc: "Complete a lesson without a single miss",
+    test: a => a.perfectLesson === true }
+];
+
+function totalWordsLearned(a) {
+  return Object.values(a.wordsLearned || {}).reduce((sum, arr) => sum + (arr ? arr.length : 0), 0);
+}
+
+/* =================================================================
+   State & persistence
+   ================================================================= */
+const STORAGE_KEY = "polyglot.state.v1";
+const defaultState = () => ({
+  activeAccountId: null,
+  accounts: {},
+  rivals: {
+    rival1: { id: "rival1", name: "Alex", xp: 420, streak: 12, weeklyXp: 180, weekStart: null },
+    rival2: { id: "rival2", name: "Jamie", xp: 260, streak: 5, weeklyXp: 90, weekStart: null }
+  },
+  activeLanguage: "es",
+  dailyGoal: 30,
+  apiKey: null,
+  chatHistory: [],
+  selectedVoice: null
+});
+
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultState();
+    const parsed = JSON.parse(raw);
+    const d = defaultState();
+    const s = { ...d, ...parsed };
+    s.accounts = s.accounts || {};
+    s.rivals = { ...d.rivals, ...(parsed.rivals || {}) };
+
+    // Migration from pre-auth schema: stash legacy "me" profile so signup can absorb it
+    if (parsed.profiles) {
+      if (parsed.profiles.rival1 && !parsed.rivals?.rival1) s.rivals.rival1 = parsed.profiles.rival1;
+      if (parsed.profiles.rival2 && !parsed.rivals?.rival2) s.rivals.rival2 = parsed.profiles.rival2;
+      if (parsed.profiles.me && (parsed.profiles.me.xp > 0 || Object.keys(parsed.profiles.me.wordsLearned || {}).length > 0)) {
+        s._pendingMigration = parsed.profiles.me;
+      }
+      delete s.profiles;
+    }
+    return s;
+  } catch (e) {
+    console.warn("Failed to load state, resetting:", e);
+    return defaultState();
+  }
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function me() {
+  if (state.activeAccountId && state.accounts && state.accounts[state.activeAccountId]) {
+    return state.accounts[state.activeAccountId];
+  }
+  return null;
+}
+
+/* =================================================================
+   Auth (client-side, accounts stored locally per device)
+   ================================================================= */
+async function hashPassword(password, salt) {
+  const enc = new TextEncoder();
+  const data = enc.encode(password + ":" + salt);
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function genSalt() {
+  const arr = new Uint8Array(16);
+  crypto.getRandomValues(arr);
+  return Array.from(arr).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function showAuth() {
+  $("auth-screen").classList.add("show");
+  $("app").style.display = "none";
+  // If accounts already exist on this device, default to Sign in tab; otherwise show Sign up
+  const hasAccounts = Object.keys(state.accounts || {}).length > 0;
+  const defaultMode = hasAccounts ? "signin" : "signup";
+  document.querySelectorAll(".auth-tab").forEach(t => t.classList.toggle("active", t.dataset.mode === defaultMode));
+  $("signin-form").style.display = defaultMode === "signin" ? "" : "none";
+  $("signup-form").style.display = defaultMode === "signup" ? "" : "none";
+  // Show migration banner if pending
+  $("auth-migration").style.display = state._pendingMigration ? "" : "none";
+  clearAuthError();
+  // Render the language picker chips on signup
+  const picker = $("auth-language-pick");
+  if (!picker.dataset.rendered) {
+    picker.innerHTML = Object.entries(LANGUAGES).map(([k, l], i) =>
+      `<button type="button" class="${i === 0 ? "selected" : ""}" data-lang="${k}" title="${l.name}">${l.flag}</button>`
+    ).join("");
+    picker.querySelectorAll("button").forEach(b => {
+      b.onclick = () => {
+        picker.querySelectorAll("button").forEach(x => x.classList.remove("selected"));
+        b.classList.add("selected");
+      };
+    });
+    picker.dataset.rendered = "1";
+  }
+}
+function hideAuth() {
+  $("auth-screen").classList.remove("show");
+  $("app").style.display = "flex";
+}
+function showAuthError(msg) {
+  $("auth-error").textContent = msg;
+  $("auth-error").classList.add("show");
+}
+function clearAuthError() {
+  $("auth-error").classList.remove("show");
+}
+
+document.querySelectorAll(".auth-tab").forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll(".auth-tab").forEach(t => t.classList.toggle("active", t === tab));
+    const mode = tab.dataset.mode;
+    $("signin-form").style.display = mode === "signin" ? "" : "none";
+    $("signup-form").style.display = mode === "signup" ? "" : "none";
+    clearAuthError();
+  };
+});
+
+async function handleSignUp() {
+  clearAuthError();
+  const username = $("signup-username").value.trim().toLowerCase();
+  const displayName = $("signup-displayname").value.trim() || username;
+  const password = $("signup-password").value;
+  const password2 = $("signup-password2").value;
+  const langPick = $("auth-language-pick").querySelector(".selected");
+  const lang = langPick ? langPick.dataset.lang : "es";
+
+  if (!/^[a-zA-Z0-9_-]{3,20}$/.test(username))
+    return showAuthError("Username must be 3–20 characters: letters, numbers, _ or -");
+  if (password.length < 6) return showAuthError("Password must be at least 6 characters");
+  if (password !== password2) return showAuthError("Passwords don't match");
+  if (Object.values(state.accounts || {}).some(a => a.username === username))
+    return showAuthError("That username is already taken on this device");
+
+  const salt = genSalt();
+  const passwordHash = await hashPassword(password, salt);
+  const id = "acc_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
+
+  const migrate = state._pendingMigration;
+  state.accounts = state.accounts || {};
+  state.accounts[id] = {
+    id, username, name: displayName,
+    passwordHash, salt,
+    createdAt: Date.now(),
+    xp: migrate?.xp || 0,
+    streak: migrate?.streak || 0,
+    lastStudy: migrate?.lastStudy || null,
+    weeklyXp: migrate?.weeklyXp || 0,
+    weekStart: migrate?.weekStart || null,
+    todayXp: migrate?.todayXp || 0,
+    todayDate: migrate?.todayDate || null,
+    wordsLearned: migrate?.wordsLearned || {},
+    lessonProgress: migrate?.lessonProgress || {}
+  };
+  delete state._pendingMigration;
+
+  state.activeAccountId = id;
+  state.activeLanguage = lang;
+  saveState();
+  hideAuth();
+  init();
+  toast(`Welcome, ${displayName}! 🎉`);
+}
+
+async function handleSignIn() {
+  clearAuthError();
+  const username = $("signin-username").value.trim().toLowerCase();
+  const password = $("signin-password").value;
+  const account = Object.values(state.accounts || {}).find(a => a.username === username);
+  if (!account) return showAuthError("No account with that username on this device");
+  const hash = await hashPassword(password, account.salt);
+  if (hash !== account.passwordHash) return showAuthError("Wrong password");
+
+  state.activeAccountId = account.id;
+  saveState();
+  hideAuth();
+  init();
+  toast(`Welcome back, ${account.name}!`);
+}
+
+function signOut() {
+  state.activeAccountId = null;
+  state.chatHistory = [];
+  saveState();
+  ["signin-username","signin-password","signup-username","signup-password","signup-password2","signup-displayname"]
+    .forEach(id => { const el = $(id); if (el) el.value = ""; });
+  showAuth();
+}
+
+async function promptChangePassword() {
+  modal(`
+    <h3>Change password</h3>
+    <p>Enter your current password, then choose a new one.</p>
+    <input id="cp-current" type="password" placeholder="Current password">
+    <input id="cp-new" type="password" placeholder="New password (min 6 chars)" style="margin-top:8px;">
+    <input id="cp-new2" type="password" placeholder="Confirm new password" style="margin-top:8px;">
+    <div id="cp-error" style="color:var(--danger);font-size:13px;margin-top:10px;display:none;"></div>
+    <div class="btn-row">
+      <button class="btn primary" onclick="doChangePassword()">Update password</button>
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+    </div>
+  `);
+}
+async function doChangePassword() {
+  const err = $("cp-error");
+  const showErr = (m) => { err.textContent = m; err.style.display = ""; };
+  const cur = $("cp-current").value;
+  const n1 = $("cp-new").value;
+  const n2 = $("cp-new2").value;
+  if (!cur || !n1) return showErr("All fields required");
+  if (n1.length < 6) return showErr("New password must be at least 6 characters");
+  if (n1 !== n2) return showErr("New passwords don't match");
+  const acc = me();
+  const curHash = await hashPassword(cur, acc.salt);
+  if (curHash !== acc.passwordHash) return showErr("Current password is incorrect");
+  const newSalt = genSalt();
+  acc.salt = newSalt;
+  acc.passwordHash = await hashPassword(n1, newSalt);
+  saveState();
+  closeModal();
+  toast("Password updated");
+}
+
+function promptChangeName() {
+  const acc = me();
+  modal(`
+    <h3>Change display name</h3>
+    <p>This is how you appear on the leaderboard. Your username doesn't change.</p>
+    <input id="cn-name" type="text" maxlength="30" value="${escapeHtml(acc.name)}">
+    <div class="btn-row">
+      <button class="btn primary" onclick="doChangeName()">Save</button>
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+    </div>
+  `);
+  setTimeout(() => $("cn-name").focus(), 50);
+}
+function doChangeName() {
+  const newName = $("cn-name").value.trim();
+  if (!newName) return;
+  me().name = newName;
+  saveState();
+  closeModal();
+  renderSidebar();
+  renderDashboard();
+  renderSettings();
+  toast("Name updated");
+}
+
+async function confirmDeleteAccount() {
+  modal(`
+    <h3 style="color:var(--danger);">Delete account?</h3>
+    <p>This will permanently erase <strong>${escapeHtml(me().name)}</strong> and all of their progress on this device. This cannot be undone.</p>
+    <p>Type your password to confirm:</p>
+    <input id="del-password" type="password" placeholder="Password">
+    <div id="del-error" style="color:var(--danger);font-size:13px;margin-top:10px;display:none;"></div>
+    <div class="btn-row">
+      <button class="btn danger" onclick="doDeleteAccount()">Delete forever</button>
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+    </div>
+  `);
+}
+async function doDeleteAccount() {
+  const err = $("del-error");
+  const showErr = (m) => { err.textContent = m; err.style.display = ""; };
+  const pw = $("del-password").value;
+  const acc = me();
+  const hash = await hashPassword(pw, acc.salt);
+  if (hash !== acc.passwordHash) return showErr("Wrong password");
+  delete state.accounts[acc.id];
+  state.activeAccountId = null;
+  saveState();
+  closeModal();
+  showAuth();
+  toast("Account deleted");
+}
+function currentLang() { return LANGUAGES[state.activeLanguage]; }
+
+function todayStr() { return new Date().toISOString().slice(0,10); }
+function weekKey() {
+  const d = new Date();
+  const onejan = new Date(d.getFullYear(),0,1);
+  const week = Math.ceil((((d - onejan) / 86400000) + onejan.getDay()+1)/7);
+  return `${d.getFullYear()}-W${week}`;
+}
+
+function awardXp(amount) {
+  const p = me();
+  if (!p) return;
+  p.xp = (p.xp || 0) + amount;
+
+  // Daily XP
+  if (p.todayDate !== todayStr()) { p.todayDate = todayStr(); p.todayXp = 0; }
+  p.todayXp += amount;
+
+  // Weekly XP
+  if (p.weekStart !== weekKey()) { p.weekStart = weekKey(); p.weeklyXp = 0; }
+  p.weeklyXp = (p.weeklyXp || 0) + amount;
+
+  // Activity heatmap: record XP per day
+  p.practiceDays = p.practiceDays || {};
+  p.practiceDays[todayStr()] = (p.practiceDays[todayStr()] || 0) + amount;
+
+  // Time-of-day achievement triggers
+  const hour = new Date().getHours();
+  if (hour < 8) p.earlyPractice = true;
+  if (hour >= 22) p.latePractice = true;
+
+  // Streak: only advance when daily goal is met AND once per day
+  if (p.todayXp >= state.dailyGoal && p.lastStudy !== todayStr()) {
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+    if (p.lastStudy === yesterday) p.streak = (p.streak || 0) + 1;
+    else p.streak = 1;
+    p.lastStudy = todayStr();
+    toast(`🔥 Streak: ${p.streak} day${p.streak>1?"s":""}!`);
+  }
+
+  saveState();
+  renderSidebar();
+  renderDashboard();
+  checkAchievements();
+}
+
+function checkAchievements() {
+  const p = me();
+  if (!p) return;
+  p.achievements = p.achievements || {};
+  const newlyUnlocked = [];
+  for (const ach of ACHIEVEMENTS) {
+    if (p.achievements[ach.id]) continue;
+    try {
+      if (ach.test(p)) {
+        p.achievements[ach.id] = Date.now();
+        newlyUnlocked.push(ach);
+      }
+    } catch (e) { /* test errors don't unlock */ }
+  }
+  if (newlyUnlocked.length) {
+    saveState();
+    newlyUnlocked.forEach((a, i) => {
+      setTimeout(() => toast(`🏆 ${a.icon} ${a.name} unlocked!`), i * 1800);
+    });
+    if ($("view-dashboard").classList.contains("active")) renderDashboard();
+  }
+}
+
+/* =================================================================
+   UI helpers
+   ================================================================= */
+function $(id) { return document.getElementById(id); }
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.remove("show"), 2500);
+}
+function modal(html) {
+  $("modal").innerHTML = html;
+  $("modal-bg").classList.add("open");
+}
+function closeModal() { $("modal-bg").classList.remove("open"); }
+$("modal-bg").addEventListener("click", (e) => { if (e.target.id === "modal-bg") closeModal(); });
+
+function switchView(view) {
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  $(`view-${view}`).classList.add("active");
+  const nav = document.querySelector(`.nav-item[data-view="${view}"]`);
+  if (nav) nav.classList.add("active");
+  if (view === "dashboard") renderDashboard();
+  if (view === "lessons") renderLessonPicker();
+  if (view === "culture") renderCultureIntro();
+  if (view === "media") renderMedia();
+  if (view === "leaderboard") renderLeaderboard();
+  if (view === "settings") renderSettings();
+  if (view === "chat") renderChat();
+  if (view === "pronunciation") renderPronunciation();
+  if (view === "expressions") renderExpressions();
+  if (view === "practice") renderPracticeIntro();
+}
+document.querySelectorAll(".nav-item").forEach(btn => {
+  btn.addEventListener("click", () => switchView(btn.dataset.view));
+});
+
+/* =================================================================
+   Language picker & sidebar
+   ================================================================= */
+function renderLangPicker() {
+  const sel = $("langSelect");
+  sel.innerHTML = Object.entries(LANGUAGES)
+    .map(([k, l]) => `<option value="${k}" ${k===state.activeLanguage?"selected":""}>${l.flag} ${l.name}</option>`)
+    .join("");
+  sel.onchange = () => {
+    state.activeLanguage = sel.value;
+    saveState();
+    renderSidebar();
+    // Refresh active view
+    const active = document.querySelector(".view.active").id.replace("view-","");
+    switchView(active);
+  };
+}
+
+function renderSidebar() {
+  const acc = me();
+  if (!acc) return;
+  $("sb-name").textContent = acc.name;
+  $("sb-xp").textContent = acc.xp || 0;
+  $("sb-streak").textContent = `${acc.streak || 0} 🔥`;
+}
+
+/* =================================================================
+   Dashboard
+   ================================================================= */
+function renderDashboard() {
+  const p = me();
+  const lang = currentLang();
+  $("db-name").textContent = p.name;
+  $("db-subtitle").textContent = `${lang.greet} You're learning ${lang.name}.`;
+  $("db-streak").textContent = p.streak || 0;
+  $("db-xp").textContent = p.xp || 0;
+  $("db-lang").textContent = `in ${lang.name}`;
+
+  // Level from XP
+  const level = Math.floor((p.xp || 0) / 200) + 1;
+  const tiers = ["Novice","Explorer","Apprentice","Traveler","Conversant","Polyglot","Master"];
+  $("db-level").textContent = `Level ${level} · ${tiers[Math.min(level-1, tiers.length-1)]}`;
+
+  // Words learned in current language
+  const wordsKey = state.activeLanguage;
+  const wordsArr = (p.wordsLearned && p.wordsLearned[wordsKey]) || [];
+  $("db-words").textContent = wordsArr.length;
+
+  // Daily goal
+  if (p.todayDate !== todayStr()) { p.todayDate = todayStr(); p.todayXp = 0; saveState(); }
+  const todayXp = p.todayXp || 0;
+  $("db-goal-xp").textContent = todayXp;
+  $("db-goal-target").textContent = state.dailyGoal;
+  $("db-goal-bar").style.width = Math.min(100, (todayXp / state.dailyGoal) * 100) + "%";
+
+  // Streak meta
+  if (todayXp >= state.dailyGoal) $("db-streak-meta").textContent = "Daily goal met ✓";
+  else $("db-streak-meta").textContent = `${state.dailyGoal - todayXp} XP to extend streak`;
+
+  // Culture tip
+  const tips = lang.cultureTips;
+  const tip = tips[Math.floor(Math.random() * tips.length)];
+  $("db-culture-tip").innerHTML = `<strong>${lang.flag} Did you know?</strong><br>${tip}`;
+
+  // Last lesson hint
+  const progress = p.lessonProgress && p.lessonProgress[state.activeLanguage];
+  if (progress && progress.lastLesson) {
+    const lesson = LESSONS[state.activeLanguage].find(l => l.id === progress.lastLesson);
+    if (lesson) $("db-lesson-hint").textContent = `Continue: ${lesson.title}`;
+  }
+
+  renderHeatmap();
+  renderAchievements();
+}
+
+/* =================================================================
+   Activity heatmap (last 84 days = 12 weeks × 7)
+   ================================================================= */
+function renderHeatmap() {
+  const p = me();
+  if (!p) return;
+  const days = p.practiceDays || {};
+  const today = new Date();
+  const start = new Date(today);
+  // Align so that the rightmost column is this week, and rows are Mon-Sun
+  start.setDate(today.getDate() - 83);
+  const cells = [];
+  let totalDays = 0;
+  for (let i = 0; i < 84; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    const key = d.toISOString().slice(0, 10);
+    const xp = days[key] || 0;
+    if (xp > 0) totalDays++;
+    let level = 0;
+    if (xp >= 1 && xp < 15) level = 1;
+    else if (xp < 40) level = 2;
+    else if (xp < 80) level = 3;
+    else if (xp >= 80) level = 4;
+    const dateLabel = d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    cells.push(`<div class="heatmap-cell" data-l="${level}" title="${dateLabel}: ${xp} XP"></div>`);
+  }
+  $("db-heatmap").innerHTML = cells.join("");
+  $("db-heatmap-summary").textContent = `${totalDays} active day${totalDays === 1 ? "" : "s"} in the last 12 weeks`;
+}
+
+/* =================================================================
+   Achievements grid on dashboard
+   ================================================================= */
+function renderAchievements() {
+  const p = me();
+  if (!p) return;
+  const unlocked = p.achievements || {};
+  $("db-achievements").innerHTML = ACHIEVEMENTS.map(a => {
+    const done = !!unlocked[a.id];
+    return `
+      <div class="achievement ${done ? 'unlocked' : 'locked'}" title="${escapeHtml(a.desc)}">
+        <span class="achievement-icon">${a.icon}</span>
+        <div class="achievement-name">${escapeHtml(a.name)}</div>
+        <div class="achievement-desc">${escapeHtml(a.desc)}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* =================================================================
+   Cloze (fill-in-the-blank practice)
+   ================================================================= */
+let clozeState = null;
+
+function renderPracticeIntro() {
+  $("practice-start").style.display = "";
+  $("practice-play").style.display = "none";
+  $("practice-done").style.display = "none";
+  $("practice-intro-title").textContent = `${currentLang().flag} Cloze drill — ${currentLang().name}`;
+}
+
+function startCloze() {
+  const pool = CLOZE[state.activeLanguage] || [];
+  if (!pool.length) { toast("No cloze sentences for this language yet"); return; }
+  const items = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
+  clozeState = { items, idx: 0, correct: 0, streak: 0, total: items.length };
+  $("practice-start").style.display = "none";
+  $("practice-done").style.display = "none";
+  $("practice-play").style.display = "";
+  renderCloze();
+}
+
+function renderCloze() {
+  const cs = clozeState;
+  const item = cs.items[cs.idx];
+  const answer = item.sentence.match(/\{([^}]+)\}/)[1];
+  const sentenceHtml = item.sentence.replace(/\{([^}]+)\}/, `<input type="text" class="cloze-input" id="cloze-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-answer="${escapeHtml(answer)}" style="width:${Math.max(110, answer.length * 14)}px;">`);
+
+  $("practice-progress").textContent = `Question ${cs.idx + 1} / ${cs.total}`;
+  $("practice-score").textContent = `Streak: ${cs.streak} · Correct: ${cs.correct}`;
+  $("cloze-english").textContent = item.english;
+  $("cloze-sentence").innerHTML = sentenceHtml;
+  $("cloze-feedback").innerHTML = "";
+  $("cloze-next").style.display = "none";
+  $("cloze-skip").style.display = "";
+
+  const input = $("cloze-input");
+  input.focus();
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if ($("cloze-next").style.display === "none") checkClozeAnswer();
+      else nextCloze();
+    }
+  });
+}
+
+function normalizeForCheck(s) {
+  return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[¿?¡!.,]/g, "").trim();
+}
+
+function checkClozeAnswer() {
+  const cs = clozeState;
+  const input = $("cloze-input");
+  const guess = input.value.trim();
+  const answer = input.dataset.answer;
+
+  const correct = normalizeForCheck(guess) === normalizeForCheck(answer);
+  input.disabled = true;
+  input.classList.add(correct ? "correct" : "wrong");
+
+  if (correct) {
+    cs.correct++;
+    cs.streak++;
+    let bonus = 0;
+    if (cs.streak > 0 && cs.streak % 3 === 0) bonus = 5;
+    awardXp(5 + bonus);
+    $("cloze-feedback").innerHTML = `<div class="cloze-feedback show success">✓ Correct! +${5 + bonus} XP${bonus ? " (streak bonus!)" : ""}</div>`;
+  } else {
+    cs.streak = 0;
+    $("cloze-feedback").innerHTML = `<div class="cloze-feedback show fail">✗ Answer: <strong>${escapeHtml(answer)}</strong></div>`;
+  }
+  $("cloze-skip").style.display = "none";
+  $("cloze-next").style.display = "";
+  $("cloze-next").textContent = cs.idx === cs.total - 1 ? "See results →" : "Next →";
+  $("cloze-next").focus();
+}
+
+function skipCloze() {
+  const cs = clozeState;
+  const input = $("cloze-input");
+  input.disabled = true;
+  input.classList.add("wrong");
+  cs.streak = 0;
+  $("cloze-feedback").innerHTML = `<div class="cloze-feedback show fail">Skipped — answer: <strong>${escapeHtml(input.dataset.answer)}</strong></div>`;
+  $("cloze-skip").style.display = "none";
+  $("cloze-next").style.display = "";
+  $("cloze-next").focus();
+}
+
+function nextCloze() {
+  const cs = clozeState;
+  cs.idx++;
+  if (cs.idx >= cs.total) {
+    $("practice-play").style.display = "none";
+    const pct = Math.round((cs.correct / cs.total) * 100);
+    const reaction = pct >= 90 ? "🎯 Sharpshooter!" : pct >= 70 ? "🌟 Solid work!" : pct >= 50 ? "💪 Keep practicing!" : "🌱 Try again — you'll get it.";
+    $("practice-done").innerHTML = `
+      <div style="font-size:48px;">${pct >= 70 ? "🎊" : "📝"}</div>
+      <h2>${reaction}</h2>
+      <div class="xp-gain">+${cs.correct * 5} XP earned</div>
+      <div style="color:var(--text-dim);margin-bottom:20px;">${cs.correct} of ${cs.total} correct (${pct}%)</div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn primary" onclick="startCloze()">Play again</button>
+        <button class="btn" onclick="renderPracticeIntro()">Done</button>
+      </div>
+    `;
+    $("practice-done").style.display = "";
+    return;
+  }
+  renderCloze();
+}
+
+/* =================================================================
+   Lessons
+   ================================================================= */
+function renderLessonPicker() {
+  $("lesson-picker").style.display = "";
+  $("lesson-session").style.display = "none";
+
+  const lessons = LESSONS[state.activeLanguage];
+  const levels = ["All", ...new Set(lessons.map(l => l.level))];
+  const currentLevel = renderLessonPicker._level || "All";
+
+  $("lesson-tabs").innerHTML = levels.map(lv =>
+    `<button class="tab ${lv===currentLevel?"active":""}" data-lv="${lv}">${lv}</button>`
+  ).join("");
+  $("lesson-tabs").querySelectorAll(".tab").forEach(t => {
+    t.onclick = () => { renderLessonPicker._level = t.dataset.lv; renderLessonPicker(); };
+  });
+
+  const p = me();
+  const progress = (p.lessonProgress && p.lessonProgress[state.activeLanguage]) || {};
+  const wordsKnown = (p.wordsLearned && p.wordsLearned[state.activeLanguage]) || [];
+
+  const filtered = currentLevel === "All" ? lessons : lessons.filter(l => l.level === currentLevel);
+  $("lesson-list").innerHTML = filtered.map(lesson => {
+    const completed = progress[lesson.id] && progress[lesson.id].completed;
+    const masteredCount = lesson.words.filter(([t]) => wordsKnown.includes(t)).length;
+    return `
+      <div class="card hover" onclick="startLesson('${lesson.id}')">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span class="pill">${lesson.level}</span>
+          ${completed ? '<span class="pill done">✓ Complete</span>' : ''}
+        </div>
+        <div style="font-weight:600;font-size:16px;margin-bottom:4px;">${lesson.title}</div>
+        <div style="color:var(--text-dim);font-size:13px;">${lesson.words.length} words · ${masteredCount} mastered</div>
+      </div>
+    `;
+  }).join("");
+}
+
+let lessonState = null;
+function startLesson(id) {
+  const lesson = LESSONS[state.activeLanguage].find(l => l.id === id);
+  if (!lesson) return;
+  // Shuffle for variety
+  const words = [...lesson.words].sort(() => Math.random() - 0.5);
+  lessonState = {
+    lesson, words, idx: 0, correct: 0, wrong: 0, showing: "target",
+    learnedThisSession: []
+  };
+  $("lesson-picker").style.display = "none";
+  $("lesson-session").style.display = "";
+  renderFlashcard();
+}
+
+function renderFlashcard() {
+  const ls = lessonState;
+  const el = $("flashcard");
+  if (ls.idx >= ls.words.length) {
+    // End of lesson
+    const xp = ls.correct * 5;
+    awardXp(xp);
+
+    // Save progress
+    const p = me();
+    p.lessonProgress = p.lessonProgress || {};
+    p.lessonProgress[state.activeLanguage] = p.lessonProgress[state.activeLanguage] || {};
+    p.lessonProgress[state.activeLanguage][ls.lesson.id] = { completed: ls.wrong === 0 };
+    p.lessonProgress[state.activeLanguage].lastLesson = ls.lesson.id;
+    if (ls.wrong === 0 && ls.lesson.words.length >= 5) p.perfectLesson = true;
+
+    // Save learned words
+    p.wordsLearned = p.wordsLearned || {};
+    p.wordsLearned[state.activeLanguage] = p.wordsLearned[state.activeLanguage] || [];
+    ls.learnedThisSession.forEach(w => {
+      if (!p.wordsLearned[state.activeLanguage].includes(w)) p.wordsLearned[state.activeLanguage].push(w);
+    });
+    saveState();
+
+    el.innerHTML = `
+      <div class="lesson-end">
+        <div style="font-size:48px;">🎉</div>
+        <h2>Lesson complete!</h2>
+        <div class="xp-gain">+${xp} XP</div>
+        <div style="color:var(--text-dim);margin-bottom:20px;">
+          ${ls.correct} correct · ${ls.wrong} missed · ${ls.learnedThisSession.length} new words
+        </div>
+        <div class="btn-row" style="justify-content:center;">
+          <button class="btn primary" onclick="renderLessonPicker()">More lessons</button>
+          <button class="btn" onclick="startLesson('${ls.lesson.id}')">Repeat</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  const [target, meaning] = ls.words[ls.idx];
+  el.innerHTML = `
+    <div class="progress">
+      <span>${ls.idx + 1} / ${ls.words.length}</span>
+      <span>${ls.lesson.title}</span>
+    </div>
+    <div class="target">${target}</div>
+    <button class="speak-btn" onclick="speak('${target.replace(/'/g,"\\'")}')" title="Hear it">🔊</button>
+    <div class="reveal ${ls.showing==='meaning'?'shown':''}">${ls.showing==='meaning' ? meaning : 'Think of the meaning...'}</div>
+    <div class="hint">Press <strong>Space</strong> to reveal · <strong>←</strong> didn't know · <strong>→</strong> got it</div>
+    <div class="btn-row" style="justify-content:center;">
+      ${ls.showing === 'target'
+        ? `<button class="btn primary" onclick="revealCard()">Reveal</button>`
+        : `<button class="btn danger" onclick="markCard(false)">Didn't know</button>
+           <button class="btn success" onclick="markCard(true)">I got it</button>`
+      }
+    </div>
+  `;
+}
+
+function revealCard() { lessonState.showing = "meaning"; renderFlashcard(); }
+function markCard(correct) {
+  const [target] = lessonState.words[lessonState.idx];
+  if (correct) {
+    lessonState.correct++;
+    if (!lessonState.learnedThisSession.includes(target)) lessonState.learnedThisSession.push(target);
+  } else {
+    lessonState.wrong++;
+    // Re-queue the missed word near the end
+    lessonState.words.push(lessonState.words[lessonState.idx]);
+  }
+  lessonState.idx++;
+  lessonState.showing = "target";
+  renderFlashcard();
+}
+
+// Keyboard shortcuts for lessons
+document.addEventListener("keydown", (e) => {
+  const lessonVisible = $("view-lessons").classList.contains("active") && $("lesson-session").style.display !== "none";
+  if (!lessonVisible || !lessonState) return;
+  if (e.key === " ") { e.preventDefault(); if (lessonState.showing === "target") revealCard(); }
+  else if (lessonState.showing === "meaning") {
+    if (e.key === "ArrowRight") markCard(true);
+    else if (e.key === "ArrowLeft") markCard(false);
+  }
+});
+
+/* =================================================================
+   Speech synthesis
+   ================================================================= */
+let voiceList = [];
+function loadVoices() {
+  voiceList = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  renderVoicePicker();
+}
+if (window.speechSynthesis) {
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+function speak(text) {
+  if (!window.speechSynthesis) { toast("Speech not available in this browser"); return; }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = currentLang().voice;
+  // Prefer a voice matching the target language
+  const langPrefix = u.lang.split("-")[0];
+  const match = voiceList.find(v => v.voiceURI === state.selectedVoice && v.lang.startsWith(langPrefix))
+             || voiceList.find(v => v.lang === u.lang)
+             || voiceList.find(v => v.lang.startsWith(langPrefix));
+  if (match) u.voice = match;
+  u.rate = 0.9;
+  window.speechSynthesis.speak(u);
+}
+function renderVoicePicker() {
+  const el = $("voice-select");
+  if (!el) return;
+  const langPrefix = currentLang().voice.split("-")[0];
+  const relevant = voiceList.filter(v => v.lang.startsWith(langPrefix));
+  if (!relevant.length) {
+    el.innerHTML = `<option>No ${currentLang().name} voice installed on your system</option>`;
+    return;
+  }
+  el.innerHTML = relevant.map(v => `<option value="${v.voiceURI}" ${v.voiceURI===state.selectedVoice?"selected":""}>${v.name} (${v.lang})</option>`).join("");
+  el.onchange = () => { state.selectedVoice = el.value; saveState(); };
+}
+
+/* =================================================================
+   Culture Quiz
+   ================================================================= */
+let quizState = null;
+function renderCultureIntro() {
+  $("quiz-start").style.display = "";
+  $("quiz-play").style.display = "none";
+  $("quiz-done").style.display = "none";
+  const flag = currentLang().flag;
+  $("quiz-intro-title").textContent = `${flag} Culture of ${currentLang().name}-speaking world`;
+}
+
+function startQuiz() {
+  const pool = CULTURE_QUIZ[state.activeLanguage];
+  const questions = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
+  quizState = { questions, idx: 0, score: 0, streak: 0 };
+  $("quiz-start").style.display = "none";
+  $("quiz-done").style.display = "none";
+  $("quiz-play").style.display = "";
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  const qs = quizState;
+  const q = qs.questions[qs.idx];
+  $("quiz-progress").textContent = `Question ${qs.idx + 1} / ${qs.questions.length}`;
+  $("quiz-score").textContent = `Score: ${qs.score}`;
+  $("quiz-q").textContent = q.q;
+  $("quiz-explain").innerHTML = "";
+  $("quiz-next").style.display = "none";
+  $("quiz-options").innerHTML = q.opts.map((opt, i) =>
+    `<button class="quiz-option" data-i="${i}">${opt}</button>`
+  ).join("");
+  $("quiz-options").querySelectorAll(".quiz-option").forEach(btn => {
+    btn.onclick = () => pickQuizAnswer(parseInt(btn.dataset.i, 10));
+  });
+}
+
+function pickQuizAnswer(i) {
+  const qs = quizState;
+  const q = qs.questions[qs.idx];
+  const buttons = $("quiz-options").querySelectorAll(".quiz-option");
+  buttons.forEach(b => b.onclick = null);
+  buttons[q.ans].classList.add("correct");
+  if (i !== q.ans) buttons[i].classList.add("wrong");
+
+  const bonus = ((i === q.ans) && (qs.streak + 1) % 5 === 0) ? 10 : 0;
+  if (i === q.ans) {
+    qs.score++;
+    qs.streak++;
+    $("quiz-explain").innerHTML = `<div class="quiz-explain"><strong style="color:var(--success);">✓ Correct.</strong> ${q.why}${bonus ? `<br><span style="color:var(--gold);">+${bonus} streak bonus!</span>`:""}</div>`;
+    awardXp(15 + bonus);
+  } else {
+    qs.streak = 0;
+    $("quiz-explain").innerHTML = `<div class="quiz-explain"><strong style="color:var(--danger);">✗ Not quite.</strong> ${q.why}</div>`;
+  }
+  $("quiz-next").style.display = "";
+  $("quiz-next").textContent = qs.idx === qs.questions.length - 1 ? "See results →" : "Next →";
+}
+
+function nextQuizQuestion() {
+  const qs = quizState;
+  qs.idx++;
+  if (qs.idx >= qs.questions.length) {
+    $("quiz-play").style.display = "none";
+    const pct = Math.round((qs.score / qs.questions.length) * 100);
+    if (pct === 100) { const acc = me(); if (acc) { acc.perfectQuiz = true; saveState(); checkAchievements(); } }
+    const reaction = pct >= 90 ? "🏆 Culture master!" : pct >= 70 ? "🎉 Strong showing!" : pct >= 50 ? "📚 Keep learning!" : "🌱 Just getting started.";
+    $("quiz-done").innerHTML = `
+      <div style="font-size:48px;">${pct >= 70 ? "🎊" : "📖"}</div>
+      <h2>${reaction}</h2>
+      <div class="xp-gain">+${qs.score * 15} XP earned</div>
+      <div style="color:var(--text-dim);margin-bottom:20px;">You got ${qs.score} of ${qs.questions.length} correct (${pct}%)</div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn primary" onclick="startQuiz()">Play again</button>
+        <button class="btn" onclick="switchView('dashboard')">Back to dashboard</button>
+      </div>
+    `;
+    $("quiz-done").style.display = "";
+    return;
+  }
+  renderQuizQuestion();
+}
+
+/* =================================================================
+   Daily Challenge
+   ================================================================= */
+function startDailyChallenge() {
+  // Mix of culture + vocab
+  switchView("culture");
+  startQuiz();
+  // Overwrite with 5 questions (vocab-style) — for simplicity we'll just do a shortened quiz
+  quizState.questions = quizState.questions.slice(0, 5);
+  toast("⚡ Daily Challenge: 5 rapid questions, 2× XP");
+  // Double XP is approximated by quiz 15 XP already, so bump to 30: wrap awardXp call in pickQuizAnswer… simplest: pre-apply doubled XP flag via a quick patch
+  // Simpler UX: tell user it's a 5-question rapid round. Full gamification for daily challenge can be added.
+}
+
+/* =================================================================
+   AI Tutor Chat
+   ================================================================= */
+function renderChat() {
+  if (state.apiKey || window._offlineTutor) {
+    $("chat-setup").style.display = "none";
+    $("chat-area").style.display = "";
+    renderChatMessages();
+  } else {
+    $("chat-setup").style.display = "";
+    $("chat-area").style.display = "none";
+  }
+}
+
+function saveApiKey() {
+  const key = $("api-key-input").value.trim();
+  if (!key.startsWith("sk-ant-")) {
+    toast("That doesn't look like an Anthropic key (should start with sk-ant-)");
+    return;
+  }
+  state.apiKey = key;
+  saveState();
+  $("api-key-input").value = "";
+  renderChat();
+  toast("Connected — start chatting below");
+  // Greet
+  pushBotWelcome();
+}
+
+function startOfflineTutor() {
+  window._offlineTutor = true;
+  renderChat();
+  pushBotWelcome();
+}
+
+function forgetApiKey() {
+  state.apiKey = null;
+  window._offlineTutor = false;
+  state.chatHistory = [];
+  saveState();
+  renderChat();
+}
+
+function resetChat() {
+  state.chatHistory = [];
+  saveState();
+  renderChatMessages();
+  pushBotWelcome();
+}
+
+function pushBotWelcome() {
+  const lang = currentLang();
+  const greetings = {
+    es: "¡Hola! Soy tu tutor. ¿De qué te gustaría hablar hoy?",
+    fr: "Bonjour ! Je suis votre tuteur. De quoi aimeriez-vous parler aujourd'hui ?",
+    ja: "こんにちは！私はあなたの先生です。今日は何について話しましょうか？",
+    de: "Hallo! Ich bin dein Tutor. Worüber möchtest du heute sprechen?",
+    it: "Ciao! Sono il tuo tutor. Di cosa vorresti parlare oggi?"
+  };
+  if (state.chatHistory.length === 0) {
+    state.chatHistory.push({ role: "assistant", content: greetings[state.activeLanguage] || "Hi! Let's practice." });
+    saveState();
+    renderChatMessages();
+  }
+}
+
+function renderChatMessages() {
+  const el = $("chat-messages");
+  el.innerHTML = state.chatHistory.map((m, i) => {
+    if (m.role === "user") {
+      return `<div class="msg user">${escapeHtml(m.content)}</div>`;
+    } else {
+      return `<div class="msg bot">${escapeHtml(m.content)}
+        <button class="translate-btn" onclick="translateMessage(${i})">Translate</button>
+        <button class="translate-btn" onclick="speak(${JSON.stringify(m.content).replace(/"/g,"&quot;")})">🔊</button>
+      </div>`;
+    }
+  }).join("");
+  el.scrollTop = el.scrollHeight;
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+
+async function sendChatMessage() {
+  const input = $("chat-input");
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = "";
+  state.chatHistory.push({ role: "user", content: text });
+  renderChatMessages();
+  awardXp(3); // Small XP for practice messages
+  const acc = me();
+  if (acc) { acc.chatMessages = (acc.chatMessages || 0) + 1; saveState(); }
+
+  const typingId = "typing-" + Date.now();
+  $("chat-messages").insertAdjacentHTML("beforeend",
+    `<div class="msg bot" id="${typingId}" style="opacity:.6;">...</div>`);
+  $("chat-messages").scrollTop = $("chat-messages").scrollHeight;
+
+  try {
+    let reply;
+    if (state.apiKey) reply = await callClaude();
+    else reply = offlineReply(text);
+    document.getElementById(typingId)?.remove();
+    state.chatHistory.push({ role: "assistant", content: reply });
+    saveState();
+    renderChatMessages();
+  } catch (e) {
+    document.getElementById(typingId)?.remove();
+    state.chatHistory.push({ role: "assistant", content: `[Error: ${e.message}]` });
+    renderChatMessages();
+  }
+}
+
+$("chat-input").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
+});
+
+async function callClaude() {
+  const lang = currentLang();
+  const level = $("chat-level").value;
+  const scenario = $("chat-scenario").value;
+  const scenarios = {
+    free: "Have a natural conversation on topics of mutual interest.",
+    cafe: "You are playing a waiter/barista in a typical café. Guide the student through ordering.",
+    directions: "You are playing a helpful local giving directions to a tourist.",
+    hotel: "You are playing a hotel receptionist checking in a guest.",
+    interview: "You are playing an interviewer. Ask the student interview questions.",
+    debate: "Pick a light topic and hold a friendly debate with the student."
+  };
+  const systemPrompt = `You are a friendly ${lang.name} tutor for a ${level} student.
+
+ALWAYS respond primarily in ${lang.name}. After your ${lang.name} response, on a NEW LINE, add a short English translation in square brackets like: [English: ...].
+
+Keep your ${lang.name} to 1–3 sentences — appropriate in length and vocabulary for a ${level} learner.
+
+If the student makes a grammar mistake, gently correct it in the next turn. If they use their native language (English), respond in ${lang.name} but offer a phrase they could have used.
+
+Role: ${scenarios[scenario]}`;
+
+  // Build messages (last ~12 turns to keep it snappy)
+  const history = state.chatHistory.slice(-12).map(m => ({ role: m.role, content: m.content }));
+
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": state.apiKey,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true"
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 400,
+      system: systemPrompt,
+      messages: history
+    })
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Anthropic API ${res.status}: ${err.slice(0,200)}`);
+  }
+  const data = await res.json();
+  const text = data?.content?.[0]?.text ?? "[no response]";
+  return text;
+}
+
+async function translateMessage(idx) {
+  const msg = state.chatHistory[idx];
+  if (!msg) return;
+  if (msg.content.includes("[English:")) {
+    toast("Translation already shown inline");
+    return;
+  }
+  if (state.apiKey) {
+    try {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": state.apiKey,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
+        body: JSON.stringify({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 200,
+          messages: [{ role: "user", content: `Translate this to English, no commentary:\n\n${msg.content}` }]
+        })
+      });
+      const data = await res.json();
+      modal(`<h3>Translation</h3><p>${escapeHtml(data.content[0].text)}</p><div class="btn-row"><button class="btn primary" onclick="closeModal()">OK</button></div>`);
+    } catch (e) { toast("Translation failed: " + e.message); }
+  } else {
+    modal(`<h3>Translation</h3><p style="color:var(--text-dim);">Offline mode — translation requires connecting your Claude API key.</p><div class="btn-row"><button class="btn primary" onclick="closeModal()">OK</button></div>`);
+  }
+}
+
+function offlineReply(userText) {
+  // Tiny canned responses per language so the demo isn't a dead end
+  const responses = {
+    es: [
+      "¡Qué interesante! Cuéntame más, por favor.",
+      "Entiendo. ¿Y cómo te sientes sobre eso?",
+      "Muy bien dicho. ¿Podrías dar un ejemplo?",
+      "Eso es un buen punto. ¿Qué opinas tú?"
+    ],
+    fr: [
+      "Très intéressant ! Dis-m'en plus, s'il te plaît.",
+      "Je vois. Et qu'en penses-tu ?",
+      "Bien dit ! Peux-tu donner un exemple ?",
+      "C'est un bon point. Continue !"
+    ],
+    ja: [
+      "面白いですね！もっと教えてください。",
+      "なるほど。どう思いますか？",
+      "いいですね。例を挙げてもらえますか？",
+      "良い点ですね。続けてください。"
+    ],
+    de: [
+      "Interessant! Erzähl mir mehr, bitte.",
+      "Ich verstehe. Wie fühlst du dich dabei?",
+      "Gut gesagt. Kannst du ein Beispiel geben?",
+      "Das ist ein guter Punkt."
+    ],
+    it: [
+      "Molto interessante! Raccontami di più, per favore.",
+      "Capisco. E come ti senti?",
+      "Ben detto. Puoi fare un esempio?",
+      "È un buon punto. Continua!"
+    ]
+  };
+  const list = responses[state.activeLanguage] || responses.es;
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+/* =================================================================
+   Media
+   ================================================================= */
+function renderMedia() {
+  const type = renderMedia._type || "film";
+  $("media-tabs").querySelectorAll(".tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.media === type);
+    t.onclick = () => { renderMedia._type = t.dataset.media; renderMedia(); };
+  });
+  const items = (MEDIA[state.activeLanguage] && MEDIA[state.activeLanguage][type]) || [];
+  $("media-list").innerHTML = items.map(m => `
+    <div class="media-card">
+      <div class="media-type">${type === 'film' ? 'FILM' : type === 'book' ? 'BOOK' : 'MUSIC'} · ${m.level}</div>
+      <div class="media-title">${m.title}</div>
+      <div class="media-meta">${m.meta}</div>
+      <div class="media-desc">${m.desc}</div>
+    </div>
+  `).join("");
+}
+
+/* =================================================================
+   Pronunciation Lab
+   ================================================================= */
+function renderPronunciation() {
+  const entries = PRONUNCIATION[state.activeLanguage] || [];
+  const lang = currentLang();
+  const speechSupported = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  const header = `<div style="color:var(--text-dim);font-size:13px;margin-bottom:16px;">
+    ${lang.flag} ${entries.length} sounds to master in ${lang.name}
+    ${speechSupported ? "" : `<br><span style="color:var(--text-muted);">Speech-recognition practice requires Chrome or Edge.</span>`}
+  </div>`;
+  const cards = entries.map((s, idx) => {
+    const wordChips = s.examples.map(w =>
+      `<button class="sound-word" onclick="speak(${JSON.stringify(w).replace(/"/g,"&quot;")})">🔊 ${escapeHtml(w)}</button>`
+    ).join("");
+    return `
+      <div class="sound-card">
+        <div class="sound-head">
+          <div class="sound-name">${escapeHtml(s.sound)}</div>
+          <div class="sound-ipa">${escapeHtml(s.ipa)}</div>
+          <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn small ghost" onclick="playAllExamples(${idx})">▶ Play all</button>
+            ${speechSupported ? `<button class="mic-btn" onclick="tryPronounce(${idx}, this)">🎤 Try saying one</button>` : ""}
+          </div>
+        </div>
+        <div class="sound-how">${escapeHtml(s.how)}</div>
+        ${s.tip ? `<div class="sound-tip"><strong>💡 Tip:</strong> ${escapeHtml(s.tip)}</div>` : ""}
+        <div class="sound-examples">${wordChips}</div>
+        <div class="mic-result" id="mic-result-${idx}"></div>
+      </div>
+    `;
+  }).join("");
+  $("pronunciation-list").innerHTML = header + (entries.length ? cards : `<div class="empty">Pronunciation guide coming soon for this language.</div>`);
+}
+
+function playAllExamples(idx) {
+  const entry = PRONUNCIATION[state.activeLanguage][idx];
+  if (!entry) return;
+  if (!window.speechSynthesis) { toast("Speech not available"); return; }
+  window.speechSynthesis.cancel();
+  entry.examples.forEach((word, i) => {
+    setTimeout(() => speak(word), i * 900);
+  });
+}
+
+/* =================================================================
+   Speech recognition (try saying it)
+   ================================================================= */
+function tryPronounce(idx, btn) {
+  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!Recognition) { toast("Speech recognition not supported (try Chrome or Edge)"); return; }
+  const entry = PRONUNCIATION[state.activeLanguage][idx];
+  if (!entry) return;
+
+  const target = entry.examples[Math.floor(Math.random() * entry.examples.length)];
+  const resultEl = $(`mic-result-${idx}`);
+  resultEl.className = "mic-result show partial";
+  resultEl.innerHTML = `<strong>Say:</strong> "${escapeHtml(target)}" — listen first if you need a hint, then click and speak clearly.`;
+
+  // First show prompt, then start listening on next click
+  if (btn.dataset.armed !== "1") {
+    btn.dataset.armed = "1";
+    btn.dataset.target = target;
+    btn.textContent = "🎤 Click to record";
+    return;
+  }
+
+  const expected = btn.dataset.target;
+  btn.dataset.armed = "0";
+  const rec = new Recognition();
+  rec.lang = currentLang().voice;
+  rec.continuous = false;
+  rec.interimResults = false;
+  rec.maxAlternatives = 4;
+
+  btn.classList.add("listening");
+  btn.textContent = "● Listening...";
+
+  rec.onresult = (e) => {
+    const alts = Array.from(e.results[0]).map(r => r.transcript);
+    const expectedNorm = normalizeForCheck(expected);
+    const exactMatch = alts.find(a => normalizeForCheck(a) === expectedNorm);
+    const sims = alts.map(a => similarity(normalizeForCheck(a), expectedNorm));
+    const bestSim = Math.max(...sims);
+
+    if (exactMatch) {
+      resultEl.className = "mic-result show success";
+      resultEl.innerHTML = `✓ <strong>Spot on!</strong> You said "${escapeHtml(alts[0])}". +3 XP`;
+      const acc = me();
+      if (acc) { acc.spokenWords = (acc.spokenWords || 0) + 1; }
+      awardXp(3);
+    } else if (bestSim > 0.65) {
+      resultEl.className = "mic-result show partial";
+      resultEl.innerHTML = `≈ <strong>Close.</strong> Heard: "${escapeHtml(alts[0])}". Target was "${escapeHtml(expected)}". +1 XP`;
+      awardXp(1);
+    } else {
+      resultEl.className = "mic-result show fail";
+      resultEl.innerHTML = `✗ <strong>Not quite.</strong> Heard: "${escapeHtml(alts[0])}". Target: "${escapeHtml(expected)}". Try again.`;
+    }
+  };
+  rec.onerror = (e) => {
+    resultEl.className = "mic-result show fail";
+    if (e.error === "not-allowed") {
+      resultEl.innerHTML = "✗ Microphone access denied. Click the lock icon in your address bar to allow it.";
+    } else if (e.error === "no-speech") {
+      resultEl.innerHTML = "✗ No speech detected — speak a bit louder or closer to the mic.";
+    } else {
+      resultEl.innerHTML = `✗ Error: ${e.error}`;
+    }
+  };
+  rec.onend = () => {
+    btn.classList.remove("listening");
+    btn.textContent = "🎤 Try saying one";
+  };
+  try { rec.start(); } catch (e) {
+    btn.classList.remove("listening");
+    btn.textContent = "🎤 Try saying one";
+    toast("Couldn't start microphone");
+  }
+}
+
+function similarity(a, b) {
+  if (!a.length || !b.length) return 0;
+  if (a === b) return 1;
+  const longer = a.length >= b.length ? a : b;
+  const shorter = a.length >= b.length ? b : a;
+  const editDist = levenshtein(longer, shorter);
+  return (longer.length - editDist) / longer.length;
+}
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]);
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i-1] === b[j-1]
+        ? dp[i-1][j-1]
+        : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+    }
+  }
+  return dp[m][n];
+}
+
+/* =================================================================
+   Expressions
+   ================================================================= */
+function renderExpressions() {
+  const entries = EXPRESSIONS[state.activeLanguage] || [];
+  $("expressions-list").innerHTML = entries.length
+    ? entries.map(e => `
+        <div class="expr-card">
+          <div class="expr-phrase">
+            ${escapeHtml(e.expr)}
+            <button class="expr-speak" onclick="speak(${JSON.stringify(e.expr).replace(/"/g,"&quot;")})" title="Hear it">🔊</button>
+          </div>
+          <div class="expr-literal">Literal: ${escapeHtml(e.literal)}</div>
+          <div class="expr-meaning">${escapeHtml(e.meaning)}</div>
+          ${e.example && e.example !== "—" ? `<div class="expr-example">${escapeHtml(e.example)}</div>` : ""}
+        </div>
+      `).join("")
+    : `<div class="empty">Expressions coming soon for this language.</div>`;
+}
+
+/* =================================================================
+   Leaderboard
+   ================================================================= */
+function renderLeaderboard() {
+  const tab = renderLeaderboard._tab || "xp";
+  document.querySelectorAll("#view-leaderboard .tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.lb === tab);
+    t.onclick = () => { renderLeaderboard._tab = t.dataset.lb; renderLeaderboard(); };
+  });
+
+  const everyone = [...Object.values(state.accounts || {}), ...Object.values(state.rivals || {})];
+  const sortKey = tab === "streak" ? "streak" : tab === "weekly" ? "weeklyXp" : "xp";
+  const sorted = [...everyone].sort((a,b) => (b[sortKey]||0) - (a[sortKey]||0));
+
+  $("lb-list").innerHTML = sorted.map((p, i) => {
+    const rankClass = i === 0 ? "g" : i === 1 ? "s" : i === 2 ? "b" : "";
+    const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "";
+    const isMe = p.id === state.activeAccountId;
+    return `
+      <div class="lb-row ${isMe?"me":""}">
+        <div class="lb-rank ${rankClass}">${medal || (i+1)}</div>
+        <div class="lb-name">${escapeHtml(p.name)}${isMe?' <span class="pill">you</span>':""}</div>
+        <div>${p.xp || 0} XP</div>
+        <div>${p.streak || 0} 🔥</div>
+        <div>${p.weeklyXp || 0} this wk</div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* =================================================================
+   Settings / profiles
+   ================================================================= */
+function renderSettings() {
+  $("goal-select").value = state.dailyGoal;
+
+  const acc = me();
+  if (acc) {
+    const joined = new Date(acc.createdAt || Date.now()).toLocaleDateString();
+    $("profiles-list").innerHTML = `
+      <div class="card" style="max-width:560px;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+          <div style="width:52px;height:52px;border-radius:14px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:24px;font-weight:500;">
+            ${escapeHtml((acc.name || acc.username || "?")[0].toUpperCase())}
+          </div>
+          <div>
+            <div style="font-family:var(--serif);font-size:22px;font-weight:500;letter-spacing:-.3px;">${escapeHtml(acc.name)}</div>
+            <div style="color:var(--text-muted);font-size:13px;margin-top:2px;">@${escapeHtml(acc.username)} · joined ${joined}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:18px;flex-wrap:wrap;color:var(--text-dim);font-size:13.5px;margin-bottom:6px;">
+          <div><strong style="color:var(--text);">${acc.xp || 0}</strong> total XP</div>
+          <div><strong style="color:var(--text);">${acc.streak || 0}</strong> day streak 🔥</div>
+          <div><strong style="color:var(--text);">${acc.weeklyXp || 0}</strong> XP this week</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn small" onclick="promptChangeName()">Change display name</button>
+          <button class="btn small" onclick="promptChangePassword()">Change password</button>
+          <button class="btn small ghost" onclick="signOut()">Sign out</button>
+          <button class="btn small danger" onclick="confirmDeleteAccount()">Delete account</button>
+        </div>
+      </div>
+    `;
+  }
+
+  renderVoicePicker();
+}
+
+function updateGoal() {
+  state.dailyGoal = parseInt($("goal-select").value, 10);
+  saveState();
+  toast("Daily goal updated");
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "polyglot-progress.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetAllData() {
+  if (!confirm("This will erase ALL progress and profiles. Continue?")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = defaultState();
+  saveState();
+  renderSidebar();
+  switchView("dashboard");
+  toast("All data reset");
+}
+
+/* =================================================================
+   Boot
+   ================================================================= */
+function init() {
+  if (!me()) {
+    showAuth();
+    return;
+  }
+  hideAuth();
+  renderLangPicker();
+  renderSidebar();
+  renderDashboard();
+}
+init();
+</script>
+</body>
+</html>
