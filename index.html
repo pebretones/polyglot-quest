@@ -523,6 +523,284 @@
     font-style: italic;
   }
 
+  /* ---------- Chapter tree (Lessons home) ---------- */
+  .section-block { margin-bottom: 32px; }
+  .section-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 22px; margin-bottom: 14px;
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .section-icon {
+    width: 48px; height: 48px; border-radius: 14px;
+    background: var(--accent); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+  }
+  .section-name {
+    font-family: var(--serif); font-size: 22px; font-weight: 500;
+    letter-spacing: -.3px; color: var(--text);
+  }
+  .section-meta {
+    font-size: 13px; color: var(--text-dim); margin-top: 2px;
+  }
+  .unit-block {
+    margin-bottom: 20px; padding-left: 8px;
+  }
+  .unit-name {
+    font-family: var(--serif); font-size: 17px; font-weight: 500;
+    color: var(--text-dim); margin-bottom: 10px;
+    letter-spacing: -.1px;
+  }
+  .lesson-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 10px;
+  }
+  .lesson-node {
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
+  .lesson-node:hover { transform: translateY(-2px); border-color: var(--border-strong); box-shadow: var(--shadow); }
+  .lesson-node.completed {
+    background: var(--accent-softer);
+    border-color: var(--accent-soft);
+  }
+  .lesson-node.completed:hover { border-color: var(--accent); }
+  .lesson-node.locked { opacity: .45; cursor: not-allowed; }
+  .lesson-node.locked:hover { transform: none; box-shadow: var(--shadow-sm); border-color: var(--border); }
+  .lesson-node-icon {
+    font-size: 24px; margin-bottom: 6px;
+  }
+  .lesson-node-name {
+    font-family: var(--serif); font-size: 15.5px; font-weight: 500;
+    color: var(--text); letter-spacing: -.1px;
+    line-height: 1.3;
+  }
+  .lesson-node-meta {
+    display: flex; align-items: center; gap: 4px;
+    margin-top: 6px;
+    font-size: 12px; color: var(--text-muted);
+  }
+  .lesson-stars {
+    display: flex; gap: 2px; font-size: 14px;
+    line-height: 1;
+  }
+  .lesson-star { color: var(--bg-strong); }
+  .lesson-star.on { color: var(--gold); }
+
+  /* ---------- Lesson player (Duolingo-style) ---------- */
+  .player-overlay {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    z-index: 80;
+    display: none;
+    flex-direction: column;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .player-overlay.show { display: flex; }
+  .player-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface);
+  }
+  .player-close {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--bg-subtle); border: none;
+    color: var(--text-dim); font-size: 20px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+    transition: all .15s ease;
+  }
+  .player-close:hover { background: var(--bg-strong); color: var(--text); }
+  .player-progress-track {
+    flex: 1;
+    height: 12px; border-radius: 999px;
+    background: var(--bg-strong);
+    overflow: hidden;
+  }
+  .player-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--success), #7da556);
+    transition: width .4s cubic-bezier(.4,0,.2,1);
+    border-radius: 999px;
+  }
+  .player-hearts {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 16px; color: var(--danger);
+    flex-shrink: 0;
+  }
+  .player-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 28px 200px;
+    max-width: 720px; width: 100%;
+    margin: 0 auto;
+  }
+  .player-prompt-label {
+    font-size: 13px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 1.5px;
+    font-weight: 600; margin-bottom: 18px;
+  }
+  .player-prompt-word {
+    font-family: var(--serif);
+    font-size: 56px; font-weight: 500;
+    color: var(--text); letter-spacing: -1px;
+    line-height: 1.1; margin-bottom: 16px;
+    text-align: center;
+    word-break: break-word; overflow-wrap: break-word;
+  }
+  .player-prompt-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; margin-bottom: 28px;
+  }
+  .player-prompt-row .speak-btn { width: 56px; height: 56px; font-size: 22px; }
+  .player-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .player-option {
+    background: var(--bg-surface);
+    border: 2px solid var(--border);
+    border-bottom-width: 4px;
+    border-radius: 14px;
+    padding: 16px 14px;
+    font-family: var(--sans); font-size: 16px; font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    text-align: center;
+    transition: all .12s ease;
+    min-height: 58px;
+  }
+  .player-option:hover { background: var(--bg-subtle); border-color: var(--border-strong); }
+  .player-option:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .player-option.selected {
+    border-color: var(--accent);
+    background: var(--accent-softer);
+    color: var(--accent-hover);
+  }
+  .player-option.correct {
+    background: var(--success-soft);
+    border-color: var(--success);
+    color: var(--success);
+  }
+  .player-option.wrong {
+    background: var(--danger-soft);
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+  .player-option .player-option-num {
+    display: inline-block;
+    font-size: 11px; color: var(--text-muted);
+    margin-right: 6px;
+  }
+  .player-typing {
+    width: 100%;
+    background: var(--bg-surface);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-family: var(--sans); font-size: 18px;
+    color: var(--text);
+    margin-top: 4px;
+  }
+  .player-typing:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  .player-footer {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border);
+    padding: 18px 24px;
+    padding-bottom: max(18px, env(safe-area-inset-bottom));
+    z-index: 81;
+    display: none;
+  }
+  .player-overlay.show .player-footer { display: block; }
+  .player-feedback {
+    margin-bottom: 12px; font-size: 14px;
+    font-weight: 500; line-height: 1.5;
+    display: none;
+  }
+  .player-feedback.show { display: block; }
+  .player-feedback.correct { color: var(--success); }
+  .player-feedback.incorrect { color: var(--danger); }
+  .player-feedback small {
+    display: block; color: var(--text-dim);
+    font-weight: 400; margin-top: 4px;
+  }
+  .player-action-btn {
+    width: 100%; max-width: 480px;
+    margin: 0 auto; display: block;
+    padding: 14px; border-radius: 12px;
+    background: var(--accent); color: #fff;
+    border: none; font-size: 15px; font-weight: 600;
+    cursor: pointer;
+    transition: filter .15s ease, transform .12s ease;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+  }
+  .player-action-btn:hover { filter: brightness(1.05); }
+  .player-action-btn:disabled {
+    background: var(--bg-strong); color: var(--text-muted);
+    cursor: not-allowed;
+  }
+  .player-action-btn.success { background: var(--success); }
+  .player-action-btn.danger { background: var(--danger); }
+
+  /* End screen */
+  .player-end {
+    text-align: center; padding: 40px 20px;
+  }
+  .player-end-emoji { font-size: 72px; margin-bottom: 16px; }
+  .player-end-title {
+    font-family: var(--serif); font-size: 36px; font-weight: 500;
+    margin-bottom: 12px; letter-spacing: -.5px;
+  }
+  .player-end-stars {
+    font-size: 48px; margin: 18px 0 8px; line-height: 1;
+  }
+  .player-end-stats {
+    display: flex; justify-content: center; gap: 28px;
+    margin: 24px 0;
+    flex-wrap: wrap;
+  }
+  .player-end-stat {
+    background: var(--bg-surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 20px;
+    min-width: 100px;
+  }
+  .player-end-stat-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-muted); font-weight: 500;
+  }
+  .player-end-stat-value {
+    font-family: var(--serif); font-size: 24px; font-weight: 500;
+    color: var(--text); margin-top: 4px;
+  }
+
+  @media (max-width: 880px) {
+    .player-body { padding: 24px 18px 220px; }
+    .player-prompt-word { font-size: 42px; }
+    .player-options { grid-template-columns: 1fr; }
+    .player-end-title { font-size: 28px; }
+  }
+
   /* ---------- Practice setup (drill type / level / length pickers) ---------- */
   .drill-types {
     display: grid;
@@ -1189,6 +1467,20 @@
   </div>
 </div>
 
+<!-- Lesson player overlay (full-screen Duolingo-style) -->
+<div class="player-overlay" id="player-overlay">
+  <div class="player-header">
+    <button class="player-close" onclick="closePlayer()" aria-label="Close">×</button>
+    <div class="player-progress-track"><div class="player-progress-fill" id="player-progress" style="width:0%"></div></div>
+    <div class="player-hearts" id="player-hearts">❤️ 5</div>
+  </div>
+  <div class="player-body" id="player-body"></div>
+  <div class="player-footer" id="player-footer">
+    <div class="player-feedback" id="player-feedback"></div>
+    <button class="player-action-btn" id="player-action" onclick="playerAction()" disabled>Check</button>
+  </div>
+</div>
+
 <div id="app">
   <div class="mobile-bar">
     <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">☰</button>
@@ -1303,19 +1595,11 @@
       <div class="achievements-grid" id="db-achievements"></div>
     </section>
 
-    <!-- Lessons -->
+    <!-- Lessons (Duolingo-style chapter tree) -->
     <section id="view-lessons" class="view">
-      <h1>Lessons</h1>
-      <p class="subtitle">Flashcards with real pronunciation. Tap the speaker to hear a native voice (if your system has one installed).</p>
-
-      <div id="lesson-picker">
-        <div class="tabs" id="lesson-tabs"></div>
-        <div class="grid grid-3" id="lesson-list"></div>
-      </div>
-
-      <div id="lesson-session" style="display:none;">
-        <div class="flashcard" id="flashcard"></div>
-      </div>
+      <h1 id="lessons-title">Lessons</h1>
+      <p class="subtitle" id="lessons-subtitle">Sections, units, and lessons. Each lesson has 12+ mixed exercises: multiple choice, listening, and typing.</p>
+      <div id="chapter-tree"></div>
     </section>
 
     <!-- Culture Quiz -->
@@ -1606,6 +1890,290 @@ const LANGUAGES = {
   }
 };
 
+const CHAPTERS = {
+  es: [
+    { id: "s1", name: "Foundations", icon: "🌱", units: [
+      { id: "u1", name: "Greetings", lessons: [
+        { id: "l1", name: "Saying hello", icon: "👋",
+          vocab: [["hola","hello"],["adiós","goodbye"],["buenos días","good morning"],["buenas tardes","good afternoon"],["buenas noches","good night"],["hasta luego","see you later"],["hasta mañana","see you tomorrow"],["bienvenido","welcome"]],
+          phrases: [["¡Hola! ¿Cómo estás?","Hi! How are you?"],["Buenos días, señora.","Good morning, ma'am."],["Hasta mañana, amigo.","See you tomorrow, friend."]] },
+        { id: "l2", name: "Politeness", icon: "🙏",
+          vocab: [["gracias","thank you"],["por favor","please"],["de nada","you're welcome"],["perdón","sorry"],["disculpe","excuse me"],["lo siento","I'm sorry"],["sí","yes"],["no","no"]],
+          phrases: [["Muchas gracias por todo.","Thank you very much for everything."],["Disculpe, ¿dónde está el baño?","Excuse me, where is the bathroom?"],["Lo siento, no entiendo.","I'm sorry, I don't understand."]] }
+      ]},
+      { id: "u2", name: "Numbers & Days", lessons: [
+        { id: "l1", name: "Numbers 1-10", icon: "🔢",
+          vocab: [["uno","one"],["dos","two"],["tres","three"],["cuatro","four"],["cinco","five"],["seis","six"],["siete","seven"],["ocho","eight"],["nueve","nine"],["diez","ten"]],
+          phrases: [["Tengo dos hermanos.","I have two brothers."],["Son las cinco.","It's five o'clock."],["Quiero tres manzanas.","I want three apples."]] },
+        { id: "l2", name: "Days of the week", icon: "📅",
+          vocab: [["lunes","Monday"],["martes","Tuesday"],["miércoles","Wednesday"],["jueves","Thursday"],["viernes","Friday"],["sábado","Saturday"],["domingo","Sunday"],["semana","week"],["fin de semana","weekend"],["hoy","today"]],
+          phrases: [["Hoy es lunes.","Today is Monday."],["El domingo voy a la iglesia.","On Sunday I go to church."],["Buen fin de semana.","Have a good weekend."]] }
+      ]}
+    ]},
+    { id: "s2", name: "Daily Life", icon: "🏠", units: [
+      { id: "u1", name: "People", lessons: [
+        { id: "l1", name: "Family", icon: "👨‍👩‍👧",
+          vocab: [["madre","mother"],["padre","father"],["hermano","brother"],["hermana","sister"],["hijo","son"],["hija","daughter"],["abuelo","grandfather"],["abuela","grandmother"],["tío","uncle"],["tía","aunt"]],
+          phrases: [["Mi madre es médica.","My mother is a doctor."],["Tengo una hermana.","I have one sister."],["Mi abuelo vive en Sevilla.","My grandfather lives in Seville."]] },
+        { id: "l2", name: "Pronouns & people", icon: "👥",
+          vocab: [["yo","I"],["tú","you (informal)"],["él","he"],["ella","she"],["nosotros","we"],["amigo","friend (m)"],["amiga","friend (f)"],["niño","boy"],["niña","girl"],["hombre","man"],["mujer","woman"]],
+          phrases: [["Yo soy María.","I am María."],["Ella es mi amiga.","She is my friend."],["Nosotros somos estudiantes.","We are students."]] }
+      ]},
+      { id: "u2", name: "Food & Drink", lessons: [
+        { id: "l1", name: "Drinks", icon: "☕",
+          vocab: [["agua","water"],["café","coffee"],["té","tea"],["vino","wine"],["cerveza","beer"],["leche","milk"],["jugo","juice"],["refresco","soft drink"]],
+          phrases: [["Quiero un café, por favor.","I'd like a coffee, please."],["Bebo mucha agua.","I drink a lot of water."],["Una cerveza fría, por favor.","A cold beer, please."]] },
+        { id: "l2", name: "Food", icon: "🍽️",
+          vocab: [["pan","bread"],["carne","meat"],["pescado","fish"],["queso","cheese"],["fruta","fruit"],["manzana","apple"],["arroz","rice"],["ensalada","salad"],["sopa","soup"],["postre","dessert"]],
+          phrases: [["Me gusta el queso.","I like cheese."],["¿Quieres una manzana?","Do you want an apple?"],["La sopa está caliente.","The soup is hot."]] }
+      ]}
+    ]},
+    { id: "s3", name: "Out & About", icon: "🌍", units: [
+      { id: "u1", name: "Places & Travel", lessons: [
+        { id: "l1", name: "Places", icon: "📍",
+          vocab: [["casa","house"],["escuela","school"],["tienda","shop"],["restaurante","restaurant"],["parque","park"],["playa","beach"],["ciudad","city"],["calle","street"],["pueblo","village"],["mercado","market"]],
+          phrases: [["Vivo en una ciudad grande.","I live in a big city."],["El restaurante está cerca.","The restaurant is nearby."],["Vamos a la playa.","Let's go to the beach."]] },
+        { id: "l2", name: "Travel", icon: "✈️",
+          vocab: [["viaje","trip"],["avión","plane"],["tren","train"],["coche","car"],["hotel","hotel"],["mapa","map"],["equipaje","luggage"],["aeropuerto","airport"],["billete","ticket"],["estación","station"]],
+          phrases: [["Viajamos en tren.","We travel by train."],["¿Dónde está el aeropuerto?","Where is the airport?"],["Necesito un billete a Madrid.","I need a ticket to Madrid."]] }
+      ]},
+      { id: "u2", name: "Time & Weather", lessons: [
+        { id: "l1", name: "Time", icon: "⏰",
+          vocab: [["hoy","today"],["mañana","tomorrow"],["ayer","yesterday"],["ahora","now"],["después","later"],["antes","before"],["siempre","always"],["nunca","never"],["día","day"],["noche","night"],["hora","hour"],["minuto","minute"]],
+          phrases: [["Hoy hace calor.","It's hot today."],["Mañana voy al cine.","Tomorrow I'm going to the cinema."],["Siempre desayuno a las siete.","I always have breakfast at seven."]] },
+        { id: "l2", name: "Weather", icon: "☀️",
+          vocab: [["sol","sun"],["lluvia","rain"],["nieve","snow"],["viento","wind"],["calor","heat"],["frío","cold"],["nublado","cloudy"],["despejado","clear"],["tormenta","storm"],["nube","cloud"]],
+          phrases: [["Hace mucho frío.","It's very cold."],["Está lloviendo mucho.","It's raining a lot."],["Hoy hay tormenta.","There's a storm today."]] }
+      ]}
+    ]}
+  ],
+  fr: [
+    { id: "s1", name: "Foundations", icon: "🌱", units: [
+      { id: "u1", name: "Greetings", lessons: [
+        { id: "l1", name: "Saying hello", icon: "👋",
+          vocab: [["bonjour","hello"],["au revoir","goodbye"],["bonsoir","good evening"],["bonne nuit","good night"],["salut","hi (informal)"],["à demain","see you tomorrow"],["à bientôt","see you soon"],["bienvenue","welcome"]],
+          phrases: [["Bonjour ! Comment ça va ?","Hello! How are you?"],["Bonsoir, madame.","Good evening, ma'am."],["À demain, mon ami.","See you tomorrow, my friend."]] },
+        { id: "l2", name: "Politeness", icon: "🙏",
+          vocab: [["merci","thank you"],["s'il vous plaît","please (formal)"],["de rien","you're welcome"],["pardon","excuse me"],["désolé","sorry"],["oui","yes"],["non","no"],["d'accord","okay"]],
+          phrases: [["Merci beaucoup pour tout.","Thank you very much for everything."],["Pardon, où sont les toilettes ?","Excuse me, where's the bathroom?"],["Désolé, je ne comprends pas.","Sorry, I don't understand."]] }
+      ]},
+      { id: "u2", name: "Numbers & Days", lessons: [
+        { id: "l1", name: "Numbers 1-10", icon: "🔢",
+          vocab: [["un","one"],["deux","two"],["trois","three"],["quatre","four"],["cinq","five"],["six","six"],["sept","seven"],["huit","eight"],["neuf","nine"],["dix","ten"]],
+          phrases: [["J'ai deux frères.","I have two brothers."],["Il est cinq heures.","It's five o'clock."],["Je veux trois pommes.","I want three apples."]] },
+        { id: "l2", name: "Days of the week", icon: "📅",
+          vocab: [["lundi","Monday"],["mardi","Tuesday"],["mercredi","Wednesday"],["jeudi","Thursday"],["vendredi","Friday"],["samedi","Saturday"],["dimanche","Sunday"],["semaine","week"],["week-end","weekend"],["aujourd'hui","today"]],
+          phrases: [["Aujourd'hui c'est lundi.","Today is Monday."],["Le dimanche je vais à l'église.","On Sunday I go to church."],["Bon week-end !","Have a nice weekend!"]] }
+      ]}
+    ]},
+    { id: "s2", name: "Daily Life", icon: "🏠", units: [
+      { id: "u1", name: "People", lessons: [
+        { id: "l1", name: "Family", icon: "👨‍👩‍👧",
+          vocab: [["mère","mother"],["père","father"],["frère","brother"],["sœur","sister"],["fils","son"],["fille","daughter"],["grand-père","grandfather"],["grand-mère","grandmother"],["oncle","uncle"],["tante","aunt"]],
+          phrases: [["Ma mère est médecin.","My mother is a doctor."],["J'ai une sœur.","I have one sister."],["Mon grand-père vit à Lyon.","My grandfather lives in Lyon."]] },
+        { id: "l2", name: "Pronouns & people", icon: "👥",
+          vocab: [["je","I"],["tu","you (informal)"],["il","he"],["elle","she"],["nous","we"],["ami","friend (m)"],["amie","friend (f)"],["enfant","child"],["garçon","boy"],["fille","girl"],["homme","man"],["femme","woman"]],
+          phrases: [["Je m'appelle Marie.","My name is Marie."],["Elle est mon amie.","She is my friend."],["Nous sommes étudiants.","We are students."]] }
+      ]},
+      { id: "u2", name: "Food & Drink", lessons: [
+        { id: "l1", name: "Drinks", icon: "☕",
+          vocab: [["eau","water"],["café","coffee"],["thé","tea"],["vin","wine"],["bière","beer"],["lait","milk"],["jus","juice"],["soda","soft drink"]],
+          phrases: [["Je voudrais un café, s'il vous plaît.","I'd like a coffee, please."],["Je bois beaucoup d'eau.","I drink a lot of water."],["Une bière fraîche, s'il vous plaît.","A cold beer, please."]] },
+        { id: "l2", name: "Food", icon: "🍽️",
+          vocab: [["pain","bread"],["viande","meat"],["poisson","fish"],["fromage","cheese"],["fruit","fruit"],["pomme","apple"],["riz","rice"],["salade","salad"],["soupe","soup"],["dessert","dessert"]],
+          phrases: [["J'aime le fromage.","I like cheese."],["Tu veux une pomme ?","Do you want an apple?"],["La soupe est chaude.","The soup is hot."]] }
+      ]}
+    ]},
+    { id: "s3", name: "Out & About", icon: "🌍", units: [
+      { id: "u1", name: "Places & Travel", lessons: [
+        { id: "l1", name: "Places", icon: "📍",
+          vocab: [["maison","house"],["école","school"],["magasin","shop"],["restaurant","restaurant"],["parc","park"],["plage","beach"],["ville","city"],["rue","street"],["village","village"],["marché","market"]],
+          phrases: [["J'habite dans une grande ville.","I live in a big city."],["Le restaurant est près d'ici.","The restaurant is near here."],["Allons à la plage.","Let's go to the beach."]] },
+        { id: "l2", name: "Travel", icon: "✈️",
+          vocab: [["voyage","trip"],["avion","plane"],["train","train"],["voiture","car"],["hôtel","hotel"],["carte","map"],["bagages","luggage"],["aéroport","airport"],["billet","ticket"],["gare","station"]],
+          phrases: [["Nous voyageons en train.","We travel by train."],["Où est l'aéroport ?","Where is the airport?"],["J'ai besoin d'un billet pour Paris.","I need a ticket to Paris."]] }
+      ]},
+      { id: "u2", name: "Time & Weather", lessons: [
+        { id: "l1", name: "Time", icon: "⏰",
+          vocab: [["aujourd'hui","today"],["demain","tomorrow"],["hier","yesterday"],["maintenant","now"],["après","later"],["avant","before"],["toujours","always"],["jamais","never"],["jour","day"],["nuit","night"],["heure","hour"],["minute","minute"]],
+          phrases: [["Aujourd'hui il fait chaud.","It's hot today."],["Demain je vais au cinéma.","Tomorrow I'm going to the cinema."],["Je prends toujours mon petit-déjeuner à sept heures.","I always have breakfast at seven."]] },
+        { id: "l2", name: "Weather", icon: "☀️",
+          vocab: [["soleil","sun"],["pluie","rain"],["neige","snow"],["vent","wind"],["chaud","hot"],["froid","cold"],["nuageux","cloudy"],["clair","clear"],["orage","storm"],["nuage","cloud"]],
+          phrases: [["Il fait très froid.","It's very cold."],["Il pleut beaucoup.","It's raining a lot."],["Il y a un orage aujourd'hui.","There's a storm today."]] }
+      ]}
+    ]}
+  ],
+  ja: [
+    { id: "s1", name: "Foundations", icon: "🌱", units: [
+      { id: "u1", name: "Greetings", lessons: [
+        { id: "l1", name: "Saying hello", icon: "👋",
+          vocab: [["こんにちは","hello (konnichiwa)"],["さようなら","goodbye (sayounara)"],["おはよう","good morning (ohayou)"],["こんばんは","good evening (konbanwa)"],["おやすみ","good night (oyasumi)"],["またね","see you (mata ne)"],["また明日","see you tomorrow (mata ashita)"],["ようこそ","welcome (youkoso)"]],
+          phrases: [["こんにちは、お元気ですか？","Hello, how are you?"],["おはようございます。","Good morning."],["また明日、友達。","See you tomorrow, friend."]] },
+        { id: "l2", name: "Politeness", icon: "🙏",
+          vocab: [["ありがとう","thank you (arigatou)"],["お願いします","please (onegai shimasu)"],["どういたしまして","you're welcome (douitashimashite)"],["すみません","sorry/excuse me (sumimasen)"],["はい","yes (hai)"],["いいえ","no (iie)"],["大丈夫","okay (daijoubu)"],["わかりました","understood (wakarimashita)"]],
+          phrases: [["どうもありがとうございます。","Thank you very much."],["すみません、トイレはどこですか？","Excuse me, where's the bathroom?"],["すみません、わかりません。","Sorry, I don't understand."]] }
+      ]},
+      { id: "u2", name: "Numbers & Days", lessons: [
+        { id: "l1", name: "Numbers 1-10", icon: "🔢",
+          vocab: [["一","one (ichi)"],["二","two (ni)"],["三","three (san)"],["四","four (shi/yon)"],["五","five (go)"],["六","six (roku)"],["七","seven (shichi/nana)"],["八","eight (hachi)"],["九","nine (kyuu)"],["十","ten (juu)"]],
+          phrases: [["兄弟が二人います。","I have two siblings."],["五時です。","It's five o'clock."],["りんごを三つください。","Three apples, please."]] },
+        { id: "l2", name: "Days of the week", icon: "📅",
+          vocab: [["月曜日","Monday (getsuyoubi)"],["火曜日","Tuesday (kayoubi)"],["水曜日","Wednesday (suiyoubi)"],["木曜日","Thursday (mokuyoubi)"],["金曜日","Friday (kinyoubi)"],["土曜日","Saturday (doyoubi)"],["日曜日","Sunday (nichiyoubi)"],["週","week (shuu)"],["週末","weekend (shuumatsu)"],["今日","today (kyou)"]],
+          phrases: [["今日は月曜日です。","Today is Monday."],["日曜日に教会へ行きます。","On Sunday I go to church."],["良い週末を！","Have a good weekend!"]] }
+      ]}
+    ]},
+    { id: "s2", name: "Daily Life", icon: "🏠", units: [
+      { id: "u1", name: "People", lessons: [
+        { id: "l1", name: "Family", icon: "👨‍👩‍👧",
+          vocab: [["母","mother (haha)"],["父","father (chichi)"],["兄","older brother (ani)"],["姉","older sister (ane)"],["弟","younger brother (otouto)"],["妹","younger sister (imouto)"],["息子","son (musuko)"],["娘","daughter (musume)"],["祖父","grandfather (sofu)"],["祖母","grandmother (sobo)"]],
+          phrases: [["母は医者です。","My mother is a doctor."],["姉が一人います。","I have one older sister."],["祖父は大阪に住んでいます。","My grandfather lives in Osaka."]] },
+        { id: "l2", name: "Pronouns & people", icon: "👥",
+          vocab: [["私","I (watashi)"],["あなた","you (anata)"],["彼","he (kare)"],["彼女","she (kanojo)"],["私たち","we (watashitachi)"],["友達","friend (tomodachi)"],["子供","child (kodomo)"],["男","man (otoko)"],["女","woman (onna)"],["人","person (hito)"]],
+          phrases: [["私は田中です。","I am Tanaka."],["彼女は私の友達です。","She is my friend."],["私たちは学生です。","We are students."]] }
+      ]},
+      { id: "u2", name: "Food & Drink", lessons: [
+        { id: "l1", name: "Drinks", icon: "☕",
+          vocab: [["水","water (mizu)"],["コーヒー","coffee (koohii)"],["お茶","tea (ocha)"],["ワイン","wine (wain)"],["ビール","beer (biiru)"],["牛乳","milk (gyuunyuu)"],["ジュース","juice (juusu)"],["ソーダ","soda"]],
+          phrases: [["コーヒーをお願いします。","A coffee, please."],["水をたくさん飲みます。","I drink a lot of water."],["冷たいビールをお願いします。","A cold beer, please."]] },
+        { id: "l2", name: "Food", icon: "🍽️",
+          vocab: [["パン","bread (pan)"],["肉","meat (niku)"],["魚","fish (sakana)"],["チーズ","cheese (chiizu)"],["果物","fruit (kudamono)"],["りんご","apple (ringo)"],["ご飯","rice (gohan)"],["サラダ","salad (sarada)"],["スープ","soup (suupu)"],["デザート","dessert (dezaato)"]],
+          phrases: [["チーズが好きです。","I like cheese."],["りんごはいかがですか？","Would you like an apple?"],["スープは熱いです。","The soup is hot."]] }
+      ]}
+    ]},
+    { id: "s3", name: "Out & About", icon: "🌍", units: [
+      { id: "u1", name: "Places & Travel", lessons: [
+        { id: "l1", name: "Places", icon: "📍",
+          vocab: [["家","house (ie)"],["学校","school (gakkou)"],["店","shop (mise)"],["レストラン","restaurant"],["公園","park (kouen)"],["海","beach/sea (umi)"],["都市","city (toshi)"],["道","street (michi)"],["村","village (mura)"],["市場","market (ichiba)"]],
+          phrases: [["大都市に住んでいます。","I live in a big city."],["レストランは近いです。","The restaurant is close."],["海に行きましょう。","Let's go to the beach."]] },
+        { id: "l2", name: "Travel", icon: "✈️",
+          vocab: [["旅行","trip (ryokou)"],["飛行機","plane (hikouki)"],["電車","train (densha)"],["車","car (kuruma)"],["ホテル","hotel (hoteru)"],["地図","map (chizu)"],["荷物","luggage (nimotsu)"],["空港","airport (kuukou)"],["切符","ticket (kippu)"],["駅","station (eki)"]],
+          phrases: [["電車で旅行します。","We travel by train."],["空港はどこですか？","Where is the airport?"],["東京までの切符をお願いします。","A ticket to Tokyo, please."]] }
+      ]},
+      { id: "u2", name: "Time & Weather", lessons: [
+        { id: "l1", name: "Time", icon: "⏰",
+          vocab: [["今日","today (kyou)"],["明日","tomorrow (ashita)"],["昨日","yesterday (kinou)"],["今","now (ima)"],["後","later (ato)"],["前","before (mae)"],["いつも","always (itsumo)"],["決して","never (kesshite)"],["日","day (hi)"],["夜","night (yoru)"],["時間","hour (jikan)"]],
+          phrases: [["今日は暑いです。","It's hot today."],["明日映画館へ行きます。","Tomorrow I'm going to the cinema."],["いつも七時に朝ごはんを食べます。","I always have breakfast at seven."]] },
+        { id: "l2", name: "Weather", icon: "☀️",
+          vocab: [["太陽","sun (taiyou)"],["雨","rain (ame)"],["雪","snow (yuki)"],["風","wind (kaze)"],["暑い","hot (atsui)"],["寒い","cold (samui)"],["曇り","cloudy (kumori)"],["晴れ","clear (hare)"],["嵐","storm (arashi)"],["雲","cloud (kumo)"]],
+          phrases: [["とても寒いです。","It's very cold."],["雨が降っています。","It's raining."],["今日は嵐です。","Today there's a storm."]] }
+      ]}
+    ]}
+  ],
+  de: [
+    { id: "s1", name: "Foundations", icon: "🌱", units: [
+      { id: "u1", name: "Greetings", lessons: [
+        { id: "l1", name: "Saying hello", icon: "👋",
+          vocab: [["Hallo","hello"],["Auf Wiedersehen","goodbye (formal)"],["Guten Morgen","good morning"],["Guten Tag","good day"],["Gute Nacht","good night"],["Tschüss","bye (informal)"],["Bis morgen","see you tomorrow"],["Willkommen","welcome"]],
+          phrases: [["Hallo! Wie geht es dir?","Hello! How are you?"],["Guten Morgen, Frau Schmidt.","Good morning, Mrs. Schmidt."],["Bis morgen, Freund.","See you tomorrow, friend."]] },
+        { id: "l2", name: "Politeness", icon: "🙏",
+          vocab: [["danke","thank you"],["bitte","please / you're welcome"],["Entschuldigung","sorry / excuse me"],["es tut mir leid","I'm sorry"],["ja","yes"],["nein","no"],["okay","okay"],["natürlich","of course"]],
+          phrases: [["Vielen Dank für alles.","Thank you very much for everything."],["Entschuldigung, wo ist die Toilette?","Excuse me, where is the bathroom?"],["Es tut mir leid, ich verstehe nicht.","I'm sorry, I don't understand."]] }
+      ]},
+      { id: "u2", name: "Numbers & Days", lessons: [
+        { id: "l1", name: "Numbers 1-10", icon: "🔢",
+          vocab: [["eins","one"],["zwei","two"],["drei","three"],["vier","four"],["fünf","five"],["sechs","six"],["sieben","seven"],["acht","eight"],["neun","nine"],["zehn","ten"]],
+          phrases: [["Ich habe zwei Brüder.","I have two brothers."],["Es ist fünf Uhr.","It's five o'clock."],["Ich möchte drei Äpfel.","I want three apples."]] },
+        { id: "l2", name: "Days of the week", icon: "📅",
+          vocab: [["Montag","Monday"],["Dienstag","Tuesday"],["Mittwoch","Wednesday"],["Donnerstag","Thursday"],["Freitag","Friday"],["Samstag","Saturday"],["Sonntag","Sunday"],["Woche","week"],["Wochenende","weekend"],["heute","today"]],
+          phrases: [["Heute ist Montag.","Today is Monday."],["Sonntags gehe ich in die Kirche.","On Sundays I go to church."],["Schönes Wochenende!","Have a nice weekend!"]] }
+      ]}
+    ]},
+    { id: "s2", name: "Daily Life", icon: "🏠", units: [
+      { id: "u1", name: "People", lessons: [
+        { id: "l1", name: "Family", icon: "👨‍👩‍👧",
+          vocab: [["Mutter","mother"],["Vater","father"],["Bruder","brother"],["Schwester","sister"],["Sohn","son"],["Tochter","daughter"],["Großvater","grandfather"],["Großmutter","grandmother"],["Onkel","uncle"],["Tante","aunt"]],
+          phrases: [["Meine Mutter ist Ärztin.","My mother is a doctor."],["Ich habe eine Schwester.","I have one sister."],["Mein Großvater wohnt in München.","My grandfather lives in Munich."]] },
+        { id: "l2", name: "Pronouns & people", icon: "👥",
+          vocab: [["ich","I"],["du","you (informal)"],["er","he"],["sie","she"],["wir","we"],["Freund","friend (m)"],["Freundin","friend (f)"],["Kind","child"],["Junge","boy"],["Mädchen","girl"],["Mann","man"],["Frau","woman"]],
+          phrases: [["Ich heiße Anna.","My name is Anna."],["Sie ist meine Freundin.","She is my friend."],["Wir sind Studenten.","We are students."]] }
+      ]},
+      { id: "u2", name: "Food & Drink", lessons: [
+        { id: "l1", name: "Drinks", icon: "☕",
+          vocab: [["Wasser","water"],["Kaffee","coffee"],["Tee","tea"],["Wein","wine"],["Bier","beer"],["Milch","milk"],["Saft","juice"],["Limonade","soda"]],
+          phrases: [["Einen Kaffee, bitte.","A coffee, please."],["Ich trinke viel Wasser.","I drink a lot of water."],["Ein kaltes Bier, bitte.","A cold beer, please."]] },
+        { id: "l2", name: "Food", icon: "🍽️",
+          vocab: [["Brot","bread"],["Fleisch","meat"],["Fisch","fish"],["Käse","cheese"],["Obst","fruit"],["Apfel","apple"],["Reis","rice"],["Salat","salad"],["Suppe","soup"],["Nachtisch","dessert"]],
+          phrases: [["Ich mag Käse.","I like cheese."],["Möchtest du einen Apfel?","Do you want an apple?"],["Die Suppe ist heiß.","The soup is hot."]] }
+      ]}
+    ]},
+    { id: "s3", name: "Out & About", icon: "🌍", units: [
+      { id: "u1", name: "Places & Travel", lessons: [
+        { id: "l1", name: "Places", icon: "📍",
+          vocab: [["Haus","house"],["Schule","school"],["Geschäft","shop"],["Restaurant","restaurant"],["Park","park"],["Strand","beach"],["Stadt","city"],["Straße","street"],["Dorf","village"],["Markt","market"]],
+          phrases: [["Ich wohne in einer großen Stadt.","I live in a big city."],["Das Restaurant ist in der Nähe.","The restaurant is nearby."],["Lass uns zum Strand gehen.","Let's go to the beach."]] },
+        { id: "l2", name: "Travel", icon: "✈️",
+          vocab: [["Reise","trip"],["Flugzeug","plane"],["Zug","train"],["Auto","car"],["Hotel","hotel"],["Karte","map"],["Gepäck","luggage"],["Flughafen","airport"],["Ticket","ticket"],["Bahnhof","station"]],
+          phrases: [["Wir reisen mit dem Zug.","We travel by train."],["Wo ist der Flughafen?","Where is the airport?"],["Ich brauche ein Ticket nach Berlin.","I need a ticket to Berlin."]] }
+      ]},
+      { id: "u2", name: "Time & Weather", lessons: [
+        { id: "l1", name: "Time", icon: "⏰",
+          vocab: [["heute","today"],["morgen","tomorrow"],["gestern","yesterday"],["jetzt","now"],["später","later"],["vorher","before"],["immer","always"],["nie","never"],["Tag","day"],["Nacht","night"],["Stunde","hour"],["Minute","minute"]],
+          phrases: [["Heute ist es heiß.","It's hot today."],["Morgen gehe ich ins Kino.","Tomorrow I'm going to the cinema."],["Ich frühstücke immer um sieben.","I always have breakfast at seven."]] },
+        { id: "l2", name: "Weather", icon: "☀️",
+          vocab: [["Sonne","sun"],["Regen","rain"],["Schnee","snow"],["Wind","wind"],["heiß","hot"],["kalt","cold"],["bewölkt","cloudy"],["klar","clear"],["Sturm","storm"],["Wolke","cloud"]],
+          phrases: [["Es ist sehr kalt.","It's very cold."],["Es regnet viel.","It's raining a lot."],["Heute gibt es einen Sturm.","There's a storm today."]] }
+      ]}
+    ]}
+  ],
+  it: [
+    { id: "s1", name: "Foundations", icon: "🌱", units: [
+      { id: "u1", name: "Greetings", lessons: [
+        { id: "l1", name: "Saying hello", icon: "👋",
+          vocab: [["ciao","hi/bye"],["arrivederci","goodbye (formal)"],["buongiorno","good morning"],["buonasera","good evening"],["buonanotte","good night"],["a presto","see you soon"],["a domani","see you tomorrow"],["benvenuto","welcome"]],
+          phrases: [["Ciao! Come stai?","Hi! How are you?"],["Buongiorno, signora.","Good morning, ma'am."],["A domani, amico.","See you tomorrow, friend."]] },
+        { id: "l2", name: "Politeness", icon: "🙏",
+          vocab: [["grazie","thank you"],["prego","please / you're welcome"],["per favore","please"],["scusa","sorry/excuse me"],["mi dispiace","I'm sorry"],["sì","yes"],["no","no"],["va bene","okay"]],
+          phrases: [["Grazie mille per tutto.","Thank you very much for everything."],["Scusa, dov'è il bagno?","Excuse me, where is the bathroom?"],["Mi dispiace, non capisco.","I'm sorry, I don't understand."]] }
+      ]},
+      { id: "u2", name: "Numbers & Days", lessons: [
+        { id: "l1", name: "Numbers 1-10", icon: "🔢",
+          vocab: [["uno","one"],["due","two"],["tre","three"],["quattro","four"],["cinque","five"],["sei","six"],["sette","seven"],["otto","eight"],["nove","nine"],["dieci","ten"]],
+          phrases: [["Ho due fratelli.","I have two brothers."],["Sono le cinque.","It's five o'clock."],["Voglio tre mele.","I want three apples."]] },
+        { id: "l2", name: "Days of the week", icon: "📅",
+          vocab: [["lunedì","Monday"],["martedì","Tuesday"],["mercoledì","Wednesday"],["giovedì","Thursday"],["venerdì","Friday"],["sabato","Saturday"],["domenica","Sunday"],["settimana","week"],["fine settimana","weekend"],["oggi","today"]],
+          phrases: [["Oggi è lunedì.","Today is Monday."],["La domenica vado in chiesa.","On Sunday I go to church."],["Buon fine settimana!","Have a good weekend!"]] }
+      ]}
+    ]},
+    { id: "s2", name: "Daily Life", icon: "🏠", units: [
+      { id: "u1", name: "People", lessons: [
+        { id: "l1", name: "Family", icon: "👨‍👩‍👧",
+          vocab: [["madre","mother"],["padre","father"],["fratello","brother"],["sorella","sister"],["figlio","son"],["figlia","daughter"],["nonno","grandfather"],["nonna","grandmother"],["zio","uncle"],["zia","aunt"]],
+          phrases: [["Mia madre è medico.","My mother is a doctor."],["Ho una sorella.","I have one sister."],["Mio nonno vive a Roma.","My grandfather lives in Rome."]] },
+        { id: "l2", name: "Pronouns & people", icon: "👥",
+          vocab: [["io","I"],["tu","you (informal)"],["lui","he"],["lei","she"],["noi","we"],["amico","friend (m)"],["amica","friend (f)"],["bambino","child (boy)"],["bambina","child (girl)"],["uomo","man"],["donna","woman"]],
+          phrases: [["Io sono Marco.","I am Marco."],["Lei è la mia amica.","She is my friend."],["Noi siamo studenti.","We are students."]] }
+      ]},
+      { id: "u2", name: "Food & Drink", lessons: [
+        { id: "l1", name: "Drinks", icon: "☕",
+          vocab: [["acqua","water"],["caffè","coffee"],["tè","tea"],["vino","wine"],["birra","beer"],["latte","milk"],["succo","juice"],["bibita","soft drink"]],
+          phrases: [["Vorrei un caffè, per favore.","I'd like a coffee, please."],["Bevo molta acqua.","I drink a lot of water."],["Una birra fredda, per favore.","A cold beer, please."]] },
+        { id: "l2", name: "Food", icon: "🍽️",
+          vocab: [["pane","bread"],["carne","meat"],["pesce","fish"],["formaggio","cheese"],["frutta","fruit"],["mela","apple"],["riso","rice"],["insalata","salad"],["zuppa","soup"],["dolce","dessert"]],
+          phrases: [["Mi piace il formaggio.","I like cheese."],["Vuoi una mela?","Do you want an apple?"],["La zuppa è calda.","The soup is hot."]] }
+      ]}
+    ]},
+    { id: "s3", name: "Out & About", icon: "🌍", units: [
+      { id: "u1", name: "Places & Travel", lessons: [
+        { id: "l1", name: "Places", icon: "📍",
+          vocab: [["casa","house"],["scuola","school"],["negozio","shop"],["ristorante","restaurant"],["parco","park"],["spiaggia","beach"],["città","city"],["strada","street"],["paese","village/country"],["mercato","market"]],
+          phrases: [["Vivo in una grande città.","I live in a big city."],["Il ristorante è vicino.","The restaurant is nearby."],["Andiamo in spiaggia.","Let's go to the beach."]] },
+        { id: "l2", name: "Travel", icon: "✈️",
+          vocab: [["viaggio","trip"],["aereo","plane"],["treno","train"],["macchina","car"],["albergo","hotel"],["mappa","map"],["bagagli","luggage"],["aeroporto","airport"],["biglietto","ticket"],["stazione","station"]],
+          phrases: [["Viaggiamo in treno.","We travel by train."],["Dov'è l'aeroporto?","Where is the airport?"],["Ho bisogno di un biglietto per Roma.","I need a ticket to Rome."]] }
+      ]},
+      { id: "u2", name: "Time & Weather", lessons: [
+        { id: "l1", name: "Time", icon: "⏰",
+          vocab: [["oggi","today"],["domani","tomorrow"],["ieri","yesterday"],["adesso","now"],["dopo","later"],["prima","before"],["sempre","always"],["mai","never"],["giorno","day"],["notte","night"],["ora","hour"],["minuto","minute"]],
+          phrases: [["Oggi fa caldo.","It's hot today."],["Domani vado al cinema.","Tomorrow I'm going to the cinema."],["Faccio sempre colazione alle sette.","I always have breakfast at seven."]] },
+        { id: "l2", name: "Weather", icon: "☀️",
+          vocab: [["sole","sun"],["pioggia","rain"],["neve","snow"],["vento","wind"],["caldo","hot"],["freddo","cold"],["nuvoloso","cloudy"],["sereno","clear"],["temporale","storm"],["nuvola","cloud"]],
+          phrases: [["Fa molto freddo.","It's very cold."],["Sta piovendo molto.","It's raining a lot."],["Oggi c'è un temporale.","There's a storm today."]] }
+      ]}
+    ]}
+  ]
+};
+
+// Legacy LESSONS reference for back-compat (same content, flat shape) — used by some older drill paths
 const LESSONS = {
   es: [
     {
@@ -2560,7 +3128,11 @@ const CLOZE = {
 
 const ACHIEVEMENTS = [
   { id: "first_steps",  icon: "👶", name: "First steps",     desc: "Complete your first lesson",
-    test: a => Object.values(a.lessonProgress || {}).some(lp => Object.keys(lp).filter(k => k !== "lastLesson").length > 0) },
+    test: a => {
+      const lp = Object.values(a.lessonProgress || {}).some(lp => Object.keys(lp).filter(k => k !== "lastLesson").length > 0);
+      const cp = Object.values(a.chapterProgress || {}).some(cp => Object.values(cp).some(l => (l.stars || 0) > 0));
+      return lp || cp;
+    } },
   { id: "century",      icon: "💯", name: "Century",         desc: "Earn 100 total XP",
     test: a => (a.xp || 0) >= 100 },
   { id: "marathoner",   icon: "🏃", name: "Marathoner",      desc: "Earn 1,000 total XP",
@@ -3121,11 +3693,12 @@ function renderDashboard() {
   const tip = tips[Math.floor(Math.random() * tips.length)];
   $("db-culture-tip").innerHTML = `<strong>${lang.flag} Did you know?</strong><br>${tip}`;
 
-  // Last lesson hint
-  const progress = p.lessonProgress && p.lessonProgress[state.activeLanguage];
-  if (progress && progress.lastLesson) {
-    const lesson = LESSONS[state.activeLanguage].find(l => l.id === progress.lastLesson);
-    if (lesson) $("db-lesson-hint").textContent = `Continue: ${lesson.title}`;
+  // Lesson hint: count completed lessons in current language
+  const cp = p.chapterProgress && p.chapterProgress[state.activeLanguage];
+  if (cp) {
+    const done = Object.values(cp).filter(l => (l.stars || 0) > 0).length;
+    const totalLessons = (CHAPTERS[state.activeLanguage] || []).reduce((sum, s) => sum + s.units.reduce((u, un) => u + un.lessons.length, 0), 0);
+    if (done > 0) $("db-lesson-hint").textContent = `${done} / ${totalLessons} lessons complete`;
   }
 
   renderHeatmap();
@@ -3444,145 +4017,413 @@ function nextDrillQuestion() {
 }
 
 /* =================================================================
-   Lessons
+   Lessons — Chapter tree + Duolingo-style player
    ================================================================= */
-function renderLessonPicker() {
-  $("lesson-picker").style.display = "";
-  $("lesson-session").style.display = "none";
-
-  const lessons = LESSONS[state.activeLanguage];
-  const levels = ["All", ...new Set(lessons.map(l => l.level))];
-  const currentLevel = renderLessonPicker._level || "All";
-
-  $("lesson-tabs").innerHTML = levels.map(lv =>
-    `<button class="tab ${lv===currentLevel?"active":""}" data-lv="${lv}">${lv}</button>`
-  ).join("");
-  $("lesson-tabs").querySelectorAll(".tab").forEach(t => {
-    t.onclick = () => { renderLessonPicker._level = t.dataset.lv; renderLessonPicker(); };
-  });
+function renderChapterTree() {
+  const lang = currentLang();
+  const chapters = CHAPTERS[state.activeLanguage] || [];
+  $("lessons-title").textContent = `${lang.flag} ${lang.name} lessons`;
 
   const p = me();
-  const progress = (p.lessonProgress && p.lessonProgress[state.activeLanguage]) || {};
-  const wordsKnown = (p.wordsLearned && p.wordsLearned[state.activeLanguage]) || [];
+  const progress = (p && p.chapterProgress && p.chapterProgress[state.activeLanguage]) || {};
 
-  const filtered = currentLevel === "All" ? lessons : lessons.filter(l => l.level === currentLevel);
-  $("lesson-list").innerHTML = filtered.map(lesson => {
-    const completed = progress[lesson.id] && progress[lesson.id].completed;
-    const masteredCount = lesson.words.filter(([t]) => wordsKnown.includes(t)).length;
+  // Compute total lessons + completed
+  let total = 0, completed = 0;
+  chapters.forEach(s => s.units.forEach(u => u.lessons.forEach(() => total++)));
+  Object.values(progress).forEach(lp => { if (lp.stars > 0) completed++; });
+
+  const subtitleNode = $("lessons-subtitle");
+  if (subtitleNode) {
+    subtitleNode.innerHTML = `${total} lessons across ${chapters.length} sections — <strong style="color:var(--accent);">${completed}</strong> complete${completed === 1 ? "" : "d"}.`;
+  }
+
+  $("chapter-tree").innerHTML = chapters.map(section => {
     return `
-      <div class="card hover" onclick="startLesson('${lesson.id}')">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-          <span class="pill">${lesson.level}</span>
-          ${completed ? '<span class="pill done">✓ Complete</span>' : ''}
+      <div class="section-block">
+        <div class="section-header">
+          <div class="section-icon">${section.icon}</div>
+          <div>
+            <div class="section-name">${escapeHtml(section.name)}</div>
+            <div class="section-meta">${section.units.length} unit${section.units.length === 1 ? "" : "s"}</div>
+          </div>
         </div>
-        <div style="font-weight:600;font-size:16px;margin-bottom:4px;">${lesson.title}</div>
-        <div style="color:var(--text-dim);font-size:13px;">${lesson.words.length} words · ${masteredCount} mastered</div>
+        ${section.units.map(unit => `
+          <div class="unit-block">
+            <div class="unit-name">${escapeHtml(unit.name)}</div>
+            <div class="lesson-row">
+              ${unit.lessons.map(lesson => {
+                const fullId = `${section.id}-${unit.id}-${lesson.id}`;
+                const lp = progress[fullId] || { stars: 0 };
+                const isComplete = lp.stars > 0;
+                return `
+                  <button class="lesson-node ${isComplete ? "completed" : ""}" type="button" onclick="startPlayerLesson('${section.id}','${unit.id}','${lesson.id}')">
+                    <div class="lesson-node-icon">${lesson.icon || "📘"}</div>
+                    <div class="lesson-node-name">${escapeHtml(lesson.name)}</div>
+                    <div class="lesson-node-meta">
+                      <span>${lesson.vocab.length} words</span>
+                      <span class="lesson-stars">
+                        <span class="lesson-star ${lp.stars >= 1 ? "on" : ""}">★</span>
+                        <span class="lesson-star ${lp.stars >= 2 ? "on" : ""}">★</span>
+                        <span class="lesson-star ${lp.stars >= 3 ? "on" : ""}">★</span>
+                      </span>
+                    </div>
+                  </button>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `).join("")}
       </div>
     `;
   }).join("");
 }
 
-let lessonState = null;
-function startLesson(id) {
-  const lesson = LESSONS[state.activeLanguage].find(l => l.id === id);
-  if (!lesson) return;
-  // Shuffle for variety
-  const words = [...lesson.words].sort(() => Math.random() - 0.5);
-  lessonState = {
-    lesson, words, idx: 0, correct: 0, wrong: 0, showing: "target",
-    learnedThisSession: []
-  };
-  $("lesson-picker").style.display = "none";
-  $("lesson-session").style.display = "";
-  renderFlashcard();
+/* ---------------------- Lesson player ---------------------- */
+let playerState = null;
+
+function findLesson(sectionId, unitId, lessonId) {
+  const chapters = CHAPTERS[state.activeLanguage];
+  const section = chapters.find(s => s.id === sectionId);
+  const unit = section && section.units.find(u => u.id === unitId);
+  const lesson = unit && unit.lessons.find(l => l.id === lessonId);
+  if (!lesson) return null;
+  return { section, unit, lesson, fullId: `${sectionId}-${unitId}-${lessonId}` };
 }
 
-function renderFlashcard() {
-  const ls = lessonState;
-  const el = $("flashcard");
-  if (ls.idx >= ls.words.length) {
-    // End of lesson
-    const xp = ls.correct * 5;
-    awardXp(xp);
+function startPlayerLesson(sectionId, unitId, lessonId) {
+  const found = findLesson(sectionId, unitId, lessonId);
+  if (!found) return;
+  const exercises = generateExercises(found.lesson);
+  playerState = {
+    section: found.section, unit: found.unit, lesson: found.lesson,
+    fullId: found.fullId,
+    exercises,
+    idx: 0, correct: 0, wrong: 0,
+    hearts: 5, awarded: 0,
+    answered: false, currentResult: null
+  };
+  $("player-overlay").classList.add("show");
+  document.body.classList.add("no-scroll");
+  renderExercise();
+}
 
-    // Save progress
-    const p = me();
-    p.lessonProgress = p.lessonProgress || {};
-    p.lessonProgress[state.activeLanguage] = p.lessonProgress[state.activeLanguage] || {};
-    p.lessonProgress[state.activeLanguage][ls.lesson.id] = { completed: ls.wrong === 0 };
-    p.lessonProgress[state.activeLanguage].lastLesson = ls.lesson.id;
-    if (ls.wrong === 0 && ls.lesson.words.length >= 5) p.perfectLesson = true;
+function closePlayer() {
+  $("player-overlay").classList.remove("show");
+  document.body.classList.remove("no-scroll");
+  playerState = null;
+  renderChapterTree();
+  renderDashboard();
+}
 
-    // Save learned words
-    p.wordsLearned = p.wordsLearned || {};
-    p.wordsLearned[state.activeLanguage] = p.wordsLearned[state.activeLanguage] || [];
-    ls.learnedThisSession.forEach(w => {
-      if (!p.wordsLearned[state.activeLanguage].includes(w)) p.wordsLearned[state.activeLanguage].push(w);
-    });
-    saveState();
+function generateExercises(lesson) {
+  const items = [];
+  // Each vocab pair generates 2 exercises across types
+  const vocab = [...lesson.vocab];
+  const phrases = [...(lesson.phrases || [])];
+  const ttsAvailable = !!window.speechSynthesis;
 
-    el.innerHTML = `
-      <div class="lesson-end">
-        <div style="font-size:48px;">🎉</div>
-        <h2>Lesson complete!</h2>
-        <div class="xp-gain">+${xp} XP</div>
-        <div style="color:var(--text-dim);margin-bottom:20px;">
-          ${ls.correct} correct · ${ls.wrong} missed · ${ls.learnedThisSession.length} new words
-        </div>
-        <div class="btn-row" style="justify-content:center;">
-          <button class="btn primary" onclick="renderLessonPicker()">More lessons</button>
-          <button class="btn" onclick="startLesson('${ls.lesson.id}')">Repeat</button>
-        </div>
-      </div>
-    `;
-    return;
+  vocab.forEach(([target, english]) => {
+    // Always include target→english MC (warm-up)
+    items.push({ kind: "mc-t2e", target, answer: english });
+    // 50/50 between the second-pass types
+    const r = Math.random();
+    if (r < 0.4) {
+      items.push({ kind: "mc-e2t", english, answer: target });
+    } else if (r < 0.75 && ttsAvailable) {
+      items.push({ kind: "listen", target, answer: target });
+    } else {
+      items.push({ kind: "type", english, answer: target });
+    }
+  });
+
+  // Add cloze for a few phrases
+  phrases.slice(0, 3).forEach(([sentence, english]) => {
+    // Make the longest word the blank
+    const words = sentence.split(/\s+/);
+    const longestIdx = words.reduce((bi, w, i) => w.replace(/[¿?¡!.,]/g, "").length > words[bi].replace(/[¿?¡!.,]/g, "").length ? i : bi, 0);
+    const blank = words[longestIdx].replace(/[¿?¡!.,]/g, "");
+    if (blank.length >= 3) {
+      const clozed = words.map((w, i) => i === longestIdx ? `{${blank}}` : w).join(" ");
+      items.push({ kind: "cloze", sentence: clozed, english, answer: blank });
+    }
+  });
+
+  // Shuffle a bit (keep first 2 simpler)
+  const head = items.slice(0, 2);
+  const rest = items.slice(2).sort(() => Math.random() - 0.5);
+  return [...head, ...rest].slice(0, 14);
+}
+
+function renderExercise() {
+  const ps = playerState;
+  if (!ps) return;
+  const ex = ps.exercises[ps.idx];
+
+  // Make sure footer is visible for new question (was hidden on end-screen)
+  $("player-footer").style.display = "";
+
+  // Update progress bar
+  const pct = (ps.idx / ps.exercises.length) * 100;
+  $("player-progress").style.width = pct + "%";
+  $("player-hearts").textContent = "❤️ " + ps.hearts;
+
+  // Reset state for this question
+  ps.answered = false;
+  ps.currentResult = null;
+  $("player-feedback").className = "player-feedback";
+  $("player-feedback").innerHTML = "";
+  $("player-action").textContent = "Check";
+  $("player-action").className = "player-action-btn";
+  $("player-action").disabled = true;
+
+  const body = $("player-body");
+  if (ex.kind === "mc-t2e") {
+    renderMCExercise(body, "What does this mean?", ex.target, ex.answer, "english", true);
+  } else if (ex.kind === "mc-e2t") {
+    renderMCExercise(body, `Choose the correct ${currentLang().name} word`, ex.english, ex.answer, "target", false);
+  } else if (ex.kind === "listen") {
+    renderListenExercise(body, ex);
+  } else if (ex.kind === "type") {
+    renderTypeExercise(body, ex);
+  } else if (ex.kind === "cloze") {
+    renderClozePlayerExercise(body, ex);
   }
-  const [target, meaning] = ls.words[ls.idx];
-  el.innerHTML = `
-    <div class="progress">
-      <span>${ls.idx + 1} / ${ls.words.length}</span>
-      <span>${ls.lesson.title}</span>
+}
+
+function buildOptions(correctAnswer, kind) {
+  // Pull all vocab from CHAPTERS for distractor sampling
+  const lang = state.activeLanguage;
+  const allWords = [];
+  (CHAPTERS[lang] || []).forEach(s => s.units.forEach(u => u.lessons.forEach(l => l.vocab.forEach(v => allWords.push(v)))));
+  const idx = kind === "english" ? 1 : 0;
+  const candidates = allWords.map(w => w[idx]).filter(w => w !== correctAnswer);
+  const distractors = [];
+  const used = new Set();
+  while (distractors.length < 3 && distractors.length < candidates.length) {
+    const pick = candidates[Math.floor(Math.random() * candidates.length)];
+    if (!used.has(pick)) { used.add(pick); distractors.push(pick); }
+  }
+  return [...distractors, correctAnswer].sort(() => Math.random() - 0.5);
+}
+
+function renderMCExercise(body, label, prompt, correctAnswer, optionKind, withSpeak) {
+  const options = buildOptions(correctAnswer, optionKind);
+  const speakBtn = withSpeak
+    ? `<button class="speak-btn" onclick="speak(${JSON.stringify(prompt).replace(/"/g, "&quot;")})" title="Hear it">🔊</button>`
+    : "";
+  body.innerHTML = `
+    <div class="player-prompt-label">${escapeHtml(label)}</div>
+    <div class="player-prompt-row">
+      <div class="player-prompt-word">${escapeHtml(prompt)}</div>
+      ${speakBtn}
     </div>
-    <div class="target">${target}</div>
-    <button class="speak-btn" onclick="speak('${target.replace(/'/g,"\\'")}')" title="Hear it">🔊</button>
-    <div class="reveal ${ls.showing==='meaning'?'shown':''}">${ls.showing==='meaning' ? meaning : 'Think of the meaning...'}</div>
-    <div class="hint">Press <strong>Space</strong> to reveal · <strong>←</strong> didn't know · <strong>→</strong> got it</div>
-    <div class="btn-row" style="justify-content:center;">
-      ${ls.showing === 'target'
-        ? `<button class="btn primary" onclick="revealCard()">Reveal</button>`
-        : `<button class="btn danger" onclick="markCard(false)">Didn't know</button>
-           <button class="btn success" onclick="markCard(true)">I got it</button>`
-      }
+    <div class="player-options">
+      ${options.map(opt => `<button class="player-option" data-opt="${escapeHtml(opt)}" onclick="selectOption(this, ${JSON.stringify(correctAnswer).replace(/"/g, "&quot;")})">${escapeHtml(opt)}</button>`).join("")}
     </div>
   `;
 }
 
-function revealCard() { lessonState.showing = "meaning"; renderFlashcard(); }
-function markCard(correct) {
-  const [target] = lessonState.words[lessonState.idx];
-  if (correct) {
-    lessonState.correct++;
-    if (!lessonState.learnedThisSession.includes(target)) lessonState.learnedThisSession.push(target);
-  } else {
-    lessonState.wrong++;
-    // Re-queue the missed word near the end
-    lessonState.words.push(lessonState.words[lessonState.idx]);
-  }
-  lessonState.idx++;
-  lessonState.showing = "target";
-  renderFlashcard();
+function renderListenExercise(body, ex) {
+  const options = buildOptions(ex.answer, "target");
+  body.innerHTML = `
+    <div class="player-prompt-label">Listen and pick the right word</div>
+    <div class="player-prompt-row">
+      <button class="speak-btn" style="width:84px;height:84px;font-size:38px;" onclick="speak(${JSON.stringify(ex.target).replace(/"/g, "&quot;")})" title="Hear it">🔊</button>
+    </div>
+    <div class="player-options">
+      ${options.map(opt => `<button class="player-option" data-opt="${escapeHtml(opt)}" onclick="selectOption(this, ${JSON.stringify(ex.answer).replace(/"/g, "&quot;")})">${escapeHtml(opt)}</button>`).join("")}
+    </div>
+  `;
+  // Auto-play once on appearance
+  setTimeout(() => speak(ex.target), 200);
 }
 
-// Keyboard shortcuts for lessons
-document.addEventListener("keydown", (e) => {
-  const lessonVisible = $("view-lessons").classList.contains("active") && $("lesson-session").style.display !== "none";
-  if (!lessonVisible || !lessonState) return;
-  if (e.key === " ") { e.preventDefault(); if (lessonState.showing === "target") revealCard(); }
-  else if (lessonState.showing === "meaning") {
-    if (e.key === "ArrowRight") markCard(true);
-    else if (e.key === "ArrowLeft") markCard(false);
+function renderTypeExercise(body, ex) {
+  body.innerHTML = `
+    <div class="player-prompt-label">Translate to ${currentLang().name}</div>
+    <div class="player-prompt-row">
+      <div class="player-prompt-word" style="font-size:36px;">${escapeHtml(ex.english)}</div>
+    </div>
+    <input type="text" class="player-typing" id="player-typing-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer in ${currentLang().name}">
+  `;
+  const input = $("player-typing-input");
+  input.focus();
+  input.addEventListener("input", () => {
+    $("player-action").disabled = !input.value.trim();
+  });
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter" && !$("player-action").disabled) {
+      e.preventDefault();
+      playerAction();
+    }
+  });
+  // Store answer info on the input for grading
+  input.dataset.answer = ex.answer;
+}
+
+function renderClozePlayerExercise(body, ex) {
+  const sentenceHtml = ex.sentence.replace(/\{([^}]+)\}/, `<input type="text" class="cloze-input" id="player-cloze-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-answer="${escapeHtml(ex.answer)}" style="width:${Math.max(110, ex.answer.length * 18)}px;font-size:24px;">`);
+  body.innerHTML = `
+    <div class="player-prompt-label">Fill in the blank</div>
+    <div class="cloze-english" style="text-align:center;font-size:15px;">${escapeHtml(ex.english)}</div>
+    <div class="cloze-sentence" style="text-align:center;margin-top:24px;font-size:30px;">${sentenceHtml}</div>
+  `;
+  const input = $("player-cloze-input");
+  input.focus();
+  input.addEventListener("input", () => {
+    $("player-action").disabled = !input.value.trim();
+  });
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter" && !$("player-action").disabled) {
+      e.preventDefault();
+      playerAction();
+    }
+  });
+}
+
+function selectOption(btn, correctAnswer) {
+  const ps = playerState;
+  if (ps.answered) return;
+  document.querySelectorAll(".player-option.selected").forEach(o => o.classList.remove("selected"));
+  btn.classList.add("selected");
+  btn.dataset.correctAnswer = correctAnswer;
+  ps.pendingPick = btn.dataset.opt;
+  ps.pendingCorrect = correctAnswer;
+  $("player-action").disabled = false;
+}
+
+function playerAction() {
+  const ps = playerState;
+  if (!ps) return;
+  if (!ps.answered) {
+    // Grade
+    const ex = ps.exercises[ps.idx];
+    let isCorrect = false;
+    let userAnswer = "";
+    if (ex.kind === "mc-t2e" || ex.kind === "mc-e2t" || ex.kind === "listen") {
+      userAnswer = ps.pendingPick;
+      isCorrect = normalizeForCheck(userAnswer || "") === normalizeForCheck(ex.answer);
+      // Show correct/wrong on options
+      document.querySelectorAll(".player-option").forEach(o => {
+        o.disabled = true;
+        if (o.dataset.opt === ex.answer) o.classList.add("correct");
+        else if (o.classList.contains("selected")) o.classList.add("wrong");
+        o.classList.remove("selected");
+      });
+    } else if (ex.kind === "type") {
+      const input = $("player-typing-input");
+      input.disabled = true;
+      userAnswer = input.value.trim();
+      isCorrect = normalizeForCheck(userAnswer) === normalizeForCheck(ex.answer);
+      input.style.borderColor = isCorrect ? "var(--success)" : "var(--danger)";
+      input.style.background = isCorrect ? "var(--success-soft)" : "var(--danger-soft)";
+    } else if (ex.kind === "cloze") {
+      const input = $("player-cloze-input");
+      input.disabled = true;
+      userAnswer = input.value.trim();
+      isCorrect = normalizeForCheck(userAnswer) === normalizeForCheck(ex.answer);
+      input.classList.add(isCorrect ? "correct" : "wrong");
+    }
+
+    ps.answered = true;
+    ps.currentResult = isCorrect;
+    if (isCorrect) {
+      ps.correct++;
+      $("player-feedback").className = "player-feedback show correct";
+      $("player-feedback").innerHTML = `✓ Nice! +5 XP`;
+    } else {
+      ps.wrong++;
+      ps.hearts = Math.max(0, ps.hearts - 1);
+      $("player-hearts").textContent = "❤️ " + ps.hearts;
+      $("player-feedback").className = "player-feedback show incorrect";
+      $("player-feedback").innerHTML = `✗ The correct answer is: <strong>${escapeHtml(ex.answer)}</strong>`;
+    }
+    if (isCorrect) ps.awarded += 5;
+    $("player-action").textContent = ps.idx === ps.exercises.length - 1 ? "Finish" : "Continue";
+    $("player-action").className = "player-action-btn " + (isCorrect ? "success" : "danger");
+    $("player-action").disabled = false;
+  } else {
+    // Continue / next
+    ps.idx++;
+    if (ps.idx >= ps.exercises.length || ps.hearts <= 0) {
+      finishLesson();
+    } else {
+      renderExercise();
+    }
   }
-});
+}
+
+function finishLesson() {
+  const ps = playerState;
+  const total = ps.exercises.length;
+  const accuracy = total > 0 ? ps.correct / total : 0;
+  const stars = accuracy >= 0.9 ? 3 : accuracy >= 0.75 ? 2 : ps.correct > 0 ? 1 : 0;
+  const xp = ps.awarded + (stars * 5); // bonus per star
+  awardXp(xp);
+
+  // Save progress
+  const p = me();
+  if (p) {
+    p.chapterProgress = p.chapterProgress || {};
+    p.chapterProgress[state.activeLanguage] = p.chapterProgress[state.activeLanguage] || {};
+    const prev = p.chapterProgress[state.activeLanguage][ps.fullId] || { stars: 0 };
+    p.chapterProgress[state.activeLanguage][ps.fullId] = {
+      stars: Math.max(prev.stars || 0, stars),
+      lastAccuracy: accuracy,
+      completedAt: Date.now(),
+      attempts: (prev.attempts || 0) + 1
+    };
+    // Track learned words
+    p.wordsLearned = p.wordsLearned || {};
+    p.wordsLearned[state.activeLanguage] = p.wordsLearned[state.activeLanguage] || [];
+    ps.lesson.vocab.forEach(([t]) => {
+      if (!p.wordsLearned[state.activeLanguage].includes(t)) p.wordsLearned[state.activeLanguage].push(t);
+    });
+    if (ps.wrong === 0 && total >= 5) p.perfectLesson = true;
+    saveState();
+  }
+
+  // Render end screen
+  $("player-progress").style.width = "100%";
+  $("player-feedback").className = "player-feedback";
+  $("player-feedback").innerHTML = "";
+  $("player-footer").style.display = "none"; // end screen has its own buttons
+  const body = $("player-body");
+  const reaction = stars === 3 ? "🌟 Perfect!" : stars === 2 ? "🎉 Great job!" : stars === 1 ? "👍 Lesson complete." : "💪 Try again!";
+  const emoji = stars === 3 ? "🏆" : stars === 2 ? "🎊" : stars === 1 ? "📘" : "🌱";
+  body.innerHTML = `
+    <div class="player-end">
+      <div class="player-end-emoji">${emoji}</div>
+      <div class="player-end-title">${reaction}</div>
+      <div class="player-end-stars">
+        <span style="color:${stars >= 1 ? "var(--gold)" : "var(--bg-strong)"}">★</span>
+        <span style="color:${stars >= 2 ? "var(--gold)" : "var(--bg-strong)"}">★</span>
+        <span style="color:${stars >= 3 ? "var(--gold)" : "var(--bg-strong)"}">★</span>
+      </div>
+      <div class="player-end-stats">
+        <div class="player-end-stat">
+          <div class="player-end-stat-label">XP earned</div>
+          <div class="player-end-stat-value">+${xp}</div>
+        </div>
+        <div class="player-end-stat">
+          <div class="player-end-stat-label">Accuracy</div>
+          <div class="player-end-stat-value">${Math.round(accuracy * 100)}%</div>
+        </div>
+        <div class="player-end-stat">
+          <div class="player-end-stat-label">Words</div>
+          <div class="player-end-stat-value">${ps.lesson.vocab.length}</div>
+        </div>
+      </div>
+      <div class="btn-row" style="justify-content:center;margin-top:8px;">
+        <button class="btn primary" onclick="closePlayer()">Continue</button>
+        <button class="btn" onclick="startPlayerLesson('${ps.section.id}','${ps.unit.id}','${ps.lesson.id}')">Repeat lesson</button>
+      </div>
+    </div>
+  `;
+}
+
+// Backward compat: wherever switchView used to render the lesson picker
+function renderLessonPicker() { renderChapterTree(); }
 
 /* =================================================================
    Speech synthesis
