@@ -523,6 +523,85 @@
     font-style: italic;
   }
 
+  /* ---------- Practice setup (drill type / level / length pickers) ---------- */
+  .drill-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .drill-card {
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
+  .drill-card:hover { border-color: var(--border-strong); }
+  .drill-card.active {
+    border-color: var(--accent);
+    background: var(--accent-softer);
+  }
+  .drill-icon { font-size: 28px; margin-bottom: 6px; }
+  .drill-name {
+    font-family: var(--serif);
+    font-size: 17px; font-weight: 500;
+    color: var(--text); margin-bottom: 4px;
+    letter-spacing: -.2px;
+  }
+  .drill-desc {
+    font-size: 13px; color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .pill-row {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px;
+  }
+  .level-pill, .length-pill {
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border);
+    color: var(--text-dim);
+    font-size: 13.5px; font-weight: 500;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .level-pill:hover, .length-pill:hover { border-color: var(--border-strong); color: var(--text); }
+  .level-pill.active, .length-pill.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #FFFFFF;
+  }
+  .practice-section-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    font-weight: 600; color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  /* Vocab multiple-choice drill */
+  .vocab-prompt-label {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px;
+    color: var(--text-muted); font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .vocab-prompt {
+    font-family: var(--serif);
+    font-size: 36px; font-weight: 500;
+    color: var(--text); letter-spacing: -.5px;
+    line-height: 1.15;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .vocab-prompt-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; margin-bottom: 22px;
+  }
+
   /* ---------- Cloze (fill-in-the-blank) ---------- */
   .cloze-english {
     color: var(--text-muted); font-size: 14px;
@@ -746,6 +825,58 @@
     font-size: 13px; color: var(--accent-hover); line-height: 1.55;
   }
   .auth-migration strong { color: var(--accent-hover); }
+
+  /* Recent accounts on sign-in */
+  .recent-accounts {
+    margin-bottom: 22px;
+  }
+  .recent-accounts-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-muted); font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .recent-account {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; margin-bottom: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg-surface);
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%; text-align: left;
+    transition: all .15s ease;
+    font-family: inherit;
+  }
+  .recent-account:hover {
+    border-color: var(--accent); background: var(--accent-softer);
+  }
+  .recent-account-avatar {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--accent); color: #FFFFFF;
+    font-family: var(--serif); font-size: 16px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .recent-account-info { flex: 1; min-width: 0; }
+  .recent-account-name {
+    font-size: 14.5px; font-weight: 500; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .recent-account-username {
+    font-size: 12px; color: var(--text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .recent-account-arrow {
+    color: var(--text-muted); font-size: 18px;
+  }
+  .recent-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 18px;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-muted); font-weight: 500;
+  }
+  .recent-divider::before, .recent-divider::after {
+    content: ""; flex: 1; height: 1px; background: var(--border);
+  }
 
   /* Sign out button in sidebar */
   .signout-btn {
@@ -1012,6 +1143,8 @@
     </div>
 
     <div class="auth-error" id="auth-error"></div>
+
+    <div class="recent-accounts" id="recent-accounts" style="display:none;"></div>
 
     <form id="signin-form" onsubmit="event.preventDefault();handleSignIn();">
       <div class="auth-field">
@@ -1290,16 +1423,50 @@
       <div id="lb-list"></div>
     </section>
 
-    <!-- Practice (cloze / fill-in-the-blank) -->
+    <!-- Practice (drills with level + length selection) -->
     <section id="view-practice" class="view">
       <h1>Practice</h1>
-      <p class="subtitle">Fill-in-the-blank sentences. The fastest way to lock vocabulary in long-term memory.</p>
+      <p class="subtitle" id="practice-subtitle">Pick a drill, choose your level, hit start. Hundreds of sentences and word challenges across all 5 languages.</p>
 
-      <div id="practice-start" class="card" style="max-width:560px;">
-        <div style="font-size:42px;margin-bottom:10px;">✏️</div>
-        <div style="font-family:var(--serif);font-weight:500;font-size:22px;letter-spacing:-.3px;margin-bottom:6px;" id="practice-intro-title">Cloze drill</div>
-        <p style="color:var(--text-dim);font-size:14.5px;line-height:1.55;margin:0 0 16px;">Type the missing word in a real sentence. +5 XP per correct answer, +5 streak bonus every 3 in a row. Accents optional.</p>
-        <button class="btn primary" onclick="startCloze()">Start drill</button>
+      <div id="practice-start" style="max-width:720px;">
+        <div class="practice-section-label">Choose a drill</div>
+        <div class="drill-types" id="drill-types">
+          <button class="drill-card active" type="button" data-drill="cloze">
+            <div class="drill-icon">✏️</div>
+            <div class="drill-name">Fill in the blank</div>
+            <div class="drill-desc">Type the missing word in real sentences. Builds active recall.</div>
+          </button>
+          <button class="drill-card" type="button" data-drill="vocab">
+            <div class="drill-icon">🎯</div>
+            <div class="drill-name">Vocabulary quiz</div>
+            <div class="drill-desc">See a word, pick the right meaning from 4 options.</div>
+          </button>
+          <button class="drill-card" type="button" data-drill="reverse">
+            <div class="drill-icon">🔄</div>
+            <div class="drill-name">English → target</div>
+            <div class="drill-desc">See the English meaning, pick the correct foreign word.</div>
+          </button>
+        </div>
+
+        <div class="practice-section-label">Difficulty</div>
+        <div class="pill-row" id="level-pills">
+          <button class="level-pill active" type="button" data-level="mixed">Mixed</button>
+          <button class="level-pill" type="button" data-level="beginner">Beginner</button>
+          <button class="level-pill" type="button" data-level="intermediate">Intermediate</button>
+          <button class="level-pill" type="button" data-level="advanced">Advanced</button>
+        </div>
+
+        <div class="practice-section-label">Length</div>
+        <div class="pill-row" id="length-pills">
+          <button class="length-pill" type="button" data-length="5">Quick · 5</button>
+          <button class="length-pill active" type="button" data-length="10">Standard · 10</button>
+          <button class="length-pill" type="button" data-length="20">Marathon · 20</button>
+          <button class="length-pill" type="button" data-length="40">Endurance · 40</button>
+        </div>
+
+        <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:18px;" id="practice-pool-info"></div>
+
+        <button class="btn primary" style="font-size:15px;padding:12px 26px;" onclick="startDrill()">Start drill →</button>
       </div>
 
       <div id="practice-play" style="display:none;max-width:640px;">
@@ -1307,15 +1474,7 @@
           <span id="practice-progress">Question 1 / 10</span>
           <span id="practice-score">Streak: 0</span>
         </div>
-        <div class="card">
-          <div class="cloze-english" id="cloze-english"></div>
-          <div class="cloze-sentence" id="cloze-sentence"></div>
-          <div id="cloze-feedback"></div>
-          <div class="btn-row">
-            <button class="btn" onclick="skipCloze()" id="cloze-skip">Skip</button>
-            <button class="btn primary" id="cloze-next" style="display:none;" onclick="nextCloze()">Next →</button>
-          </div>
-        </div>
+        <div class="card" id="practice-card"></div>
       </div>
 
       <div id="practice-done" style="display:none;" class="lesson-end"></div>
@@ -2132,76 +2291,271 @@ const EXPRESSIONS = {
 };
 
 const CLOZE = {
-  es: [
-    { sentence: "Quiero un vaso de {agua}.",         english: "I want a glass of water." },
-    { sentence: "Mi {familia} es muy grande.",       english: "My family is very big." },
-    { sentence: "¿Dónde está el {baño}?",            english: "Where is the bathroom?" },
-    { sentence: "Por la mañana tomo un {café}.",     english: "In the morning I have a coffee." },
-    { sentence: "Mi {amigo} se llama Pablo.",        english: "My friend's name is Pablo." },
-    { sentence: "La {casa} tiene un jardín bonito.", english: "The house has a pretty garden." },
-    { sentence: "Tengo {hambre}, ¿comemos?",         english: "I'm hungry, shall we eat?" },
-    { sentence: "{Buenos} días, ¿cómo está?",        english: "Good morning, how are you?" },
-    { sentence: "No {entiendo} la pregunta.",        english: "I don't understand the question." },
-    { sentence: "¿Cuánto {cuesta} este libro?",      english: "How much does this book cost?" },
-    { sentence: "Hace mucho {sol} hoy.",             english: "It's very sunny today." },
-    { sentence: "Mi {hermana} es médica.",           english: "My sister is a doctor." }
-  ],
-  fr: [
-    { sentence: "Je voudrais un verre d'{eau}.",        english: "I'd like a glass of water." },
-    { sentence: "Ma {famille} habite à Paris.",         english: "My family lives in Paris." },
-    { sentence: "Où sont les {toilettes} ?",            english: "Where's the bathroom?" },
-    { sentence: "Le matin, je prends un {café}.",       english: "In the morning, I have a coffee." },
-    { sentence: "Mon {ami} s'appelle Pierre.",          english: "My friend's name is Pierre." },
-    { sentence: "La {maison} a un grand jardin.",       english: "The house has a big garden." },
-    { sentence: "J'ai {faim}. On mange ?",              english: "I'm hungry. Shall we eat?" },
-    { sentence: "{Bonjour}, comment allez-vous ?",      english: "Hello, how are you?" },
-    { sentence: "Je ne {comprends} pas la question.",   english: "I don't understand the question." },
-    { sentence: "Ça {coûte} combien ?",                 english: "How much does it cost?" },
-    { sentence: "Il fait {beau} aujourd'hui.",          english: "The weather is nice today." },
-    { sentence: "Ma {sœur} est médecin.",               english: "My sister is a doctor." }
-  ],
-  ja: [
-    { sentence: "{Mizu} o kudasai.",                          english: "Water, please." },
-    { sentence: "Watashi no {kazoku} wa Tokyo ni sundeimasu.", english: "My family lives in Tokyo." },
-    { sentence: "{Toire} wa doko desu ka?",                   english: "Where's the bathroom?" },
-    { sentence: "Asa, {koohii} o nomimasu.",                  english: "In the morning, I drink coffee." },
-    { sentence: "{Tomodachi} no namae wa Ken desu.",          english: "My friend's name is Ken." },
-    { sentence: "Watashi no {ie} wa ookii desu.",             english: "My house is big." },
-    { sentence: "Onaka ga {suita}.",                          english: "I'm hungry." },
-    { sentence: "{Konnichiwa}, ogenki desu ka?",              english: "Hello, how are you?" },
-    { sentence: "{Wakarimasen}.",                             english: "I don't understand." },
-    { sentence: "{Ikura} desu ka?",                           english: "How much is it?" },
-    { sentence: "Kyou wa ii {tenki} desu.",                   english: "The weather is nice today." },
-    { sentence: "{Imouto} wa isha desu.",                     english: "My younger sister is a doctor." }
-  ],
-  de: [
-    { sentence: "Ein Glas {Wasser}, bitte.",         english: "A glass of water, please." },
-    { sentence: "Meine {Familie} wohnt in Berlin.",  english: "My family lives in Berlin." },
-    { sentence: "Wo ist die {Toilette}?",            english: "Where's the bathroom?" },
-    { sentence: "Morgens trinke ich einen {Kaffee}.", english: "In the morning I drink coffee." },
-    { sentence: "Mein {Freund} heißt Hans.",         english: "My friend's name is Hans." },
-    { sentence: "Das {Haus} hat einen Garten.",      english: "The house has a garden." },
-    { sentence: "Ich habe {Hunger}. Essen wir?",     english: "I'm hungry. Shall we eat?" },
-    { sentence: "{Guten} Morgen, wie geht es Ihnen?", english: "Good morning, how are you?" },
-    { sentence: "Ich {verstehe} die Frage nicht.",   english: "I don't understand the question." },
-    { sentence: "Wie viel {kostet} das?",            english: "How much does it cost?" },
-    { sentence: "Heute scheint die {Sonne}.",        english: "The sun is shining today." },
-    { sentence: "Meine {Schwester} ist Ärztin.",     english: "My sister is a doctor." }
-  ],
-  it: [
-    { sentence: "Un bicchiere d'{acqua}, per favore.", english: "A glass of water, please." },
-    { sentence: "La mia {famiglia} vive a Roma.",      english: "My family lives in Rome." },
-    { sentence: "Dov'è il {bagno}?",                   english: "Where's the bathroom?" },
-    { sentence: "La mattina bevo un {caffè}.",         english: "In the morning I drink coffee." },
-    { sentence: "Il mio {amico} si chiama Marco.",     english: "My friend's name is Marco." },
-    { sentence: "La {casa} ha un giardino.",           english: "The house has a garden." },
-    { sentence: "Ho {fame}, mangiamo?",                english: "I'm hungry, shall we eat?" },
-    { sentence: "{Buongiorno}, come sta?",             english: "Good morning, how are you?" },
-    { sentence: "Non {capisco} la domanda.",           english: "I don't understand the question." },
-    { sentence: "Quanto {costa} questo libro?",        english: "How much does this book cost?" },
-    { sentence: "Oggi c'è il {sole}.",                 english: "It's sunny today." },
-    { sentence: "Mia {sorella} è medico.",             english: "My sister is a doctor." }
-  ]
+  es: {
+    beginner: [
+      { sentence: "Hola, ¿cómo {estás}?",                       english: "Hi, how are you?" },
+      { sentence: "Me {llamo} María.",                          english: "My name is María." },
+      { sentence: "Yo {tengo} dos hermanos.",                   english: "I have two siblings." },
+      { sentence: "Mi familia es muy {grande}.",                english: "My family is very big." },
+      { sentence: "¿Dónde está el {baño}?",                     english: "Where is the bathroom?" },
+      { sentence: "Por la mañana tomo un {café}.",              english: "In the morning I have a coffee." },
+      { sentence: "Ella habla español muy {bien}.",             english: "She speaks Spanish very well." },
+      { sentence: "Hoy hace mucho {sol}.",                      english: "It's very sunny today." },
+      { sentence: "¿Te gusta el {chocolate}?",                  english: "Do you like chocolate?" },
+      { sentence: "Mi amigo {es} de Madrid.",                   english: "My friend is from Madrid." },
+      { sentence: "La biblioteca está {cerca}.",                english: "The library is close." },
+      { sentence: "Tengo veinte {años}.",                       english: "I'm twenty years old." },
+      { sentence: "¿Qué {hora} es?",                            english: "What time is it?" },
+      { sentence: "Bebo {agua} todos los días.",                english: "I drink water every day." },
+      { sentence: "Mañana es {domingo}.",                       english: "Tomorrow is Sunday." },
+      { sentence: "El gato {duerme} mucho.",                    english: "The cat sleeps a lot." },
+      { sentence: "Quiero {ir} al cine.",                       english: "I want to go to the cinema." },
+      { sentence: "¿Cuánto {cuesta} este libro?",               english: "How much does this book cost?" },
+      { sentence: "No {entiendo} la pregunta.",                 english: "I don't understand the question." },
+      { sentence: "Tengo mucha {hambre}.",                      english: "I'm very hungry." }
+    ],
+    intermediate: [
+      { sentence: "Si {hubiera} sabido, habría venido.",        english: "If I had known, I would have come." },
+      { sentence: "Lleva tres horas {estudiando}.",             english: "She's been studying for three hours." },
+      { sentence: "Es importante que {hagas} ejercicio.",       english: "It's important that you exercise." },
+      { sentence: "No creo que {sea} verdad.",                  english: "I don't think it's true." },
+      { sentence: "Mientras {comía}, sonó el teléfono.",        english: "While I was eating, the phone rang." },
+      { sentence: "Aunque {llueva}, iremos al parque.",         english: "Even if it rains, we'll go to the park." },
+      { sentence: "Espero que {llegues} a tiempo.",             english: "I hope you arrive on time." },
+      { sentence: "Ojalá {pudiera} viajar más.",                english: "I wish I could travel more." },
+      { sentence: "El libro {fue} escrito en 1985.",            english: "The book was written in 1985." },
+      { sentence: "Tan pronto como {termine}, te aviso.",       english: "As soon as I finish, I'll let you know." },
+      { sentence: "Me hizo {reír} mucho.",                      english: "It made me laugh a lot." },
+      { sentence: "¿Has {visto} esa película?",                 english: "Have you seen that movie?" },
+      { sentence: "Iba {caminando} por la calle.",              english: "I was walking down the street." },
+      { sentence: "Antes de {salir}, cierra la puerta.",        english: "Before leaving, close the door." },
+      { sentence: "Llevo dos años {viviendo} aquí.",            english: "I've been living here for two years." }
+    ],
+    advanced: [
+      { sentence: "De no {haber} sido por ti, habría fracasado.",        english: "Had it not been for you, I would have failed." },
+      { sentence: "No vendría aunque me lo {suplicaras}.",               english: "I wouldn't come even if you begged me." },
+      { sentence: "Hagas lo que {hagas}, te apoyaré.",                   english: "Whatever you do, I'll support you." },
+      { sentence: "Por mucho que se {esfuerce}, no lo logrará.",         english: "However hard he tries, he won't succeed." },
+      { sentence: "A medida que {pasaban} los años, lo entendía mejor.", english: "As the years went by, he understood better." },
+      { sentence: "Lejos de {desanimarse}, redobló sus esfuerzos.",      english: "Far from getting discouraged, he doubled his efforts." },
+      { sentence: "No es que no {quiera}, es que no puedo.",             english: "It's not that I don't want to, it's that I can't." },
+      { sentence: "{Habiendo} estudiado tanto, mereces aprobar.",        english: "Having studied so much, you deserve to pass." },
+      { sentence: "Conviene que se {tomen} medidas urgentes.",           english: "Urgent measures should be taken." },
+      { sentence: "Era un libro {cuya} portada me intrigaba.",           english: "It was a book whose cover intrigued me." }
+    ]
+  },
+  fr: {
+    beginner: [
+      { sentence: "Bonjour, comment {ça} va ?",                 english: "Hi, how are you?" },
+      { sentence: "Je m'{appelle} Marie.",                      english: "My name is Marie." },
+      { sentence: "J'{ai} deux frères.",                        english: "I have two brothers." },
+      { sentence: "Ma famille est très {grande}.",              english: "My family is very big." },
+      { sentence: "Où sont les {toilettes} ?",                  english: "Where are the bathrooms?" },
+      { sentence: "Le matin je prends un {café}.",              english: "In the morning I have a coffee." },
+      { sentence: "Elle parle français très {bien}.",           english: "She speaks French very well." },
+      { sentence: "Il fait beau {aujourd'hui}.",                english: "The weather is nice today." },
+      { sentence: "Tu aimes le {chocolat} ?",                   english: "Do you like chocolate?" },
+      { sentence: "Mon ami {est} de Paris.",                    english: "My friend is from Paris." },
+      { sentence: "La bibliothèque est {près} d'ici.",          english: "The library is near here." },
+      { sentence: "J'ai vingt {ans}.",                          english: "I'm twenty years old." },
+      { sentence: "Quelle heure {est}-il ?",                    english: "What time is it?" },
+      { sentence: "Je bois de l'{eau} chaque jour.",            english: "I drink water every day." },
+      { sentence: "Demain c'est {dimanche}.",                   english: "Tomorrow is Sunday." },
+      { sentence: "Le chat {dort} beaucoup.",                   english: "The cat sleeps a lot." },
+      { sentence: "Je veux {aller} au cinéma.",                 english: "I want to go to the cinema." },
+      { sentence: "Combien {coûte} ce livre ?",                 english: "How much does this book cost?" },
+      { sentence: "Je ne {comprends} pas la question.",         english: "I don't understand the question." },
+      { sentence: "J'ai très {faim}.",                          english: "I'm very hungry." }
+    ],
+    intermediate: [
+      { sentence: "Si j'avais {su}, je serais venu.",           english: "If I had known, I would have come." },
+      { sentence: "Elle étudie {depuis} trois heures.",         english: "She's been studying for three hours." },
+      { sentence: "Il faut que tu {fasses} de l'exercice.",     english: "You need to exercise." },
+      { sentence: "Je ne pense pas que ce {soit} vrai.",        english: "I don't think it's true." },
+      { sentence: "Pendant que je {mangeais}, le téléphone a sonné.", english: "While I was eating, the phone rang." },
+      { sentence: "Même s'il {pleut}, nous irons au parc.",     english: "Even if it rains, we'll go to the park." },
+      { sentence: "J'espère que tu {arriveras} à temps.",       english: "I hope you arrive on time." },
+      { sentence: "J'aimerais {pouvoir} voyager plus.",         english: "I wish I could travel more." },
+      { sentence: "Le livre a {été} écrit en 1985.",            english: "The book was written in 1985." },
+      { sentence: "Dès que je {finirai}, je te préviens.",      english: "As soon as I finish, I'll let you know." },
+      { sentence: "Ça m'a fait {rire} beaucoup.",               english: "It made me laugh a lot." },
+      { sentence: "As-tu {vu} ce film ?",                       english: "Have you seen that movie?" },
+      { sentence: "Je marchais {dans} la rue.",                 english: "I was walking down the street." },
+      { sentence: "Avant de {partir}, ferme la porte.",         english: "Before leaving, close the door." },
+      { sentence: "J'habite ici depuis deux {ans}.",            english: "I've been living here for two years." }
+    ],
+    advanced: [
+      { sentence: "Sans toi, j'aurais {échoué}.",                            english: "Without you, I would have failed." },
+      { sentence: "Je ne viendrais pas même si tu me le {demandais}.",       english: "I wouldn't come even if you asked me." },
+      { sentence: "Quoi que tu {fasses}, je te soutiendrai.",                english: "Whatever you do, I'll support you." },
+      { sentence: "Si fort qu'il {s'efforce}, il n'y arrivera pas.",         english: "However hard he tries, he won't succeed." },
+      { sentence: "Au fur et à mesure que les années {passaient}, il comprenait.", english: "As years went by, he understood." },
+      { sentence: "Loin de {se} décourager, il a redoublé d'efforts.",       english: "Far from giving up, he doubled his efforts." },
+      { sentence: "Ce n'est pas que je ne {veuille} pas, c'est que je ne peux pas.", english: "It's not that I don't want to, it's that I can't." },
+      { sentence: "{Ayant} tant étudié, tu mérites de réussir.",             english: "Having studied so much, you deserve success." },
+      { sentence: "Il convient que des mesures {soient} prises.",            english: "Measures should be taken." },
+      { sentence: "C'était un livre {dont} la couverture m'intriguait.",     english: "It was a book whose cover intrigued me." }
+    ]
+  },
+  ja: {
+    beginner: [
+      { sentence: "{Konnichiwa}, ogenki desu ka?",              english: "Hello, how are you?" },
+      { sentence: "Watashi no namae wa Yuki {desu}.",           english: "My name is Yuki." },
+      { sentence: "Ani ga {futari} imasu.",                     english: "I have two older brothers." },
+      { sentence: "{Kazoku} wa ookii desu.",                    english: "My family is big." },
+      { sentence: "{Toire} wa doko desu ka?",                   english: "Where's the bathroom?" },
+      { sentence: "Asa, {koohii} o nomimasu.",                  english: "In the morning, I drink coffee." },
+      { sentence: "Kanojo wa nihongo o jouzu ni {hanashimasu}.", english: "She speaks Japanese well." },
+      { sentence: "Kyou wa ii {tenki} desu.",                   english: "Today the weather is nice." },
+      { sentence: "Choko-reeto ga {suki} desu ka?",             english: "Do you like chocolate?" },
+      { sentence: "Tomodachi wa Kyoto kara {kimashita}.",       english: "My friend came from Kyoto." },
+      { sentence: "Toshokan wa {chikai} desu.",                 english: "The library is close." },
+      { sentence: "Hatachi {desu}.",                            english: "I am twenty years old." },
+      { sentence: "Ima {nanji} desu ka?",                       english: "What time is it now?" },
+      { sentence: "Mainichi {mizu} o nomimasu.",                english: "I drink water every day." },
+      { sentence: "Ashita wa {nichiyoubi} desu.",               english: "Tomorrow is Sunday." },
+      { sentence: "Eiga ni {ikitai} desu.",                     english: "I want to go to the cinema." },
+      { sentence: "Kono hon wa {ikura} desu ka?",               english: "How much is this book?" },
+      { sentence: "Shitsumon ga {wakarimasen}.",                english: "I don't understand the question." },
+      { sentence: "Onaka ga {suita} desu.",                     english: "I'm hungry." },
+      { sentence: "Watashi no neko wa {kuroi} desu.",           english: "My cat is black." }
+    ],
+    intermediate: [
+      { sentence: "Moshi {shitte} itara, kimashita.",           english: "If I had known, I would have come." },
+      { sentence: "Sanjikan {benkyou} shite imasu.",            english: "I have been studying for three hours." },
+      { sentence: "Undou suru {koto} ga taisetsu desu.",        english: "It is important to exercise." },
+      { sentence: "Hontou da to {omoimasen}.",                  english: "I don't think it's true." },
+      { sentence: "Tabete iru {aida} ni, denwa ga narimashita.", english: "While I was eating, the phone rang." },
+      { sentence: "Ame ga {futtemo}, kouen ni ikimasu.",        english: "Even if it rains, we'll go to the park." },
+      { sentence: "Jikan ni {maniau} koto o negaimasu.",        english: "I hope you'll be on time." },
+      { sentence: "Motto ryokou {dekireba} ii na.",             english: "I wish I could travel more." },
+      { sentence: "Sono hon wa 1985 nen ni {kakaremashita}.",   english: "That book was written in 1985." },
+      { sentence: "Owari {shidai}, oshirase shimasu.",          english: "As soon as I finish, I'll let you know." },
+      { sentence: "Sugoku {warawasete} kuremashita.",           english: "It made me laugh a lot." },
+      { sentence: "Sono eiga o {mita} koto ga arimasu ka?",     english: "Have you seen that movie?" },
+      { sentence: "Tooro o {aruite} imashita.",                 english: "I was walking down the street." },
+      { sentence: "Deru {mae} ni doa o shimete kudasai.",       english: "Before leaving, close the door please." },
+      { sentence: "Koko ni {ninen} sundeimasu.",                english: "I've lived here for two years." }
+    ],
+    advanced: [
+      { sentence: "Anata ga {inakattara}, shippai shita deshou.",        english: "Had it not been for you, I'd have failed." },
+      { sentence: "Tanonde mo {ikanai} desu.",                            english: "I wouldn't come even if asked." },
+      { sentence: "Nani o {shitemo}, oen shimasu.",                       english: "Whatever you do, I'll support you." },
+      { sentence: "Donna ni doryoku {shitemo} ushinatte iru.",            english: "However hard he tries, he won't succeed." },
+      { sentence: "Toshi ga {tatsu} ni tsurete, wakatta.",                english: "As years passed, he understood." },
+      { sentence: "Akiramezu, sara ni {doryoku} shimashita.",             english: "Far from giving up, he doubled his efforts." },
+      { sentence: "Iya na no de wa naku, {dekinai} no desu.",             english: "It's not that I don't want to, I can't." },
+      { sentence: "Konna ni {benkyou} shita kara, gokaku suru hazu.",     english: "Having studied so much, you should pass." },
+      { sentence: "Shinkokuna {taisaku} ga torareru beki desu.",          english: "Urgent measures should be taken." },
+      { sentence: "Hyoushi ni {hikareta} hon deshita.",                   english: "It was a book whose cover drew me in." }
+    ]
+  },
+  de: {
+    beginner: [
+      { sentence: "Hallo, wie {geht} es dir?",                  english: "Hi, how are you?" },
+      { sentence: "Ich {heiße} Anna.",                          english: "My name is Anna." },
+      { sentence: "Ich {habe} zwei Geschwister.",               english: "I have two siblings." },
+      { sentence: "Meine Familie ist sehr {groß}.",             english: "My family is very big." },
+      { sentence: "Wo ist die {Toilette}?",                     english: "Where is the bathroom?" },
+      { sentence: "Morgens trinke ich einen {Kaffee}.",         english: "I drink a coffee in the morning." },
+      { sentence: "Sie {spricht} sehr gut Deutsch.",            english: "She speaks German very well." },
+      { sentence: "Heute ist das Wetter {schön}.",              english: "The weather is nice today." },
+      { sentence: "Magst du {Schokolade}?",                     english: "Do you like chocolate?" },
+      { sentence: "Mein Freund {kommt} aus Berlin.",            english: "My friend is from Berlin." },
+      { sentence: "Die Bibliothek ist {nah}.",                  english: "The library is near." },
+      { sentence: "Ich bin zwanzig {Jahre} alt.",               english: "I'm twenty years old." },
+      { sentence: "Wie spät ist {es}?",                         english: "What time is it?" },
+      { sentence: "Ich trinke jeden Tag {Wasser}.",             english: "I drink water every day." },
+      { sentence: "Morgen ist {Sonntag}.",                      english: "Tomorrow is Sunday." },
+      { sentence: "Die Katze {schläft} viel.",                  english: "The cat sleeps a lot." },
+      { sentence: "Ich möchte ins {Kino} gehen.",               english: "I want to go to the cinema." },
+      { sentence: "Wie viel {kostet} dieses Buch?",             english: "How much is this book?" },
+      { sentence: "Ich {verstehe} die Frage nicht.",            english: "I don't understand the question." },
+      { sentence: "Ich habe {Hunger}.",                         english: "I'm hungry." }
+    ],
+    intermediate: [
+      { sentence: "Wenn ich es {gewusst} hätte, wäre ich gekommen.",     english: "If I had known, I'd have come." },
+      { sentence: "Sie lernt {seit} drei Stunden.",                      english: "She's been studying for three hours." },
+      { sentence: "Es ist wichtig, dass du Sport {treibst}.",            english: "It's important that you exercise." },
+      { sentence: "Ich {glaube} nicht, dass es wahr ist.",               english: "I don't think it's true." },
+      { sentence: "Während ich {aß}, klingelte das Telefon.",            english: "While I was eating, the phone rang." },
+      { sentence: "Auch wenn es {regnet}, gehen wir in den Park.",       english: "Even if it rains, we'll go to the park." },
+      { sentence: "Ich hoffe, dass du pünktlich {kommst}.",              english: "I hope you arrive on time." },
+      { sentence: "Ich wünschte, ich {könnte} mehr reisen.",             english: "I wish I could travel more." },
+      { sentence: "Das Buch wurde 1985 {geschrieben}.",                  english: "The book was written in 1985." },
+      { sentence: "Sobald ich fertig {bin}, sage ich Bescheid.",         english: "As soon as I'm done, I'll let you know." },
+      { sentence: "Es hat mich sehr zum {Lachen} gebracht.",             english: "It made me laugh a lot." },
+      { sentence: "Hast du diesen Film {gesehen}?",                      english: "Have you seen that movie?" },
+      { sentence: "Ich {ging} die Straße entlang.",                      english: "I was walking down the street." },
+      { sentence: "Bevor du {gehst}, schließ die Tür.",                  english: "Before you leave, close the door." },
+      { sentence: "Ich wohne {seit} zwei Jahren hier.",                  english: "I've lived here for two years." }
+    ],
+    advanced: [
+      { sentence: "Ohne dich {hätte} ich versagt.",                                  english: "Without you, I'd have failed." },
+      { sentence: "Ich würde nicht kommen, selbst wenn du mich {bätest}.",           english: "I wouldn't come even if you asked." },
+      { sentence: "Was auch immer du {tust}, ich unterstütze dich.",                 english: "Whatever you do, I'll support you." },
+      { sentence: "So sehr er sich auch {anstrengt}, er schafft es nicht.",          english: "However hard he tries, he won't make it." },
+      { sentence: "Mit den Jahren {verstand} er es besser.",                         english: "As years passed, he understood better." },
+      { sentence: "Anstatt sich {entmutigen} zu lassen, verdoppelte er die Bemühungen.", english: "Far from giving up, he doubled efforts." },
+      { sentence: "Es ist nicht so, dass ich nicht {will}, ich kann nicht.",         english: "It's not that I don't want to, I can't." },
+      { sentence: "Da er so viel gelernt {hat}, verdient er den Erfolg.",            english: "Since he studied so much, he deserves success." },
+      { sentence: "Es sollten dringend Maßnahmen {ergriffen} werden.",               english: "Urgent measures should be taken." },
+      { sentence: "Es war ein Buch, {dessen} Cover mich faszinierte.",               english: "It was a book whose cover fascinated me." }
+    ]
+  },
+  it: {
+    beginner: [
+      { sentence: "Ciao, come {stai}?",                         english: "Hi, how are you?" },
+      { sentence: "Mi {chiamo} Marco.",                         english: "My name is Marco." },
+      { sentence: "Ho {due} fratelli.",                         english: "I have two brothers." },
+      { sentence: "La mia famiglia è molto {grande}.",          english: "My family is very big." },
+      { sentence: "Dov'è il {bagno}?",                          english: "Where's the bathroom?" },
+      { sentence: "La mattina bevo un {caffè}.",                english: "In the morning I drink a coffee." },
+      { sentence: "Lei parla bene l'{italiano}.",               english: "She speaks Italian well." },
+      { sentence: "Oggi c'è il {sole}.",                        english: "Today is sunny." },
+      { sentence: "Ti piace il {cioccolato}?",                  english: "Do you like chocolate?" },
+      { sentence: "Il mio amico {è} di Roma.",                  english: "My friend is from Rome." },
+      { sentence: "La biblioteca è {vicina}.",                  english: "The library is close." },
+      { sentence: "Ho venti {anni}.",                           english: "I'm twenty years old." },
+      { sentence: "Che ora {è}?",                               english: "What time is it?" },
+      { sentence: "Bevo {acqua} ogni giorno.",                  english: "I drink water every day." },
+      { sentence: "Domani è {domenica}.",                       english: "Tomorrow is Sunday." },
+      { sentence: "Il gatto {dorme} molto.",                    english: "The cat sleeps a lot." },
+      { sentence: "Voglio {andare} al cinema.",                 english: "I want to go to the cinema." },
+      { sentence: "Quanto {costa} questo libro?",               english: "How much is this book?" },
+      { sentence: "Non {capisco} la domanda.",                  english: "I don't understand the question." },
+      { sentence: "Ho molta {fame}.",                           english: "I'm very hungry." }
+    ],
+    intermediate: [
+      { sentence: "Se l'{avessi} saputo, sarei venuto.",        english: "If I had known, I'd have come." },
+      { sentence: "Lei studia {da} tre ore.",                   english: "She's been studying for three hours." },
+      { sentence: "È importante che tu {faccia} esercizio.",    english: "It's important that you exercise." },
+      { sentence: "Non credo che {sia} vero.",                  english: "I don't think it's true." },
+      { sentence: "Mentre {mangiavo}, ha squillato il telefono.", english: "While I was eating, the phone rang." },
+      { sentence: "Anche se {piove}, andremo al parco.",        english: "Even if it rains, we'll go to the park." },
+      { sentence: "Spero che tu {arrivi} in tempo.",            english: "I hope you arrive on time." },
+      { sentence: "Vorrei {poter} viaggiare di più.",           english: "I wish I could travel more." },
+      { sentence: "Il libro {fu} scritto nel 1985.",            english: "The book was written in 1985." },
+      { sentence: "Appena {finirò}, ti avviso.",                english: "As soon as I finish, I'll let you know." },
+      { sentence: "Mi ha fatto {ridere} molto.",                english: "It made me laugh a lot." },
+      { sentence: "Hai {visto} quel film?",                     english: "Have you seen that movie?" },
+      { sentence: "{Camminavo} per strada.",                    english: "I was walking down the street." },
+      { sentence: "Prima di {uscire}, chiudi la porta.",        english: "Before leaving, close the door." },
+      { sentence: "Vivo qui da due {anni}.",                    english: "I've been living here for two years." }
+    ],
+    advanced: [
+      { sentence: "Se non {fosse} stato per te, avrei fallito.",          english: "Had it not been for you, I'd have failed." },
+      { sentence: "Non verrei nemmeno se me lo {chiedessi}.",             english: "I wouldn't come even if you asked." },
+      { sentence: "Qualunque cosa tu {faccia}, ti sosterrò.",             english: "Whatever you do, I'll support you." },
+      { sentence: "Per quanto si {sforzi}, non ci riuscirà.",             english: "However hard he tries, he won't succeed." },
+      { sentence: "Mano a {mano} che gli anni passavano, capiva meglio.", english: "As the years went by, he understood." },
+      { sentence: "Lungi dallo {scoraggiarsi}, raddoppiò gli sforzi.",    english: "Far from giving up, he doubled his efforts." },
+      { sentence: "Non è che non {voglia}, è che non posso.",             english: "It's not that I don't want to, it's that I can't." },
+      { sentence: "{Avendo} studiato così tanto, meriti il successo.",    english: "Having studied so much, you deserve success." },
+      { sentence: "Conviene che si {prendano} provvedimenti urgenti.",    english: "Urgent measures should be taken." },
+      { sentence: "Era un libro la cui {copertina} mi incuriosiva.",      english: "It was a book whose cover intrigued me." }
+    ]
+  }
 };
 
 const ACHIEVEMENTS = [
@@ -2315,9 +2669,7 @@ function showAuth() {
   // If accounts already exist on this device, default to Sign in tab; otherwise show Sign up
   const hasAccounts = Object.keys(state.accounts || {}).length > 0;
   const defaultMode = hasAccounts ? "signin" : "signup";
-  document.querySelectorAll(".auth-tab").forEach(t => t.classList.toggle("active", t.dataset.mode === defaultMode));
-  $("signin-form").style.display = defaultMode === "signin" ? "" : "none";
-  $("signup-form").style.display = defaultMode === "signup" ? "" : "none";
+  setAuthMode(defaultMode);
   // Show migration banner if pending
   $("auth-migration").style.display = state._pendingMigration ? "" : "none";
   clearAuthError();
@@ -2336,6 +2688,57 @@ function showAuth() {
     picker.dataset.rendered = "1";
   }
 }
+
+function setAuthMode(mode) {
+  document.querySelectorAll(".auth-tab").forEach(t => t.classList.toggle("active", t.dataset.mode === mode));
+  $("signin-form").style.display = mode === "signin" ? "" : "none";
+  $("signup-form").style.display = mode === "signup" ? "" : "none";
+  if (mode === "signin") {
+    renderRecentAccounts();
+    // Pre-fill the most recently used username
+    const accounts = Object.values(state.accounts || {});
+    if (accounts.length) {
+      const mostRecent = accounts.sort((a, b) => (b.lastSignIn || b.createdAt || 0) - (a.lastSignIn || a.createdAt || 0))[0];
+      if (!$("signin-username").value) $("signin-username").value = mostRecent.username;
+    }
+  } else {
+    $("recent-accounts").style.display = "none";
+  }
+}
+
+function renderRecentAccounts() {
+  const el = $("recent-accounts");
+  const accounts = Object.values(state.accounts || {});
+  if (accounts.length === 0) {
+    el.style.display = "none";
+    el.innerHTML = "";
+    return;
+  }
+  const sorted = accounts.sort((a, b) => (b.lastSignIn || b.createdAt || 0) - (a.lastSignIn || a.createdAt || 0));
+  const items = sorted.slice(0, 4); // show up to 4 most recent
+  el.style.display = "";
+  el.innerHTML = `
+    <div class="recent-accounts-label">Continue as</div>
+    ${items.map(a => `
+      <button class="recent-account" type="button" data-username="${escapeHtml(a.username)}">
+        <div class="recent-account-avatar">${escapeHtml((a.name || a.username || "?")[0].toUpperCase())}</div>
+        <div class="recent-account-info">
+          <div class="recent-account-name">${escapeHtml(a.name || a.username)}</div>
+          <div class="recent-account-username">@${escapeHtml(a.username)}</div>
+        </div>
+        <div class="recent-account-arrow">→</div>
+      </button>
+    `).join("")}
+    <div class="recent-divider">or sign in manually</div>
+  `;
+  el.querySelectorAll(".recent-account").forEach(b => {
+    b.onclick = () => {
+      $("signin-username").value = b.dataset.username;
+      $("signin-password").value = "";
+      $("signin-password").focus();
+    };
+  });
+}
 function hideAuth() {
   $("auth-screen").classList.remove("show");
   $("app").style.display = "flex";
@@ -2350,10 +2753,7 @@ function clearAuthError() {
 
 document.querySelectorAll(".auth-tab").forEach(tab => {
   tab.onclick = () => {
-    document.querySelectorAll(".auth-tab").forEach(t => t.classList.toggle("active", t === tab));
-    const mode = tab.dataset.mode;
-    $("signin-form").style.display = mode === "signin" ? "" : "none";
-    $("signup-form").style.display = mode === "signup" ? "" : "none";
+    setAuthMode(tab.dataset.mode);
     clearAuthError();
   };
 });
@@ -2384,6 +2784,7 @@ async function handleSignUp() {
     id, username, name: displayName,
     passwordHash, salt,
     createdAt: Date.now(),
+    lastSignIn: Date.now(),
     xp: migrate?.xp || 0,
     streak: migrate?.streak || 0,
     lastStudy: migrate?.lastStudy || null,
@@ -2413,6 +2814,7 @@ async function handleSignIn() {
   const hash = await hashPassword(password, account.salt);
   if (hash !== account.passwordHash) return showAuthError("Wrong password");
 
+  account.lastSignIn = Date.now();
   state.activeAccountId = account.id;
   saveState();
   hideAuth();
@@ -2421,10 +2823,14 @@ async function handleSignIn() {
 }
 
 function signOut() {
+  // Mark when this account was last active so it bubbles up the recent list
+  const acc = me();
+  if (acc) acc.lastSignIn = Date.now();
   state.activeAccountId = null;
   state.chatHistory = [];
   saveState();
-  ["signin-username","signin-password","signup-username","signup-password","signup-password2","signup-displayname"]
+  // Clear sensitive fields but keep the username remembered for quick re-login
+  ["signin-password", "signup-username", "signup-password", "signup-password2", "signup-displayname"]
     .forEach(id => { const el = $(id); if (el) el.value = ""; });
   showAuth();
 }
@@ -2777,51 +3183,195 @@ function renderAchievements() {
 }
 
 /* =================================================================
-   Cloze (fill-in-the-blank practice)
+   Practice — drills with level/length selection
    ================================================================= */
-let clozeState = null;
+const drillConfig = { type: "cloze", level: "mixed", length: 10 };
+let drillState = null;
 
 function renderPracticeIntro() {
   $("practice-start").style.display = "";
   $("practice-play").style.display = "none";
   $("practice-done").style.display = "none";
-  $("practice-intro-title").textContent = `${currentLang().flag} Cloze drill — ${currentLang().name}`;
+
+  // Wire selectors with current config
+  document.querySelectorAll("#drill-types .drill-card").forEach(b => {
+    b.classList.toggle("active", b.dataset.drill === drillConfig.type);
+    b.onclick = () => { drillConfig.type = b.dataset.drill; renderPracticeIntro(); };
+  });
+  document.querySelectorAll("#level-pills .level-pill").forEach(b => {
+    b.classList.toggle("active", b.dataset.level === drillConfig.level);
+    b.onclick = () => { drillConfig.level = b.dataset.level; renderPracticeIntro(); };
+  });
+  document.querySelectorAll("#length-pills .length-pill").forEach(b => {
+    b.classList.toggle("active", parseInt(b.dataset.length, 10) === drillConfig.length);
+    b.onclick = () => { drillConfig.length = parseInt(b.dataset.length, 10); renderPracticeIntro(); };
+  });
+
+  // Show pool info
+  const pool = buildDrillPool();
+  const lang = currentLang();
+  if (pool.length === 0) {
+    $("practice-pool-info").innerHTML = `<span style="color:var(--danger);">No items available for this combination yet. Try a different level or drill type.</span>`;
+  } else if (pool.length < drillConfig.length) {
+    $("practice-pool-info").innerHTML = `${lang.flag} ${pool.length} ${pool.length === 1 ? "item" : "items"} in the ${lang.name} ${drillConfig.level === "mixed" ? "" : drillConfig.level + " "}pool — repeats may occur.`;
+  } else {
+    $("practice-pool-info").innerHTML = `${lang.flag} ${pool.length} ${lang.name} ${drillConfig.level === "mixed" ? "" : drillConfig.level + " "}items available.`;
+  }
 }
 
-function startCloze() {
-  const pool = CLOZE[state.activeLanguage] || [];
-  if (!pool.length) { toast("No cloze sentences for this language yet"); return; }
-  const items = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
-  clozeState = { items, idx: 0, correct: 0, streak: 0, total: items.length };
+function buildDrillPool() {
+  const lang = state.activeLanguage;
+  if (drillConfig.type === "cloze") {
+    const langCloze = CLOZE[lang] || {};
+    if (drillConfig.level === "mixed") {
+      return [...(langCloze.beginner || []), ...(langCloze.intermediate || []), ...(langCloze.advanced || [])];
+    }
+    return [...(langCloze[drillConfig.level] || [])];
+  } else {
+    // vocab / reverse — pull from LESSONS, filter by level
+    const lessons = LESSONS[lang] || [];
+    const levelMap = { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" };
+    const wanted = levelMap[drillConfig.level];
+    const filtered = drillConfig.level === "mixed" ? lessons : lessons.filter(l => l.level === wanted);
+    const words = [];
+    filtered.forEach(l => l.words.forEach(([t, e]) => words.push({ target: t, english: e })));
+    return words;
+  }
+}
+
+function startDrill() {
+  const pool = buildDrillPool();
+  if (!pool.length) { toast("No items available for this combination"); return; }
+
+  // Sample (with repeats if pool < length)
+  const items = [];
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  for (let i = 0; i < drillConfig.length; i++) {
+    items.push(shuffled[i % shuffled.length]);
+  }
+
+  drillState = {
+    type: drillConfig.type,
+    items,
+    idx: 0,
+    correct: 0,
+    streak: 0,
+    total: items.length,
+    pool // needed for distractor sampling in MC drills
+  };
+
   $("practice-start").style.display = "none";
   $("practice-done").style.display = "none";
   $("practice-play").style.display = "";
-  renderCloze();
+  renderDrillQuestion();
 }
 
-function renderCloze() {
-  const cs = clozeState;
-  const item = cs.items[cs.idx];
-  const answer = item.sentence.match(/\{([^}]+)\}/)[1];
-  const sentenceHtml = item.sentence.replace(/\{([^}]+)\}/, `<input type="text" class="cloze-input" id="cloze-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-answer="${escapeHtml(answer)}" style="width:${Math.max(110, answer.length * 14)}px;">`);
+function renderDrillQuestion() {
+  const ds = drillState;
+  $("practice-progress").textContent = `Question ${ds.idx + 1} / ${ds.total}`;
+  $("practice-score").textContent = `Streak: ${ds.streak} · Correct: ${ds.correct}`;
+  if (ds.type === "cloze") renderClozeQuestion();
+  else renderMCQuestion();
+}
 
-  $("practice-progress").textContent = `Question ${cs.idx + 1} / ${cs.total}`;
-  $("practice-score").textContent = `Streak: ${cs.streak} · Correct: ${cs.correct}`;
-  $("cloze-english").textContent = item.english;
-  $("cloze-sentence").innerHTML = sentenceHtml;
-  $("cloze-feedback").innerHTML = "";
-  $("cloze-next").style.display = "none";
-  $("cloze-skip").style.display = "";
+function renderClozeQuestion() {
+  const ds = drillState;
+  const item = ds.items[ds.idx];
+  const answer = item.sentence.match(/\{([^}]+)\}/)[1];
+  const sentenceHtml = item.sentence.replace(/\{([^}]+)\}/,
+    `<input type="text" class="cloze-input" id="cloze-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-answer="${escapeHtml(answer)}" style="width:${Math.max(110, answer.length * 16)}px;">`
+  );
+
+  $("practice-card").innerHTML = `
+    <div class="cloze-english">${escapeHtml(item.english)}</div>
+    <div class="cloze-sentence">${sentenceHtml}</div>
+    <div id="drill-feedback"></div>
+    <div class="btn-row">
+      <button class="btn" onclick="skipDrill()" id="drill-skip">Skip</button>
+      <button class="btn primary" id="drill-next" style="display:none;" onclick="nextDrillQuestion()">Next →</button>
+    </div>
+  `;
 
   const input = $("cloze-input");
   input.focus();
   input.addEventListener("keydown", e => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if ($("cloze-next").style.display === "none") checkClozeAnswer();
-      else nextCloze();
+      if ($("drill-next").style.display === "none") checkClozeAnswer();
+      else nextDrillQuestion();
     }
   });
+}
+
+function renderMCQuestion() {
+  const ds = drillState;
+  const item = ds.items[ds.idx];
+  const isReverse = ds.type === "reverse";
+  const promptKey = isReverse ? "english" : "target";
+  const answerKey = isReverse ? "target" : "english";
+  const promptText = item[promptKey];
+  const correctAnswer = item[answerKey];
+
+  // Build distractors from pool: 3 other entries with different correctAnswer
+  const distractorPool = ds.pool.filter(p => p[answerKey] !== correctAnswer);
+  const distractors = [];
+  const used = new Set();
+  while (distractors.length < 3 && distractors.length < distractorPool.length) {
+    const pick = distractorPool[Math.floor(Math.random() * distractorPool.length)];
+    if (!used.has(pick[answerKey])) {
+      used.add(pick[answerKey]);
+      distractors.push(pick[answerKey]);
+    }
+  }
+  const options = [...distractors, correctAnswer].sort(() => Math.random() - 0.5);
+
+  // Speak button only useful when prompt is in target language
+  const speakBtn = !isReverse
+    ? `<button class="speak-btn" onclick="speak(${JSON.stringify(promptText).replace(/"/g, "&quot;")})" title="Hear it">🔊</button>`
+    : "";
+
+  $("practice-card").innerHTML = `
+    <div class="vocab-prompt-label">${isReverse ? "Pick the correct word in " + currentLang().name : "What does this mean?"}</div>
+    <div class="vocab-prompt-row">
+      <div class="vocab-prompt">${escapeHtml(promptText)}</div>
+      ${speakBtn}
+    </div>
+    <div id="mc-options">
+      ${options.map(opt => `<button class="quiz-option" data-opt="${escapeHtml(opt)}">${escapeHtml(opt)}</button>`).join("")}
+    </div>
+    <div id="drill-feedback"></div>
+    <div class="btn-row">
+      <button class="btn primary" id="drill-next" style="display:none;" onclick="nextDrillQuestion()">Next →</button>
+    </div>
+  `;
+  $("mc-options").querySelectorAll(".quiz-option").forEach(b => {
+    b.onclick = () => pickMCAnswer(b, correctAnswer);
+  });
+}
+
+function pickMCAnswer(btn, correctAnswer) {
+  const ds = drillState;
+  const buttons = $("mc-options").querySelectorAll(".quiz-option");
+  buttons.forEach(b => {
+    b.onclick = null;
+    if (b.dataset.opt === correctAnswer) b.classList.add("correct");
+    else if (b === btn) b.classList.add("wrong");
+  });
+  const correct = btn.dataset.opt === correctAnswer;
+  if (correct) {
+    ds.correct++;
+    ds.streak++;
+    let bonus = 0;
+    if (ds.streak > 0 && ds.streak % 3 === 0) bonus = 5;
+    awardXp(5 + bonus);
+    $("drill-feedback").innerHTML = `<div class="cloze-feedback show success">✓ Correct! +${5 + bonus} XP${bonus ? " (streak bonus!)" : ""}</div>`;
+  } else {
+    ds.streak = 0;
+    $("drill-feedback").innerHTML = `<div class="cloze-feedback show fail">✗ Correct answer: <strong>${escapeHtml(correctAnswer)}</strong></div>`;
+  }
+  $("drill-next").style.display = "";
+  $("drill-next").textContent = ds.idx === ds.total - 1 ? "See results →" : "Next →";
+  $("drill-next").focus();
 }
 
 function normalizeForCheck(s) {
@@ -2829,7 +3379,7 @@ function normalizeForCheck(s) {
 }
 
 function checkClozeAnswer() {
-  const cs = clozeState;
+  const ds = drillState;
   const input = $("cloze-input");
   const guess = input.value.trim();
   const answer = input.dataset.answer;
@@ -2839,55 +3389,58 @@ function checkClozeAnswer() {
   input.classList.add(correct ? "correct" : "wrong");
 
   if (correct) {
-    cs.correct++;
-    cs.streak++;
+    ds.correct++;
+    ds.streak++;
     let bonus = 0;
-    if (cs.streak > 0 && cs.streak % 3 === 0) bonus = 5;
+    if (ds.streak > 0 && ds.streak % 3 === 0) bonus = 5;
     awardXp(5 + bonus);
-    $("cloze-feedback").innerHTML = `<div class="cloze-feedback show success">✓ Correct! +${5 + bonus} XP${bonus ? " (streak bonus!)" : ""}</div>`;
+    $("drill-feedback").innerHTML = `<div class="cloze-feedback show success">✓ Correct! +${5 + bonus} XP${bonus ? " (streak bonus!)" : ""}</div>`;
   } else {
-    cs.streak = 0;
-    $("cloze-feedback").innerHTML = `<div class="cloze-feedback show fail">✗ Answer: <strong>${escapeHtml(answer)}</strong></div>`;
+    ds.streak = 0;
+    $("drill-feedback").innerHTML = `<div class="cloze-feedback show fail">✗ Answer: <strong>${escapeHtml(answer)}</strong></div>`;
   }
-  $("cloze-skip").style.display = "none";
-  $("cloze-next").style.display = "";
-  $("cloze-next").textContent = cs.idx === cs.total - 1 ? "See results →" : "Next →";
-  $("cloze-next").focus();
+  $("drill-skip").style.display = "none";
+  $("drill-next").style.display = "";
+  $("drill-next").textContent = ds.idx === ds.total - 1 ? "See results →" : "Next →";
+  $("drill-next").focus();
 }
 
-function skipCloze() {
-  const cs = clozeState;
-  const input = $("cloze-input");
-  input.disabled = true;
-  input.classList.add("wrong");
-  cs.streak = 0;
-  $("cloze-feedback").innerHTML = `<div class="cloze-feedback show fail">Skipped — answer: <strong>${escapeHtml(input.dataset.answer)}</strong></div>`;
-  $("cloze-skip").style.display = "none";
-  $("cloze-next").style.display = "";
-  $("cloze-next").focus();
+function skipDrill() {
+  const ds = drillState;
+  if (ds.type === "cloze") {
+    const input = $("cloze-input");
+    input.disabled = true;
+    input.classList.add("wrong");
+    ds.streak = 0;
+    $("drill-feedback").innerHTML = `<div class="cloze-feedback show fail">Skipped — answer: <strong>${escapeHtml(input.dataset.answer)}</strong></div>`;
+    $("drill-skip").style.display = "none";
+    $("drill-next").style.display = "";
+    $("drill-next").focus();
+  }
 }
 
-function nextCloze() {
-  const cs = clozeState;
-  cs.idx++;
-  if (cs.idx >= cs.total) {
+function nextDrillQuestion() {
+  const ds = drillState;
+  ds.idx++;
+  if (ds.idx >= ds.total) {
     $("practice-play").style.display = "none";
-    const pct = Math.round((cs.correct / cs.total) * 100);
+    const pct = Math.round((ds.correct / ds.total) * 100);
     const reaction = pct >= 90 ? "🎯 Sharpshooter!" : pct >= 70 ? "🌟 Solid work!" : pct >= 50 ? "💪 Keep practicing!" : "🌱 Try again — you'll get it.";
+    const drillName = ds.type === "cloze" ? "Cloze" : ds.type === "vocab" ? "Vocabulary" : "Translation";
     $("practice-done").innerHTML = `
       <div style="font-size:48px;">${pct >= 70 ? "🎊" : "📝"}</div>
       <h2>${reaction}</h2>
-      <div class="xp-gain">+${cs.correct * 5} XP earned</div>
-      <div style="color:var(--text-dim);margin-bottom:20px;">${cs.correct} of ${cs.total} correct (${pct}%)</div>
+      <div class="xp-gain">+${ds.correct * 5} XP earned</div>
+      <div style="color:var(--text-dim);margin-bottom:20px;">${drillName} drill · ${ds.correct} of ${ds.total} correct (${pct}%)</div>
       <div class="btn-row" style="justify-content:center;">
-        <button class="btn primary" onclick="startCloze()">Play again</button>
-        <button class="btn" onclick="renderPracticeIntro()">Done</button>
+        <button class="btn primary" onclick="startDrill()">Play again</button>
+        <button class="btn" onclick="renderPracticeIntro()">Change settings</button>
       </div>
     `;
     $("practice-done").style.display = "";
     return;
   }
-  renderCloze();
+  renderDrillQuestion();
 }
 
 /* =================================================================
