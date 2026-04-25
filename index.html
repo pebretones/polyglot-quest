@@ -4790,6 +4790,67 @@ function nextDrillQuestion() {
 /* =================================================================
    Goals — CEFR target + personalized plan
    ================================================================= */
+const PLACEMENT_QUIZ = {
+  es: [
+    { level: "A1", q: "What does 'hola' mean?", options: ["hello","goodbye","thanks","please"], answer: "hello" },
+    { level: "A1", q: "Which is the number 'siete'?", options: ["6","7","8","5"], answer: "7" },
+    { level: "A2", q: "Choose: 'Yo ___ a la escuela todos los días.'", options: ["voy","fui","iré","ir"], answer: "voy" },
+    { level: "A2", q: "What does 'Me gusta el chocolate' mean?", options: ["I like chocolate","I have chocolate","I want chocolate","I make chocolate"], answer: "I like chocolate" },
+    { level: "B1", q: "Choose: 'Quiero que tú ___ aquí.' (subjunctive after 'querer que')", options: ["estés","estás","estabas","estarás"], answer: "estés" },
+    { level: "B1", q: "Best translation: 'I lived in Spain when I was a child.'", options: ["Vivía en España cuando era niño.","Vivo en España cuando soy niño.","Viví en España cuando fui niño.","Vivir en España cuando ser niño."], answer: "Vivía en España cuando era niño." },
+    { level: "B2", q: "Choose: 'Yo ya había ___ cuando llamaste.' (pluperfect of 'comer')", options: ["comido","comí","como","comer"], answer: "comido" },
+    { level: "B2", q: "Most natural: 'However hard you try...'", options: ["Por mucho que te esfuerces","Aunque te esfuerzas","Porque te esfuerces","Si te esfuerces"], answer: "Por mucho que te esfuerces" },
+    { level: "C1", q: "What does 'De no haber sido por ti...' mean?", options: ["Had it not been for you","Without telling you","Despite you","Because of you"], answer: "Had it not been for you" },
+    { level: "C1", q: "What does 'Hagas lo que hagas...' mean?", options: ["Whatever you do","Whatever you say","Whoever you are","Wherever you go"], answer: "Whatever you do" },
+    { level: "C2", q: "Best translation: 'It's not that I don't want to, it's that I can't.'", options: ["No es que no quiera, es que no puedo.","No quiero ni puedo.","No quiero porque no puedo.","No es para querer ni para poder."], answer: "No es que no quiera, es que no puedo." },
+    { level: "C2", q: "Which uses 'cuyo' correctly?", options: ["Era un libro cuya portada me intrigaba.","Era un libro que portada me intrigaba.","Era un libro de cuyo portada me intrigaba.","Era un libro la cuyo portada me intrigaba."], answer: "Era un libro cuya portada me intrigaba." }
+  ],
+  fr: [
+    { level: "A1", q: "What does 'bonjour' mean?", options: ["hello","goodbye","thanks","please"], answer: "hello" },
+    { level: "A1", q: "Which is the number 'sept'?", options: ["6","7","8","5"], answer: "7" },
+    { level: "A2", q: "Choose: 'Je ___ à l'école tous les jours.'", options: ["vais","suis allé","irai","aller"], answer: "vais" },
+    { level: "A2", q: "What does 'Tu aimes le chocolat ?' mean?", options: ["Do you like chocolate?","Do you have chocolate?","Do you want chocolate?","Do you make chocolate?"], answer: "Do you like chocolate?" },
+    { level: "B1", q: "Choose: 'Il faut que tu ___ tes devoirs.' (subjunctive)", options: ["fasses","fais","faisais","feras"], answer: "fasses" },
+    { level: "B1", q: "Best translation: 'I lived in Paris when I was young.'", options: ["Je vivais à Paris quand j'étais jeune.","Je vis à Paris quand je suis jeune.","J'ai vécu à Paris quand j'ai été jeune.","Vivre à Paris quand être jeune."], answer: "Je vivais à Paris quand j'étais jeune." },
+    { level: "B2", q: "Choose: 'J'aurais dû ___ avec toi hier.' (past conditional)", options: ["aller","allé","vais","irai"], answer: "aller" },
+    { level: "B2", q: "Most natural: 'However hard you try...'", options: ["Quoi que tu fasses","Bien que tu fais","Parce que tu fasses","Si tu essaies"], answer: "Quoi que tu fasses" },
+    { level: "C1", q: "What does 'Sans toi, j'aurais échoué' mean?", options: ["Without you, I'd have failed","Despite you, I succeeded","Because of you, I tried","With you, I have failed"], answer: "Without you, I'd have failed" },
+    { level: "C1", q: "What does 'Quoi que tu fasses...' mean?", options: ["Whatever you do","Whoever you are","Whenever you arrive","Wherever you go"], answer: "Whatever you do" },
+    { level: "C2", q: "Best translation: 'It's not that I don't want to, it's that I can't.'", options: ["Ce n'est pas que je ne veuille pas, c'est que je ne peux pas.","Je ne veux ni ne peux.","Je ne veux pas car je ne peux pas.","Ce n'est pas pour vouloir ni pouvoir."], answer: "Ce n'est pas que je ne veuille pas, c'est que je ne peux pas." },
+    { level: "C2", q: "Which uses 'dont' correctly?", options: ["C'était un livre dont la couverture m'intriguait.","C'était un livre que la couverture m'intriguait.","C'était un livre lequel la couverture m'intriguait.","C'était un livre la dont couverture m'intriguait."], answer: "C'était un livre dont la couverture m'intriguait." }
+  ],
+  ja: [
+    { level: "A1", q: "What does 'こんにちは (konnichiwa)' mean?", options: ["hello","goodbye","thanks","please"], answer: "hello" },
+    { level: "A1", q: "Which kanji means 'one'?", options: ["一","二","三","四"], answer: "一" },
+    { level: "A2", q: "What does 'お元気ですか？' mean?", options: ["How are you?","What's your name?","Where are you from?","How old are you?"], answer: "How are you?" },
+    { level: "A2", q: "Choose: '私の名前は田中___.'", options: ["です","ます","する","あり"], answer: "です" },
+    { level: "B1", q: "What's the て-form of 食べる?", options: ["食べて","食べた","食べる","食べない"], answer: "食べて" },
+    { level: "B1", q: "What does 'もう一度お願いします' mean?", options: ["Once more, please","Thank you very much","Excuse me","I'm sorry"], answer: "Once more, please" },
+    { level: "B2", q: "Plain past form of 来る (kuru)?", options: ["来た","来ます","来る","来ない"], answer: "来た" },
+    { level: "C1", q: "What does '一期一会 (ichigo ichie)' express?", options: ["Treasure each meeting — it happens once","Two birds, one stone","Practice makes perfect","Time is money"], answer: "Treasure each meeting — it happens once" }
+  ],
+  de: [
+    { level: "A1", q: "What does 'Hallo' mean?", options: ["hello","goodbye","thanks","please"], answer: "hello" },
+    { level: "A1", q: "Which is the number 'sieben'?", options: ["6","7","8","5"], answer: "7" },
+    { level: "A2", q: "Choose: 'Ich ___ jeden Tag zur Schule.'", options: ["gehe","ging","werde gehen","gehen"], answer: "gehe" },
+    { level: "A2", q: "What does 'Wie geht es dir?' mean?", options: ["How are you?","What's your name?","Where are you from?","How old are you?"], answer: "How are you?" },
+    { level: "B1", q: "Choose: 'Wenn ich Zeit ___, würde ich kommen.' (Konjunktiv II)", options: ["hätte","habe","hatte","gehabt"], answer: "hätte" },
+    { level: "B1", q: "Best translation: 'I lived in Berlin when I was young.'", options: ["Ich lebte in Berlin, als ich jung war.","Ich lebe in Berlin, wenn ich jung bin.","Ich gelebt habe in Berlin, als ich jung war.","Leben in Berlin, jung sein."], answer: "Ich lebte in Berlin, als ich jung war." },
+    { level: "B2", q: "Choose: 'Ich hätte gestern kommen ___.' (past modal)", options: ["sollen","sollte","gesollt","sollen können"], answer: "sollen" },
+    { level: "C1", q: "What does 'jedoch' express?", options: ["however","therefore","because","although"], answer: "however" }
+  ],
+  it: [
+    { level: "A1", q: "What does 'ciao' mean?", options: ["hi/bye","goodnight","thanks","please"], answer: "hi/bye" },
+    { level: "A1", q: "Which is the number 'sette'?", options: ["6","7","8","5"], answer: "7" },
+    { level: "A2", q: "Choose: 'Io ___ a scuola ogni giorno.'", options: ["vado","sono andato","andrò","andare"], answer: "vado" },
+    { level: "A2", q: "What does 'Come stai?' mean?", options: ["How are you?","What's your name?","Where are you from?","How old are you?"], answer: "How are you?" },
+    { level: "B1", q: "Choose: 'Voglio che tu ___ qui.' (subjunctive)", options: ["sia","sei","eri","sarai"], answer: "sia" },
+    { level: "B1", q: "Best translation: 'I lived in Rome when I was young.'", options: ["Vivevo a Roma quando ero giovane.","Vivo a Roma quando sono giovane.","Ho vissuto a Roma quando sono stato giovane.","Vivere a Roma quando essere giovane."], answer: "Vivevo a Roma quando ero giovane." },
+    { level: "B2", q: "Choose: 'Avrei dovuto ___ con te ieri.' (past conditional)", options: ["andare","andato","vado","andrò"], answer: "andare" },
+    { level: "C1", q: "What does 'tuttavia' express?", options: ["however","therefore","because","although"], answer: "however" }
+  ]
+};
+
 const CEFR_LEVELS = [
   { id: "A1", name: "Breakthrough",    desc: "Basic phrases, introducing yourself, simple needs.",
     requirement: { allBeginner: 1 } },
@@ -4903,7 +4964,13 @@ function renderGoalSetup() {
     if (Math.abs(closest.days - d) <= 7) activeQuick = closest.label;
   }
 
+  const acc2 = me();
+  const placedBadge = (acc2.placedLevel && acc2.placedLanguage === state.activeLanguage)
+    ? `<div style="margin-bottom:18px;padding:12px 16px;background:var(--success-soft);border-left:3px solid var(--success);border-radius:8px;font-size:13.5px;color:var(--text);">✓ <strong>You're placed at ${escapeHtml(acc2.placedLevel)}</strong> in ${lang.flag} ${lang.name}. Lessons up to your level have been auto-checked. <a style="color:var(--accent);cursor:pointer;text-decoration:underline;" onclick="startPlacementTest()">Re-take the test</a></div>`
+    : `<div style="margin-bottom:18px;padding:12px 16px;background:var(--accent-softer);border-left:3px solid var(--accent);border-radius:8px;font-size:13.5px;color:var(--text);">💡 <strong>Not sure where you stand?</strong> Take a quick 12-question placement test — we'll skip the lessons you already know. <button class="btn small primary" style="margin-left:8px;" onclick="startPlacementTest()">Take placement test (2 min)</button></div>`;
+
   $("goals-content").innerHTML = `
+    ${placedBadge}
     <div class="card" style="max-width:840px;margin-bottom:24px;">
       <h2 style="margin-top:0;">1. What level do you want to reach?</h2>
       <p style="color:var(--text-dim);font-size:14px;line-height:1.55;margin-bottom:18px;">CEFR levels are the European standard. Pick your target — we'll build a plan around the lessons in ${lang.flag} ${lang.name}.</p>
@@ -5108,6 +5175,214 @@ function editGoal() {
     targetDate: acc.goal.targetDate
   };
   renderGoalSetup();
+}
+
+/* ---------------------- Placement test ---------------------- */
+let placementState = null;
+
+function startPlacementTest() {
+  const lang = state.activeLanguage;
+  const pool = PLACEMENT_QUIZ[lang] || [];
+  if (!pool.length) { toast("Placement test not available for this language yet"); return; }
+  // Shuffle within each level so retakes feel fresh, then concat in order A1→C2
+  const byLevel = {};
+  pool.forEach(q => { (byLevel[q.level] = byLevel[q.level] || []).push(q); });
+  const ordered = [];
+  ["A1","A2","B1","B2","C1","C2"].forEach(lv => {
+    if (byLevel[lv]) ordered.push(...byLevel[lv].sort(() => Math.random() - 0.5));
+  });
+  placementState = {
+    questions: ordered,
+    idx: 0,
+    correct: 0,
+    perLevel: {}, // tracks {right, total} per level
+    answered: false,
+    pickedAnswer: null
+  };
+  renderPlacementQuestion();
+}
+
+function renderPlacementQuestion() {
+  const ps = placementState;
+  if (!ps) return;
+  if (ps.idx >= ps.questions.length) {
+    finishPlacementTest();
+    return;
+  }
+  const q = ps.questions[ps.idx];
+  const pct = (ps.idx / ps.questions.length) * 100;
+  $("goals-content").innerHTML = `
+    <div style="max-width:680px;">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+        <div style="flex:1;height:10px;background:var(--bg-strong);border-radius:999px;overflow:hidden;">
+          <div style="height:100%;background:var(--accent);width:${pct}%;transition:width .3s ease;border-radius:999px;"></div>
+        </div>
+        <span style="font-size:13px;color:var(--text-dim);">${ps.idx + 1} / ${ps.questions.length}</span>
+        <button class="btn small ghost" onclick="cancelPlacementTest()">Cancel</button>
+      </div>
+
+      <div class="card">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:600;margin-bottom:10px;">Level ${q.level}</div>
+        <div class="quiz-question">${escapeHtml(q.q)}</div>
+        <div id="placement-options">
+          ${q.options.map(o => `<button class="quiz-option" data-opt="${escapeHtml(o)}">${escapeHtml(o)}</button>`).join("")}
+        </div>
+        <div id="placement-feedback" style="margin-top:14px;display:none;"></div>
+        <div class="btn-row">
+          <button class="btn primary" id="placement-next" style="display:none;" onclick="nextPlacementQuestion()">Next →</button>
+        </div>
+      </div>
+    </div>
+  `;
+  $("placement-options").querySelectorAll(".quiz-option").forEach(b => {
+    b.onclick = () => pickPlacementAnswer(b);
+  });
+}
+
+function pickPlacementAnswer(btn) {
+  const ps = placementState;
+  if (!ps || ps.answered) return;
+  const q = ps.questions[ps.idx];
+  ps.answered = true;
+  ps.pickedAnswer = btn.dataset.opt;
+  const isCorrect = ps.pickedAnswer === q.answer;
+  if (isCorrect) ps.correct++;
+  ps.perLevel[q.level] = ps.perLevel[q.level] || { right: 0, total: 0 };
+  ps.perLevel[q.level].total++;
+  if (isCorrect) ps.perLevel[q.level].right++;
+
+  // Visual feedback
+  $("placement-options").querySelectorAll(".quiz-option").forEach(b => {
+    b.onclick = null;
+    if (b.dataset.opt === q.answer) b.classList.add("correct");
+    else if (b === btn) b.classList.add("wrong");
+  });
+  const fb = $("placement-feedback");
+  fb.style.display = "";
+  fb.className = "quiz-explain";
+  fb.innerHTML = isCorrect
+    ? `✓ <strong style="color:var(--success);">Correct.</strong>`
+    : `✗ <strong style="color:var(--danger);">Not quite.</strong> The right answer is <strong>${escapeHtml(q.answer)}</strong>.`;
+  $("placement-next").style.display = "";
+  $("placement-next").textContent = ps.idx === ps.questions.length - 1 ? "See result →" : "Next →";
+  $("placement-next").focus();
+}
+
+function nextPlacementQuestion() {
+  const ps = placementState;
+  if (!ps) return;
+  ps.answered = false;
+  ps.pickedAnswer = null;
+  ps.idx++;
+  renderPlacementQuestion();
+}
+
+function cancelPlacementTest() {
+  placementState = null;
+  renderGoals();
+}
+
+function finishPlacementTest() {
+  const ps = placementState;
+  if (!ps) return;
+
+  // Determine placed level: highest CEFR where ≥50% correct, with at least 1 question
+  const levels = ["A1","A2","B1","B2","C1","C2"];
+  let placed = "A1";
+  for (const lv of levels) {
+    const stats = ps.perLevel[lv];
+    if (stats && stats.total > 0 && stats.right / stats.total >= 0.5) placed = lv;
+    else break; // first level the user fails to pass = ceiling
+  }
+
+  const lang = currentLang();
+  const breakdown = levels.filter(lv => ps.perLevel[lv]).map(lv => {
+    const s = ps.perLevel[lv];
+    const pct = Math.round((s.right / s.total) * 100);
+    return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);">
+      <div style="font-family:var(--serif);font-size:18px;font-weight:600;color:var(--accent);width:36px;">${lv}</div>
+      <div style="flex:1;height:6px;background:var(--bg-strong);border-radius:999px;overflow:hidden;">
+        <div style="height:100%;background:${pct >= 50 ? "var(--success)" : "var(--danger)"};width:${pct}%;border-radius:999px;"></div>
+      </div>
+      <div style="font-size:13px;color:var(--text-dim);min-width:60px;text-align:right;">${s.right}/${s.total} · ${pct}%</div>
+    </div>`;
+  }).join("");
+
+  const placedMeta = CEFR_LEVELS.find(l => l.id === placed);
+
+  $("goals-content").innerHTML = `
+    <div style="max-width:680px;">
+      <div class="card" style="text-align:center;margin-bottom:18px;">
+        <div style="font-size:48px;margin-bottom:6px;">🎯</div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);font-weight:600;margin-bottom:10px;">Your placement</div>
+        <div style="font-family:var(--serif);font-size:42px;font-weight:500;letter-spacing:-1px;color:var(--accent);margin-bottom:6px;">${placed}</div>
+        <div style="font-family:var(--serif);font-size:20px;font-weight:500;color:var(--text);margin-bottom:8px;">${escapeHtml(placedMeta.name)}</div>
+        <div style="color:var(--text-dim);font-size:14px;line-height:1.55;max-width:480px;margin:0 auto 22px;">${escapeHtml(placedMeta.desc)}</div>
+        <div style="font-size:13px;color:var(--text-dim);">Score: ${ps.correct}/${ps.questions.length}</div>
+      </div>
+
+      <div class="card" style="margin-bottom:18px;">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);font-weight:600;margin-bottom:14px;">Breakdown by level</div>
+        ${breakdown}
+      </div>
+
+      <div class="pace-note">
+        <strong>What this means:</strong> we'll auto-mark lessons up to ${placed} as already known (so you skip them). You can still revisit any lesson manually if you want extra practice. Your goal plan will start from where you actually need to learn.
+      </div>
+
+      <div class="btn-row">
+        <button class="btn primary" onclick="applyPlacement('${placed}')">Apply ${placed} & continue</button>
+        <button class="btn" onclick="applyPlacement('A1')">Start from scratch instead</button>
+        <button class="btn ghost" onclick="cancelPlacementTest()">Cancel</button>
+      </div>
+    </div>
+  `;
+}
+
+const SKIP_GRANTS = {
+  A1: { beginner: 0, intermediate: 0, advanced: 0 },
+  A2: { beginner: 1, intermediate: 0, advanced: 0 },
+  B1: { beginner: 2, intermediate: 0, advanced: 0 },
+  B2: { beginner: 3, intermediate: 1, advanced: 0 },
+  C1: { beginner: 3, intermediate: 2, advanced: 1 },
+  C2: { beginner: 3, intermediate: 3, advanced: 2 }
+};
+
+function applyPlacement(level) {
+  const acc = me();
+  const lang = state.activeLanguage;
+  const grants = SKIP_GRANTS[level] || SKIP_GRANTS.A1;
+  acc.chapterProgress = acc.chapterProgress || {};
+  acc.chapterProgress[lang] = acc.chapterProgress[lang] || {};
+
+  let granted = 0;
+  (CHAPTERS[lang] || []).forEach(s => {
+    const sectionLevel = s.level || "beginner";
+    const stars = grants[sectionLevel] || 0;
+    if (stars <= 0) return;
+    s.units.forEach(u => u.lessons.forEach(l => {
+      const fullId = `${s.id}-${u.id}-${l.id}`;
+      const existing = acc.chapterProgress[lang][fullId];
+      const existingStars = existing?.stars || 0;
+      if (stars > existingStars) {
+        acc.chapterProgress[lang][fullId] = {
+          stars: stars,
+          autoPlaced: true,
+          completedAt: existing?.completedAt || Date.now(),
+          attempts: existing?.attempts || 0
+        };
+        granted++;
+      }
+    }));
+  });
+
+  acc.placedLevel = level;
+  acc.placedLanguage = lang;
+  acc.placedAt = Date.now();
+  saveState();
+  placementState = null;
+  toast(`✓ Placed at ${level} — ${granted} lesson${granted === 1 ? "" : "s"} auto-completed`);
+  renderGoals();
 }
 
 function clearGoal() {
