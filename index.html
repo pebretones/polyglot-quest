@@ -748,6 +748,155 @@
   }
   .signout-btn:hover { background: var(--bg-subtle); color: var(--text); border-color: var(--border-strong); }
 
+  /* ---------- Mobile top bar (hidden on desktop) ---------- */
+  .mobile-bar { display: none; }
+  .sidebar-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(31,27,21,.45);
+    z-index: 40;
+    opacity: 0;
+    transition: opacity .25s ease;
+  }
+  .sidebar-backdrop.show { display: block; opacity: 1; }
+
+  /* ---------- Mobile / tablet (≤880px) ---------- */
+  @media (max-width: 880px) {
+    html, body { overflow: auto; }
+    #app { display: block; height: auto; min-height: 100vh; }
+
+    .mobile-bar {
+      display: flex; align-items: center; gap: 12px;
+      position: sticky; top: 0; z-index: 30;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .mobile-menu-btn {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text); font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .mobile-menu-btn:hover { background: var(--bg-subtle); }
+    .mobile-brand {
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--serif); font-size: 18px;
+      font-weight: 600; letter-spacing: -.2px;
+      color: var(--text);
+    }
+    .mobile-brand-mark {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+
+    .sidebar {
+      position: fixed; left: 0; top: 0; bottom: 0;
+      width: 280px; max-width: 85vw;
+      transform: translateX(-100%);
+      transition: transform .28s ease;
+      z-index: 50;
+      box-shadow: var(--shadow-lg);
+      height: 100vh;
+    }
+    .sidebar.open { transform: none; }
+
+    .content {
+      padding: 24px 20px 60px;
+      overflow-y: visible;
+      height: auto;
+    }
+
+    h1 { font-size: 30px; }
+    h2 { font-size: 22px; margin: 32px 0 14px; }
+    .subtitle { font-size: 14.5px; margin-bottom: 28px; }
+
+    .stat-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .stat { padding: 14px 16px; }
+    .stat-value { font-size: 26px; }
+
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+
+    /* Flashcards */
+    .flashcard { padding: 36px 20px; border-radius: 16px; }
+    .flashcard .target { font-size: 36px; }
+    .flashcard .reveal { font-size: 16px; }
+    .flashcard .hint { display: none; } /* keyboard shortcuts irrelevant on phone */
+
+    /* Quiz */
+    .quiz-question { font-size: 20px; }
+    .quiz-option { padding: 13px 16px; font-size: 14.5px; }
+
+    /* Practice */
+    .cloze-sentence { font-size: 22px; }
+    .cloze-input { min-width: 100px; padding: 4px 10px; }
+
+    /* Tabs */
+    .tabs { gap: 6px; }
+    .tab { padding: 7px 13px; font-size: 12.5px; }
+
+    /* Pronunciation */
+    .sound-card { padding: 18px; border-radius: 14px; }
+    .sound-name { font-size: 20px; }
+    .sound-head { gap: 8px; }
+    .sound-head > div[style*="margin-left:auto"] { margin-left: 0 !important; width: 100%; }
+
+    /* Expressions */
+    .expr-phrase { font-size: 18px; }
+
+    /* Chat */
+    .chat-wrap { height: calc(100vh - 240px); max-width: 100%; }
+    .chat-input-row textarea { font-size: 15px; }
+    .msg { max-width: 88%; }
+
+    /* Leaderboard — drop the weekly column */
+    .lb-row {
+      grid-template-columns: 36px 1fr auto auto;
+      gap: 8px; padding: 12px 14px; font-size: 13.5px;
+    }
+    .lb-row > div:nth-child(5) { display: none; }
+    .lb-rank { font-size: 18px; }
+
+    /* Achievements: 2 cols */
+    .achievements-grid { grid-template-columns: repeat(2, 1fr); }
+
+    /* Heatmap stays scrollable */
+    .heatmap { padding-bottom: 4px; }
+
+    /* Modals */
+    .modal { padding: 22px 18px; }
+    .modal h3 { font-size: 20px; }
+
+    /* Auth screen */
+    .auth-card { padding: 30px 22px; }
+    .auth-title { font-size: 24px; }
+    .auth-brand-mark { width: 56px; height: 56px; font-size: 28px; }
+
+    /* Toast bottom-center on mobile so it's not under the keyboard */
+    .toast { left: 16px; right: 16px; bottom: 16px; text-align: center; }
+
+    /* Dashboard quick cards: more compact */
+    .card { padding: 18px; }
+  }
+
+  /* ---------- Phone-only (≤480px) ---------- */
+  @media (max-width: 480px) {
+    .stat-row { grid-template-columns: 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr; }
+    h1 { font-size: 26px; letter-spacing: -.6px; }
+    h2 { font-size: 20px; }
+    .content { padding: 20px 16px 60px; }
+    .flashcard .target { font-size: 30px; }
+    .achievements-grid { grid-template-columns: 1fr 1fr; }
+    .quiz-question { font-size: 19px; }
+    .auth-language { grid-template-columns: repeat(5, 1fr); }
+  }
+
   /* Scrollbar polish */
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-thumb { background: var(--bg-strong); border-radius: 6px; }
@@ -821,7 +970,15 @@
 </div>
 
 <div id="app">
-  <aside class="sidebar">
+  <div class="mobile-bar">
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">☰</button>
+    <div class="mobile-brand">
+      <span class="mobile-brand-mark">🌍</span>
+      <span>Polyglot Quest</span>
+    </div>
+  </div>
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+  <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="brand-mark">🌍</div>
       <div>Polyglot<br><span style="font-size:11px;color:var(--text-dim);font-weight:400;">Quest</span></div>
@@ -2377,7 +2534,29 @@ function switchView(view) {
   if (view === "practice") renderPracticeIntro();
 }
 document.querySelectorAll(".nav-item").forEach(btn => {
-  btn.addEventListener("click", () => switchView(btn.dataset.view));
+  btn.addEventListener("click", () => {
+    switchView(btn.dataset.view);
+    closeMobileSidebar();
+  });
+});
+
+/* Mobile sidebar drawer */
+function openMobileSidebar() {
+  $("sidebar").classList.add("open");
+  $("sidebar-backdrop").classList.add("show");
+}
+function closeMobileSidebar() {
+  $("sidebar").classList.remove("open");
+  $("sidebar-backdrop").classList.remove("show");
+}
+$("mobile-menu-btn").addEventListener("click", () => {
+  if ($("sidebar").classList.contains("open")) closeMobileSidebar();
+  else openMobileSidebar();
+});
+$("sidebar-backdrop").addEventListener("click", closeMobileSidebar);
+// Close drawer on escape
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && $("sidebar").classList.contains("open")) closeMobileSidebar();
 });
 
 /* =================================================================
