@@ -524,6 +524,38 @@
   }
 
   /* ---------- Chapter tree (Lessons home) ---------- */
+  .level-group { margin-bottom: 44px; }
+  .level-header {
+    display: flex; align-items: center; gap: 14px;
+    margin: 0 0 22px;
+    padding: 14px 20px;
+    background: var(--bg-subtle);
+    border-radius: 14px;
+    border-left: 6px solid var(--accent);
+  }
+  .level-header-icon {
+    font-size: 32px;
+  }
+  .level-header-text {
+    flex: 1;
+  }
+  .level-header-title {
+    font-family: var(--serif); font-size: 26px;
+    font-weight: 500; letter-spacing: -.5px;
+    color: var(--text);
+    line-height: 1.1;
+  }
+  .level-header-sub {
+    font-size: 13px; color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .level-header-badge {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+    font-weight: 600; padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--accent); color: #fff;
+    flex-shrink: 0;
+  }
   .section-block { margin-bottom: 32px; }
   .section-header {
     display: flex; align-items: center; gap: 14px;
@@ -1945,6 +1977,132 @@ const CHAPTERS = {
           vocab: [["sol","sun"],["lluvia","rain"],["nieve","snow"],["viento","wind"],["calor","heat"],["frío","cold"],["nublado","cloudy"],["despejado","clear"],["tormenta","storm"],["nube","cloud"]],
           phrases: [["Hace mucho frío.","It's very cold."],["Está lloviendo mucho.","It's raining a lot."],["Hoy hay tormenta.","There's a storm today."]] }
       ]}
+    ]},
+    { id: "s4", name: "Conversations", icon: "💬", level: "intermediate", units: [
+      { id: "u1", name: "Question words", lessons: [
+        { id: "l1", name: "What, who, where", icon: "❓",
+          vocab: [["qué","what"],["quién","who"],["dónde","where"],["cuándo","when"],["cómo","how"],["por qué","why"],["cuánto","how much"],["cuál","which"]],
+          phrases: [["¿Cómo te llamas?","What's your name?"],["¿De dónde eres?","Where are you from?"]] },
+        { id: "l2", name: "Common questions", icon: "🗣️",
+          vocab: [["te llamas","your name is"],["edad","age"],["a qué hora","at what time"],["entiendes","you understand"],["preguntar","to ask"],["responder","to answer"],["repetir","to repeat"],["explicar","to explain"]],
+          phrases: [["¿Cuántos años tienes?","How old are you?"],["¿Puedes repetir, por favor?","Can you repeat, please?"]] }
+      ]},
+      { id: "u2", name: "Giving directions", lessons: [
+        { id: "l1", name: "Direction words", icon: "🧭",
+          vocab: [["izquierda","left"],["derecha","right"],["recto","straight"],["cerca","close"],["lejos","far"],["esquina","corner"],["semáforo","traffic light"],["plaza","square"]],
+          phrases: [["Gira a la izquierda.","Turn left."],["Sigue recto.","Go straight."]] },
+        { id: "l2", name: "Direction phrases", icon: "🗺️",
+          vocab: [["delante","in front"],["detrás","behind"],["entre","between"],["enfrente","across"],["norte","north"],["sur","south"],["este","east"],["oeste","west"]],
+          phrases: [["Está enfrente del banco.","It's across from the bank."],["Camina hasta el semáforo.","Walk to the traffic light."]] }
+      ]}
+    ]},
+    { id: "s5", name: "Daily Routines", icon: "🗓️", level: "intermediate", units: [
+      { id: "u1", name: "Hobbies & sports", lessons: [
+        { id: "l1", name: "Sports", icon: "⚽",
+          vocab: [["fútbol","soccer"],["baloncesto","basketball"],["tenis","tennis"],["natación","swimming"],["correr","to run"],["gimnasio","gym"],["equipo","team"],["partido","match"]],
+          phrases: [["Juego al fútbol los sábados.","I play soccer on Saturdays."],["Voy al gimnasio tres veces a la semana.","I go to the gym three times a week."]] },
+        { id: "l2", name: "Hobbies", icon: "🎨",
+          vocab: [["leer","to read"],["cantar","to sing"],["bailar","to dance"],["cocinar","to cook"],["pintar","to paint"],["jugar","to play"],["viajar","to travel"],["fotografía","photography"]],
+          phrases: [["Me gusta leer novelas.","I like reading novels."],["Toco la guitarra desde niño.","I've played guitar since I was a child."]] }
+      ]},
+      { id: "u2", name: "Shopping", lessons: [
+        { id: "l1", name: "Clothes", icon: "👕",
+          vocab: [["camisa","shirt"],["pantalones","pants"],["zapatos","shoes"],["vestido","dress"],["abrigo","coat"],["sombrero","hat"],["bufanda","scarf"],["talla","size"]],
+          phrases: [["¿Tiene esta camisa en otra talla?","Do you have this shirt in another size?"],["Me gustan estos zapatos.","I like these shoes."]] },
+        { id: "l2", name: "At the shop", icon: "🛍️",
+          vocab: [["precio","price"],["caja","cash register"],["oferta","sale"],["descuento","discount"],["probador","fitting room"],["recibo","receipt"],["tarjeta","card"],["efectivo","cash"]],
+          phrases: [["¿Cuánto cuesta?","How much does it cost?"],["¿Aceptan tarjeta?","Do you accept card?"]] }
+      ]}
+    ]},
+    { id: "s6", name: "Work & Study", icon: "💼", level: "advanced", units: [
+      { id: "u1", name: "Work life", lessons: [
+        { id: "l1", name: "Jobs", icon: "👔",
+          vocab: [["médico","doctor"],["profesor","teacher"],["ingeniero","engineer"],["abogado","lawyer"],["periodista","journalist"],["diseñador","designer"],["científico","scientist"],["artista","artist"]],
+          phrases: [["Trabajo como ingeniero.","I work as an engineer."],["Mi padre es médico.","My father is a doctor."]] },
+        { id: "l2", name: "Office", icon: "🏢",
+          vocab: [["oficina","office"],["reunión","meeting"],["jefe","boss"],["colega","colleague"],["salario","salary"],["proyecto","project"],["plazo","deadline"],["contrato","contract"]],
+          phrases: [["Tengo una reunión a las diez.","I have a meeting at ten."],["El plazo es el viernes.","The deadline is Friday."]] }
+      ]},
+      { id: "u2", name: "Education", lessons: [
+        { id: "l1", name: "At school", icon: "🎓",
+          vocab: [["universidad","university"],["estudiante","student"],["examen","exam"],["asignatura","subject"],["aula","classroom"],["beca","scholarship"],["título","degree"],["curso","course"]],
+          phrases: [["Estudio en la universidad.","I study at the university."],["Tengo un examen mañana.","I have an exam tomorrow."]] },
+        { id: "l2", name: "Subjects", icon: "📚",
+          vocab: [["matemáticas","math"],["historia","history"],["idiomas","languages"],["ciencias","sciences"],["literatura","literature"],["arte","art"],["filosofía","philosophy"],["derecho","law"]],
+          phrases: [["Me especializo en literatura.","I specialize in literature."],["No me gustan las matemáticas.","I don't like math."]] }
+      ]}
+    ]},
+    { id: "s7", name: "Opinions & Emotions", icon: "💭", level: "advanced", units: [
+      { id: "u1", name: "Feelings", lessons: [
+        { id: "l1", name: "Emotions", icon: "😊",
+          vocab: [["feliz","happy"],["triste","sad"],["enfadado","angry"],["asustado","scared"],["sorprendido","surprised"],["orgulloso","proud"],["aburrido","bored"],["nervioso","nervous"]],
+          phrases: [["Estoy muy feliz hoy.","I'm very happy today."],["Me siento nervioso por el examen.","I'm nervous about the exam."]] },
+        { id: "l2", name: "Expressing feelings", icon: "💗",
+          vocab: [["sentir","to feel"],["preocupar","to worry"],["encantar","to love"],["odiar","to hate"],["temer","to fear"],["esperar","to hope"],["confiar","to trust"],["echar de menos","to miss"]],
+          phrases: [["Me preocupa el futuro.","I'm worried about the future."],["Te echo de menos.","I miss you."]] }
+      ]},
+      { id: "u2", name: "Opinions & debate", lessons: [
+        { id: "l1", name: "Expressing opinions", icon: "🗣️",
+          vocab: [["creer","to believe"],["pensar","to think"],["parecer","to seem"],["opinión","opinion"],["acuerdo","agreement"],["depende","depends"],["razón","reason"],["mentira","lie"]],
+          phrases: [["Creo que tienes razón.","I think you're right."],["En mi opinión, es verdad.","In my opinion, it's true."]] },
+        { id: "l2", name: "Connectors", icon: "🔗",
+          vocab: [["sin embargo","however"],["por lo tanto","therefore"],["aunque","although"],["además","moreover"],["por ejemplo","for example"],["en cambio","on the other hand"],["es decir","that is"],["en resumen","in short"]],
+          phrases: [["Es difícil; sin embargo, vale la pena.","It's hard; however, it's worth it."],["Por ejemplo, los animales.","For example, animals."]] }
+      ]}
+    ]},
+    { id: "s8", name: "Body & Health", icon: "🩺", level: "beginner", units: [
+      { id: "u1", name: "Body parts", lessons: [
+        { id: "l1", name: "Head & face", icon: "👤",
+          vocab: [["cabeza","head"],["ojos","eyes"],["boca","mouth"],["nariz","nose"],["oreja","ear"],["pelo","hair"],["cara","face"],["cuello","neck"]],
+          phrases: [["Me duele la cabeza.","My head hurts."],["Tengo los ojos azules.","I have blue eyes."]] },
+        { id: "l2", name: "Limbs & senses", icon: "🖐️",
+          vocab: [["mano","hand"],["pie","foot"],["brazo","arm"],["pierna","leg"],["dedo","finger"],["ver","to see"],["oír","to hear"],["tocar","to touch"]],
+          phrases: [["Me he hecho daño en el pie.","I've hurt my foot."],["No oigo nada.","I can't hear anything."]] }
+      ]},
+      { id: "u2", name: "Health", lessons: [
+        { id: "l1", name: "Feeling sick", icon: "🤒",
+          vocab: [["enfermo","sick"],["sano","healthy"],["hospital","hospital"],["medicina","medicine"],["dolor","pain"],["cansado","tired"],["fiebre","fever"],["resfriado","cold (illness)"]],
+          phrases: [["Estoy muy cansado.","I'm very tired."],["Tengo fiebre.","I have a fever."]] },
+        { id: "l2", name: "At the doctor", icon: "💊",
+          vocab: [["cita","appointment"],["receta","prescription"],["farmacia","pharmacy"],["paciente","patient"],["salud","health"],["gripe","flu"],["dolor de cabeza","headache"],["descansar","to rest"]],
+          phrases: [["Necesito una cita con el médico.","I need an appointment with the doctor."],["Tienes que descansar.","You need to rest."]] }
+      ]}
+    ]},
+    { id: "s9", name: "Restaurant & Food", icon: "🍽️", level: "intermediate", units: [
+      { id: "u1", name: "At the restaurant", lessons: [
+        { id: "l1", name: "Ordering", icon: "📋",
+          vocab: [["menú","menu"],["camarero","waiter"],["plato","dish"],["propina","tip"],["bebida","drink"],["reservar","to book"],["mesa","table"],["cuenta","bill"]],
+          phrases: [["¿Me puede traer el menú?","Can you bring me the menu?"],["La cuenta, por favor.","The bill, please."]] },
+        { id: "l2", name: "Food types", icon: "🍕",
+          vocab: [["pasta","pasta"],["pizza","pizza"],["sandwich","sandwich"],["hamburguesa","burger"],["tortilla","omelette"],["paella","paella"],["tapas","tapas"],["helado","ice cream"]],
+          phrases: [["Me gustaría una paella.","I'd like a paella."],["¿Tienen helado de chocolate?","Do you have chocolate ice cream?"]] }
+      ]},
+      { id: "u2", name: "Cooking", lessons: [
+        { id: "l1", name: "Ingredients", icon: "🧂",
+          vocab: [["sal","salt"],["azúcar","sugar"],["aceite","oil"],["harina","flour"],["huevo","egg"],["mantequilla","butter"],["cebolla","onion"],["ajo","garlic"]],
+          phrases: [["Pásame la sal, por favor.","Pass me the salt, please."],["Necesito dos huevos.","I need two eggs."]] },
+        { id: "l2", name: "Cooking verbs", icon: "🍳",
+          vocab: [["cortar","to cut"],["mezclar","to mix"],["hervir","to boil"],["freír","to fry"],["asar","to roast"],["probar","to taste"],["servir","to serve"],["calentar","to heat"]],
+          phrases: [["Voy a freír los huevos.","I'm going to fry the eggs."],["Mezcla bien los ingredientes.","Mix the ingredients well."]] }
+      ]}
+    ]},
+    { id: "s10", name: "Society & Politics", icon: "🏛️", level: "advanced", units: [
+      { id: "u1", name: "Politics & society", lessons: [
+        { id: "l1", name: "Government", icon: "🗳️",
+          vocab: [["gobierno","government"],["presidente","president"],["ley","law"],["votar","to vote"],["elecciones","elections"],["partido","party"],["ministro","minister"],["política","politics"]],
+          phrases: [["Hoy son las elecciones.","Today are the elections."],["No estoy de acuerdo con esa ley.","I don't agree with that law."]] },
+        { id: "l2", name: "Society", icon: "🤝",
+          vocab: [["sociedad","society"],["ciudadano","citizen"],["derecho","right"],["libertad","freedom"],["igualdad","equality"],["justicia","justice"],["comunidad","community"],["pueblo","the people"]],
+          phrases: [["La libertad es un derecho fundamental.","Freedom is a fundamental right."],["Vivimos en una comunidad diversa.","We live in a diverse community."]] }
+      ]},
+      { id: "u2", name: "Current issues", lessons: [
+        { id: "l1", name: "Big topics", icon: "🌐",
+          vocab: [["economía","economy"],["crisis","crisis"],["pobreza","poverty"],["cambio climático","climate change"],["futuro","future"],["problema","problem"],["solución","solution"],["tecnología","technology"]],
+          phrases: [["El cambio climático es urgente.","Climate change is urgent."],["Necesitamos soluciones reales.","We need real solutions."]] },
+        { id: "l2", name: "News & media", icon: "📰",
+          vocab: [["noticia","news"],["periódico","newspaper"],["televisión","television"],["internet","internet"],["anuncio","announcement"],["reportaje","report"],["prensa","press"],["opinión pública","public opinion"]],
+          phrases: [["He visto la noticia en la televisión.","I saw the news on TV."],["La prensa es libre.","The press is free."]] }
+      ]}
     ]}
   ],
   fr: [
@@ -2000,6 +2158,132 @@ const CHAPTERS = {
         { id: "l2", name: "Weather", icon: "☀️",
           vocab: [["soleil","sun"],["pluie","rain"],["neige","snow"],["vent","wind"],["chaud","hot"],["froid","cold"],["nuageux","cloudy"],["clair","clear"],["orage","storm"],["nuage","cloud"]],
           phrases: [["Il fait très froid.","It's very cold."],["Il pleut beaucoup.","It's raining a lot."],["Il y a un orage aujourd'hui.","There's a storm today."]] }
+      ]}
+    ]},
+    { id: "s4", name: "Conversations", icon: "💬", level: "intermediate", units: [
+      { id: "u1", name: "Question words", lessons: [
+        { id: "l1", name: "What, who, where", icon: "❓",
+          vocab: [["quoi","what"],["qui","who"],["où","where"],["quand","when"],["comment","how"],["pourquoi","why"],["combien","how much"],["quel","which"]],
+          phrases: [["Comment t'appelles-tu ?","What's your name?"],["D'où viens-tu ?","Where are you from?"]] },
+        { id: "l2", name: "Common questions", icon: "🗣️",
+          vocab: [["t'appelles","your name is"],["âge","age"],["heure","time/hour"],["comprendre","to understand"],["demander","to ask"],["répondre","to answer"],["répéter","to repeat"],["expliquer","to explain"]],
+          phrases: [["Quel âge as-tu ?","How old are you?"],["Pouvez-vous répéter, s'il vous plaît ?","Can you repeat, please?"]] }
+      ]},
+      { id: "u2", name: "Giving directions", lessons: [
+        { id: "l1", name: "Direction words", icon: "🧭",
+          vocab: [["gauche","left"],["droite","right"],["tout droit","straight"],["près","close"],["loin","far"],["coin","corner"],["feu","traffic light"],["place","square"]],
+          phrases: [["Tournez à gauche.","Turn left."],["Continuez tout droit.","Go straight."]] },
+        { id: "l2", name: "Direction phrases", icon: "🗺️",
+          vocab: [["devant","in front"],["derrière","behind"],["entre","between"],["en face","across"],["nord","north"],["sud","south"],["est","east"],["ouest","west"]],
+          phrases: [["C'est en face de la banque.","It's across from the bank."],["Marchez jusqu'au feu.","Walk to the traffic light."]] }
+      ]}
+    ]},
+    { id: "s5", name: "Daily Routines", icon: "🗓️", level: "intermediate", units: [
+      { id: "u1", name: "Hobbies & sports", lessons: [
+        { id: "l1", name: "Sports", icon: "⚽",
+          vocab: [["football","soccer"],["basket","basketball"],["tennis","tennis"],["natation","swimming"],["courir","to run"],["gym","gym"],["équipe","team"],["match","match"]],
+          phrases: [["Je joue au football le samedi.","I play soccer on Saturdays."],["Je vais à la gym trois fois par semaine.","I go to the gym three times a week."]] },
+        { id: "l2", name: "Hobbies", icon: "🎨",
+          vocab: [["lire","to read"],["chanter","to sing"],["danser","to dance"],["cuisiner","to cook"],["peindre","to paint"],["jouer","to play"],["voyager","to travel"],["photographie","photography"]],
+          phrases: [["J'aime lire des romans.","I like reading novels."],["Je joue de la guitare depuis l'enfance.","I've played guitar since childhood."]] }
+      ]},
+      { id: "u2", name: "Shopping", lessons: [
+        { id: "l1", name: "Clothes", icon: "👕",
+          vocab: [["chemise","shirt"],["pantalon","pants"],["chaussures","shoes"],["robe","dress"],["manteau","coat"],["chapeau","hat"],["écharpe","scarf"],["taille","size"]],
+          phrases: [["Avez-vous cette chemise dans une autre taille ?","Do you have this shirt in another size?"],["J'aime ces chaussures.","I like these shoes."]] },
+        { id: "l2", name: "At the shop", icon: "🛍️",
+          vocab: [["prix","price"],["caisse","cash register"],["soldes","sale"],["réduction","discount"],["cabine","fitting room"],["ticket","receipt"],["carte","card"],["espèces","cash"]],
+          phrases: [["Combien ça coûte ?","How much does it cost?"],["Acceptez-vous la carte ?","Do you accept card?"]] }
+      ]}
+    ]},
+    { id: "s6", name: "Work & Study", icon: "💼", level: "advanced", units: [
+      { id: "u1", name: "Work life", lessons: [
+        { id: "l1", name: "Jobs", icon: "👔",
+          vocab: [["médecin","doctor"],["professeur","teacher"],["ingénieur","engineer"],["avocat","lawyer"],["journaliste","journalist"],["designer","designer"],["scientifique","scientist"],["artiste","artist"]],
+          phrases: [["Je travaille comme ingénieur.","I work as an engineer."],["Mon père est médecin.","My father is a doctor."]] },
+        { id: "l2", name: "Office", icon: "🏢",
+          vocab: [["bureau","office"],["réunion","meeting"],["patron","boss"],["collègue","colleague"],["salaire","salary"],["projet","project"],["délai","deadline"],["contrat","contract"]],
+          phrases: [["J'ai une réunion à dix heures.","I have a meeting at ten."],["Le délai est vendredi.","The deadline is Friday."]] }
+      ]},
+      { id: "u2", name: "Education", lessons: [
+        { id: "l1", name: "At school", icon: "🎓",
+          vocab: [["université","university"],["étudiant","student"],["examen","exam"],["matière","subject"],["classe","classroom"],["bourse","scholarship"],["diplôme","degree"],["cours","course"]],
+          phrases: [["J'étudie à l'université.","I study at the university."],["J'ai un examen demain.","I have an exam tomorrow."]] },
+        { id: "l2", name: "Subjects", icon: "📚",
+          vocab: [["mathématiques","math"],["histoire","history"],["langues","languages"],["sciences","sciences"],["littérature","literature"],["art","art"],["philosophie","philosophy"],["droit","law"]],
+          phrases: [["Je me spécialise en littérature.","I specialize in literature."],["Je n'aime pas les mathématiques.","I don't like math."]] }
+      ]}
+    ]},
+    { id: "s7", name: "Opinions & Emotions", icon: "💭", level: "advanced", units: [
+      { id: "u1", name: "Feelings", lessons: [
+        { id: "l1", name: "Emotions", icon: "😊",
+          vocab: [["heureux","happy"],["triste","sad"],["fâché","angry"],["effrayé","scared"],["surpris","surprised"],["fier","proud"],["ennuyé","bored"],["nerveux","nervous"]],
+          phrases: [["Je suis très heureux aujourd'hui.","I'm very happy today."],["Je suis nerveux pour l'examen.","I'm nervous about the exam."]] },
+        { id: "l2", name: "Expressing feelings", icon: "💗",
+          vocab: [["sentir","to feel"],["s'inquiéter","to worry"],["adorer","to love"],["détester","to hate"],["craindre","to fear"],["espérer","to hope"],["faire confiance","to trust"],["manquer","to miss"]],
+          phrases: [["Je m'inquiète pour l'avenir.","I'm worried about the future."],["Tu me manques.","I miss you."]] }
+      ]},
+      { id: "u2", name: "Opinions & debate", lessons: [
+        { id: "l1", name: "Expressing opinions", icon: "🗣️",
+          vocab: [["croire","to believe"],["penser","to think"],["sembler","to seem"],["opinion","opinion"],["accord","agreement"],["dépendre","to depend"],["raison","reason"],["mensonge","lie"]],
+          phrases: [["Je pense que tu as raison.","I think you're right."],["À mon avis, c'est vrai.","In my opinion, it's true."]] },
+        { id: "l2", name: "Connectors", icon: "🔗",
+          vocab: [["cependant","however"],["donc","therefore"],["bien que","although"],["en plus","moreover"],["par exemple","for example"],["en revanche","on the other hand"],["c'est-à-dire","that is"],["en bref","in short"]],
+          phrases: [["C'est difficile ; cependant, ça vaut la peine.","It's hard; however, it's worth it."],["Par exemple, les animaux.","For example, animals."]] }
+      ]}
+    ]},
+    { id: "s8", name: "Body & Health", icon: "🩺", level: "beginner", units: [
+      { id: "u1", name: "Body parts", lessons: [
+        { id: "l1", name: "Head & face", icon: "👤",
+          vocab: [["tête","head"],["yeux","eyes"],["bouche","mouth"],["nez","nose"],["oreille","ear"],["cheveux","hair"],["visage","face"],["cou","neck"]],
+          phrases: [["J'ai mal à la tête.","My head hurts."],["J'ai les yeux bleus.","I have blue eyes."]] },
+        { id: "l2", name: "Limbs & senses", icon: "🖐️",
+          vocab: [["main","hand"],["pied","foot"],["bras","arm"],["jambe","leg"],["doigt","finger"],["voir","to see"],["entendre","to hear"],["toucher","to touch"]],
+          phrases: [["Je me suis fait mal au pied.","I hurt my foot."],["Je n'entends rien.","I can't hear anything."]] }
+      ]},
+      { id: "u2", name: "Health", lessons: [
+        { id: "l1", name: "Feeling sick", icon: "🤒",
+          vocab: [["malade","sick"],["sain","healthy"],["hôpital","hospital"],["médicament","medicine"],["douleur","pain"],["fatigué","tired"],["fièvre","fever"],["rhume","cold (illness)"]],
+          phrases: [["Je suis très fatigué.","I'm very tired."],["J'ai de la fièvre.","I have a fever."]] },
+        { id: "l2", name: "At the doctor", icon: "💊",
+          vocab: [["rendez-vous","appointment"],["ordonnance","prescription"],["pharmacie","pharmacy"],["patient","patient"],["santé","health"],["grippe","flu"],["mal de tête","headache"],["se reposer","to rest"]],
+          phrases: [["J'ai besoin d'un rendez-vous chez le médecin.","I need a doctor's appointment."],["Tu dois te reposer.","You need to rest."]] }
+      ]}
+    ]},
+    { id: "s9", name: "Restaurant & Food", icon: "🍽️", level: "intermediate", units: [
+      { id: "u1", name: "At the restaurant", lessons: [
+        { id: "l1", name: "Ordering", icon: "📋",
+          vocab: [["menu","menu"],["serveur","waiter"],["plat","dish"],["pourboire","tip"],["boisson","drink"],["réserver","to book"],["table","table"],["addition","bill"]],
+          phrases: [["Vous pouvez m'apporter le menu ?","Can you bring me the menu?"],["L'addition, s'il vous plaît.","The bill, please."]] },
+        { id: "l2", name: "Food types", icon: "🍕",
+          vocab: [["pâtes","pasta"],["pizza","pizza"],["sandwich","sandwich"],["hamburger","burger"],["omelette","omelette"],["tarte","pie"],["fromage","cheese plate"],["glace","ice cream"]],
+          phrases: [["Je voudrais une omelette.","I'd like an omelette."],["Vous avez de la glace au chocolat ?","Do you have chocolate ice cream?"]] }
+      ]},
+      { id: "u2", name: "Cooking", lessons: [
+        { id: "l1", name: "Ingredients", icon: "🧂",
+          vocab: [["sel","salt"],["sucre","sugar"],["huile","oil"],["farine","flour"],["œuf","egg"],["beurre","butter"],["oignon","onion"],["ail","garlic"]],
+          phrases: [["Passe-moi le sel, s'il te plaît.","Pass me the salt, please."],["Il me faut deux œufs.","I need two eggs."]] },
+        { id: "l2", name: "Cooking verbs", icon: "🍳",
+          vocab: [["couper","to cut"],["mélanger","to mix"],["bouillir","to boil"],["frire","to fry"],["rôtir","to roast"],["goûter","to taste"],["servir","to serve"],["chauffer","to heat"]],
+          phrases: [["Je vais frire les œufs.","I'm going to fry the eggs."],["Mélange bien les ingrédients.","Mix the ingredients well."]] }
+      ]}
+    ]},
+    { id: "s10", name: "Society & Politics", icon: "🏛️", level: "advanced", units: [
+      { id: "u1", name: "Politics & society", lessons: [
+        { id: "l1", name: "Government", icon: "🗳️",
+          vocab: [["gouvernement","government"],["président","president"],["loi","law"],["voter","to vote"],["élections","elections"],["parti","party"],["ministre","minister"],["politique","politics"]],
+          phrases: [["Aujourd'hui ce sont les élections.","Today are the elections."],["Je ne suis pas d'accord avec cette loi.","I don't agree with that law."]] },
+        { id: "l2", name: "Society", icon: "🤝",
+          vocab: [["société","society"],["citoyen","citizen"],["droit","right"],["liberté","freedom"],["égalité","equality"],["justice","justice"],["communauté","community"],["peuple","the people"]],
+          phrases: [["La liberté est un droit fondamental.","Freedom is a fundamental right."],["Nous vivons dans une communauté diverse.","We live in a diverse community."]] }
+      ]},
+      { id: "u2", name: "Current issues", lessons: [
+        { id: "l1", name: "Big topics", icon: "🌐",
+          vocab: [["économie","economy"],["crise","crisis"],["pauvreté","poverty"],["changement climatique","climate change"],["avenir","future"],["problème","problem"],["solution","solution"],["technologie","technology"]],
+          phrases: [["Le changement climatique est urgent.","Climate change is urgent."],["Nous avons besoin de vraies solutions.","We need real solutions."]] },
+        { id: "l2", name: "News & media", icon: "📰",
+          vocab: [["nouvelle","news"],["journal","newspaper"],["télévision","television"],["internet","internet"],["annonce","announcement"],["reportage","report"],["presse","press"],["opinion publique","public opinion"]],
+          phrases: [["J'ai vu les nouvelles à la télévision.","I saw the news on TV."],["La presse est libre.","The press is free."]] }
       ]}
     ]}
   ],
@@ -2057,6 +2341,78 @@ const CHAPTERS = {
           vocab: [["太陽","sun (taiyou)"],["雨","rain (ame)"],["雪","snow (yuki)"],["風","wind (kaze)"],["暑い","hot (atsui)"],["寒い","cold (samui)"],["曇り","cloudy (kumori)"],["晴れ","clear (hare)"],["嵐","storm (arashi)"],["雲","cloud (kumo)"]],
           phrases: [["とても寒いです。","It's very cold."],["雨が降っています。","It's raining."],["今日は嵐です。","Today there's a storm."]] }
       ]}
+    ]},
+    { id: "s4", name: "Conversations", icon: "💬", level: "intermediate", units: [
+      { id: "u1", name: "Question words", lessons: [
+        { id: "l1", name: "What, who, where", icon: "❓",
+          vocab: [["何","what (nani)"],["誰","who (dare)"],["どこ","where (doko)"],["いつ","when (itsu)"],["どう","how (dou)"],["なぜ","why (naze)"],["いくつ","how many (ikutsu)"],["どれ","which (dore)"]],
+          phrases: [["お名前は何ですか？","What is your name?"],["どこから来ましたか？","Where are you from?"]] },
+        { id: "l2", name: "Common questions", icon: "🗣️",
+          vocab: [["名前","name (namae)"],["年齢","age (nenrei)"],["時間","time (jikan)"],["質問","question (shitsumon)"],["答え","answer (kotae)"],["聞く","to ask/listen (kiku)"],["言う","to say (iu)"],["説明","explanation (setsumei)"]],
+          phrases: [["何歳ですか？","How old are you?"],["もう一度お願いします。","Once more, please."]] }
+      ]},
+      { id: "u2", name: "Giving directions", lessons: [
+        { id: "l1", name: "Direction words", icon: "🧭",
+          vocab: [["左","left (hidari)"],["右","right (migi)"],["まっすぐ","straight (massugu)"],["近く","near (chikaku)"],["遠く","far (tooku)"],["角","corner (kado)"],["信号","traffic light (shingou)"],["駅","station (eki)"]],
+          phrases: [["左に曲がってください。","Turn left, please."],["まっすぐ行ってください。","Go straight, please."]] },
+        { id: "l2", name: "Direction phrases", icon: "🗺️",
+          vocab: [["前","in front (mae)"],["後ろ","behind (ushiro)"],["間","between (aida)"],["北","north (kita)"],["南","south (minami)"],["東","east (higashi)"],["西","west (nishi)"],["地図","map (chizu)"]],
+          phrases: [["銀行の前にあります。","It's in front of the bank."],["信号まで歩いてください。","Walk to the traffic light."]] }
+      ]}
+    ]},
+    { id: "s5", name: "Daily Routines", icon: "🗓️", level: "intermediate", units: [
+      { id: "u1", name: "Hobbies & sports", lessons: [
+        { id: "l1", name: "Sports", icon: "⚽",
+          vocab: [["サッカー","soccer (sakkaa)"],["バスケ","basketball (basuke)"],["テニス","tennis (tenisu)"],["水泳","swimming (suiei)"],["走る","to run (hashiru)"],["ジム","gym (jimu)"],["チーム","team (chiimu)"],["試合","match (shiai)"]],
+          phrases: [["土曜日にサッカーをします。","I play soccer on Saturdays."],["週に三回ジムに行きます。","I go to the gym three times a week."]] },
+        { id: "l2", name: "Hobbies", icon: "🎨",
+          vocab: [["読む","to read (yomu)"],["歌う","to sing (utau)"],["踊る","to dance (odoru)"],["料理","cooking (ryouri)"],["描く","to draw (kaku)"],["遊ぶ","to play (asobu)"],["旅行","travel (ryokou)"],["写真","photography (shashin)"]],
+          phrases: [["小説を読むのが好きです。","I like reading novels."],["子供の頃からギターを弾いています。","I've played guitar since childhood."]] }
+      ]},
+      { id: "u2", name: "Shopping", lessons: [
+        { id: "l1", name: "Clothes", icon: "👕",
+          vocab: [["シャツ","shirt (shatsu)"],["ズボン","pants (zubon)"],["靴","shoes (kutsu)"],["ドレス","dress (doresu)"],["コート","coat (kooto)"],["帽子","hat (boushi)"],["スカーフ","scarf (sukaafu)"],["サイズ","size (saizu)"]],
+          phrases: [["別のサイズはありますか？","Do you have a different size?"],["この靴が好きです。","I like these shoes."]] },
+        { id: "l2", name: "At the shop", icon: "🛍️",
+          vocab: [["値段","price (nedan)"],["レジ","cash register (reji)"],["セール","sale (seeru)"],["割引","discount (waribiki)"],["試着室","fitting room (shichakushitsu)"],["レシート","receipt (reshiito)"],["カード","card (kaado)"],["現金","cash (genkin)"]],
+          phrases: [["いくらですか？","How much is it?"],["カードは使えますか？","Can I use a card?"]] }
+      ]}
+    ]},
+    { id: "s6", name: "Work & Study", icon: "💼", level: "advanced", units: [
+      { id: "u1", name: "Work life", lessons: [
+        { id: "l1", name: "Jobs", icon: "👔",
+          vocab: [["医者","doctor (isha)"],["先生","teacher (sensei)"],["エンジニア","engineer (enjinia)"],["弁護士","lawyer (bengoshi)"],["記者","journalist (kisha)"],["デザイナー","designer (dezainaa)"],["科学者","scientist (kagakusha)"],["芸術家","artist (geijutsuka)"]],
+          phrases: [["エンジニアとして働いています。","I work as an engineer."],["父は医者です。","My father is a doctor."]] },
+        { id: "l2", name: "Office", icon: "🏢",
+          vocab: [["オフィス","office (ofisu)"],["会議","meeting (kaigi)"],["上司","boss (joushi)"],["同僚","colleague (douryou)"],["給料","salary (kyuuryou)"],["プロジェクト","project (purojekuto)"],["締切","deadline (shimekiri)"],["契約","contract (keiyaku)"]],
+          phrases: [["十時に会議があります。","I have a meeting at ten."],["締切は金曜日です。","The deadline is Friday."]] }
+      ]},
+      { id: "u2", name: "Education", lessons: [
+        { id: "l1", name: "At school", icon: "🎓",
+          vocab: [["大学","university (daigaku)"],["学生","student (gakusei)"],["試験","exam (shiken)"],["科目","subject (kamoku)"],["教室","classroom (kyoushitsu)"],["奨学金","scholarship (shougakkin)"],["学位","degree (gakui)"],["授業","class (jugyou)"]],
+          phrases: [["大学で勉強しています。","I study at the university."],["明日試験があります。","I have an exam tomorrow."]] },
+        { id: "l2", name: "Subjects", icon: "📚",
+          vocab: [["数学","math (suugaku)"],["歴史","history (rekishi)"],["言語","languages (gengo)"],["科学","science (kagaku)"],["文学","literature (bungaku)"],["芸術","art (geijutsu)"],["哲学","philosophy (tetsugaku)"],["法律","law (houritsu)"]],
+          phrases: [["文学を専攻しています。","I major in literature."],["数学は好きではありません。","I don't like math."]] }
+      ]}
+    ]},
+    { id: "s7", name: "Opinions & Emotions", icon: "💭", level: "advanced", units: [
+      { id: "u1", name: "Feelings", lessons: [
+        { id: "l1", name: "Emotions", icon: "😊",
+          vocab: [["嬉しい","happy (ureshii)"],["悲しい","sad (kanashii)"],["怒っている","angry (okotteiru)"],["怖い","scared (kowai)"],["驚いた","surprised (odoroita)"],["誇り","proud (hokori)"],["退屈","bored (taikutsu)"],["緊張","nervous (kinchou)"]],
+          phrases: [["今日はとても嬉しいです。","I'm very happy today."],["試験で緊張しています。","I'm nervous about the exam."]] },
+        { id: "l2", name: "Expressing feelings", icon: "💗",
+          vocab: [["感じる","to feel (kanjiru)"],["心配","worry (shinpai)"],["大好き","love (daisuki)"],["嫌い","hate (kirai)"],["恐れる","to fear (osoreru)"],["期待","hope (kitai)"],["信頼","trust (shinrai)"],["寂しい","lonely (sabishii)"]],
+          phrases: [["将来が心配です。","I'm worried about the future."],["寂しいです。","I miss you / I'm lonely."]] }
+      ]},
+      { id: "u2", name: "Opinions & debate", lessons: [
+        { id: "l1", name: "Expressing opinions", icon: "🗣️",
+          vocab: [["思う","to think (omou)"],["信じる","to believe (shinjiru)"],["意見","opinion (iken)"],["賛成","agree (sansei)"],["反対","disagree (hantai)"],["理由","reason (riyuu)"],["嘘","lie (uso)"],["本当","true (hontou)"]],
+          phrases: [["あなたが正しいと思います。","I think you are right."],["私の意見では、本当です。","In my opinion, it's true."]] },
+        { id: "l2", name: "Connectors", icon: "🔗",
+          vocab: [["しかし","however (shikashi)"],["だから","therefore (dakara)"],["でも","but (demo)"],["さらに","moreover (sarani)"],["例えば","for example (tatoeba)"],["一方","on the other hand (ippou)"],["つまり","in other words (tsumari)"],["要するに","in short (yousuruni)"]],
+          phrases: [["難しいです。しかし、価値があります。","It's hard. However, it's worth it."],["例えば、動物。","For example, animals."]] }
+      ]}
     ]}
   ],
   de: [
@@ -2113,6 +2469,78 @@ const CHAPTERS = {
           vocab: [["Sonne","sun"],["Regen","rain"],["Schnee","snow"],["Wind","wind"],["heiß","hot"],["kalt","cold"],["bewölkt","cloudy"],["klar","clear"],["Sturm","storm"],["Wolke","cloud"]],
           phrases: [["Es ist sehr kalt.","It's very cold."],["Es regnet viel.","It's raining a lot."],["Heute gibt es einen Sturm.","There's a storm today."]] }
       ]}
+    ]},
+    { id: "s4", name: "Conversations", icon: "💬", level: "intermediate", units: [
+      { id: "u1", name: "Question words", lessons: [
+        { id: "l1", name: "What, who, where", icon: "❓",
+          vocab: [["was","what"],["wer","who"],["wo","where"],["wann","when"],["wie","how"],["warum","why"],["wie viel","how much"],["welcher","which"]],
+          phrases: [["Wie heißt du?","What's your name?"],["Woher kommst du?","Where are you from?"]] },
+        { id: "l2", name: "Common questions", icon: "🗣️",
+          vocab: [["heißt","name is"],["Alter","age"],["Uhrzeit","time"],["verstehen","to understand"],["fragen","to ask"],["antworten","to answer"],["wiederholen","to repeat"],["erklären","to explain"]],
+          phrases: [["Wie alt bist du?","How old are you?"],["Können Sie das wiederholen, bitte?","Can you repeat, please?"]] }
+      ]},
+      { id: "u2", name: "Giving directions", lessons: [
+        { id: "l1", name: "Direction words", icon: "🧭",
+          vocab: [["links","left"],["rechts","right"],["geradeaus","straight"],["nah","close"],["weit","far"],["Ecke","corner"],["Ampel","traffic light"],["Platz","square"]],
+          phrases: [["Biegen Sie links ab.","Turn left."],["Gehen Sie geradeaus.","Go straight."]] },
+        { id: "l2", name: "Direction phrases", icon: "🗺️",
+          vocab: [["vor","in front of"],["hinter","behind"],["zwischen","between"],["gegenüber","across from"],["Norden","north"],["Süden","south"],["Osten","east"],["Westen","west"]],
+          phrases: [["Es ist gegenüber der Bank.","It's across from the bank."],["Gehen Sie bis zur Ampel.","Walk to the traffic light."]] }
+      ]}
+    ]},
+    { id: "s5", name: "Daily Routines", icon: "🗓️", level: "intermediate", units: [
+      { id: "u1", name: "Hobbies & sports", lessons: [
+        { id: "l1", name: "Sports", icon: "⚽",
+          vocab: [["Fußball","soccer"],["Basketball","basketball"],["Tennis","tennis"],["Schwimmen","swimming"],["laufen","to run"],["Fitnessstudio","gym"],["Mannschaft","team"],["Spiel","match"]],
+          phrases: [["Ich spiele samstags Fußball.","I play soccer on Saturdays."],["Ich gehe dreimal pro Woche ins Fitnessstudio.","I go to the gym three times a week."]] },
+        { id: "l2", name: "Hobbies", icon: "🎨",
+          vocab: [["lesen","to read"],["singen","to sing"],["tanzen","to dance"],["kochen","to cook"],["malen","to paint"],["spielen","to play"],["reisen","to travel"],["Fotografie","photography"]],
+          phrases: [["Ich lese gerne Romane.","I like reading novels."],["Ich spiele seit meiner Kindheit Gitarre.","I've played guitar since childhood."]] }
+      ]},
+      { id: "u2", name: "Shopping", lessons: [
+        { id: "l1", name: "Clothes", icon: "👕",
+          vocab: [["Hemd","shirt"],["Hose","pants"],["Schuhe","shoes"],["Kleid","dress"],["Mantel","coat"],["Hut","hat"],["Schal","scarf"],["Größe","size"]],
+          phrases: [["Haben Sie dieses Hemd in einer anderen Größe?","Do you have this shirt in another size?"],["Ich mag diese Schuhe.","I like these shoes."]] },
+        { id: "l2", name: "At the shop", icon: "🛍️",
+          vocab: [["Preis","price"],["Kasse","cash register"],["Angebot","sale"],["Rabatt","discount"],["Umkleidekabine","fitting room"],["Quittung","receipt"],["Karte","card"],["Bargeld","cash"]],
+          phrases: [["Wie viel kostet das?","How much does it cost?"],["Akzeptieren Sie Karten?","Do you accept cards?"]] }
+      ]}
+    ]},
+    { id: "s6", name: "Work & Study", icon: "💼", level: "advanced", units: [
+      { id: "u1", name: "Work life", lessons: [
+        { id: "l1", name: "Jobs", icon: "👔",
+          vocab: [["Arzt","doctor"],["Lehrer","teacher"],["Ingenieur","engineer"],["Anwalt","lawyer"],["Journalist","journalist"],["Designer","designer"],["Wissenschaftler","scientist"],["Künstler","artist"]],
+          phrases: [["Ich arbeite als Ingenieur.","I work as an engineer."],["Mein Vater ist Arzt.","My father is a doctor."]] },
+        { id: "l2", name: "Office", icon: "🏢",
+          vocab: [["Büro","office"],["Besprechung","meeting"],["Chef","boss"],["Kollege","colleague"],["Gehalt","salary"],["Projekt","project"],["Frist","deadline"],["Vertrag","contract"]],
+          phrases: [["Ich habe um zehn eine Besprechung.","I have a meeting at ten."],["Die Frist ist Freitag.","The deadline is Friday."]] }
+      ]},
+      { id: "u2", name: "Education", lessons: [
+        { id: "l1", name: "At school", icon: "🎓",
+          vocab: [["Universität","university"],["Student","student"],["Prüfung","exam"],["Fach","subject"],["Klassenzimmer","classroom"],["Stipendium","scholarship"],["Abschluss","degree"],["Kurs","course"]],
+          phrases: [["Ich studiere an der Universität.","I study at the university."],["Ich habe morgen eine Prüfung.","I have an exam tomorrow."]] },
+        { id: "l2", name: "Subjects", icon: "📚",
+          vocab: [["Mathematik","math"],["Geschichte","history"],["Sprachen","languages"],["Wissenschaft","science"],["Literatur","literature"],["Kunst","art"],["Philosophie","philosophy"],["Recht","law"]],
+          phrases: [["Ich spezialisiere mich auf Literatur.","I specialize in literature."],["Ich mag Mathematik nicht.","I don't like math."]] }
+      ]}
+    ]},
+    { id: "s7", name: "Opinions & Emotions", icon: "💭", level: "advanced", units: [
+      { id: "u1", name: "Feelings", lessons: [
+        { id: "l1", name: "Emotions", icon: "😊",
+          vocab: [["glücklich","happy"],["traurig","sad"],["wütend","angry"],["ängstlich","scared"],["überrascht","surprised"],["stolz","proud"],["gelangweilt","bored"],["nervös","nervous"]],
+          phrases: [["Ich bin heute sehr glücklich.","I'm very happy today."],["Ich bin nervös wegen der Prüfung.","I'm nervous about the exam."]] },
+        { id: "l2", name: "Expressing feelings", icon: "💗",
+          vocab: [["fühlen","to feel"],["sich sorgen","to worry"],["lieben","to love"],["hassen","to hate"],["fürchten","to fear"],["hoffen","to hope"],["vertrauen","to trust"],["vermissen","to miss"]],
+          phrases: [["Ich sorge mich um die Zukunft.","I'm worried about the future."],["Ich vermisse dich.","I miss you."]] }
+      ]},
+      { id: "u2", name: "Opinions & debate", lessons: [
+        { id: "l1", name: "Expressing opinions", icon: "🗣️",
+          vocab: [["glauben","to believe"],["denken","to think"],["scheinen","to seem"],["Meinung","opinion"],["zustimmen","to agree"],["abhängen","to depend"],["Grund","reason"],["Lüge","lie"]],
+          phrases: [["Ich denke, du hast recht.","I think you're right."],["Meiner Meinung nach ist es wahr.","In my opinion, it's true."]] },
+        { id: "l2", name: "Connectors", icon: "🔗",
+          vocab: [["jedoch","however"],["deshalb","therefore"],["obwohl","although"],["außerdem","moreover"],["zum Beispiel","for example"],["andererseits","on the other hand"],["das heißt","that is"],["kurz gesagt","in short"]],
+          phrases: [["Es ist schwer; jedoch ist es die Mühe wert.","It's hard; however, it's worth it."],["Zum Beispiel Tiere.","For example, animals."]] }
+      ]}
     ]}
   ],
   it: [
@@ -2168,6 +2596,78 @@ const CHAPTERS = {
         { id: "l2", name: "Weather", icon: "☀️",
           vocab: [["sole","sun"],["pioggia","rain"],["neve","snow"],["vento","wind"],["caldo","hot"],["freddo","cold"],["nuvoloso","cloudy"],["sereno","clear"],["temporale","storm"],["nuvola","cloud"]],
           phrases: [["Fa molto freddo.","It's very cold."],["Sta piovendo molto.","It's raining a lot."],["Oggi c'è un temporale.","There's a storm today."]] }
+      ]}
+    ]},
+    { id: "s4", name: "Conversations", icon: "💬", level: "intermediate", units: [
+      { id: "u1", name: "Question words", lessons: [
+        { id: "l1", name: "What, who, where", icon: "❓",
+          vocab: [["cosa","what"],["chi","who"],["dove","where"],["quando","when"],["come","how"],["perché","why"],["quanto","how much"],["quale","which"]],
+          phrases: [["Come ti chiami?","What's your name?"],["Da dove vieni?","Where are you from?"]] },
+        { id: "l2", name: "Common questions", icon: "🗣️",
+          vocab: [["chiami","name is"],["età","age"],["ora","time/hour"],["capire","to understand"],["chiedere","to ask"],["rispondere","to answer"],["ripetere","to repeat"],["spiegare","to explain"]],
+          phrases: [["Quanti anni hai?","How old are you?"],["Può ripetere, per favore?","Can you repeat, please?"]] }
+      ]},
+      { id: "u2", name: "Giving directions", lessons: [
+        { id: "l1", name: "Direction words", icon: "🧭",
+          vocab: [["sinistra","left"],["destra","right"],["dritto","straight"],["vicino","close"],["lontano","far"],["angolo","corner"],["semaforo","traffic light"],["piazza","square"]],
+          phrases: [["Gira a sinistra.","Turn left."],["Vai dritto.","Go straight."]] },
+        { id: "l2", name: "Direction phrases", icon: "🗺️",
+          vocab: [["davanti","in front"],["dietro","behind"],["tra","between"],["di fronte","across"],["nord","north"],["sud","south"],["est","east"],["ovest","west"]],
+          phrases: [["È di fronte alla banca.","It's across from the bank."],["Cammina fino al semaforo.","Walk to the traffic light."]] }
+      ]}
+    ]},
+    { id: "s5", name: "Daily Routines", icon: "🗓️", level: "intermediate", units: [
+      { id: "u1", name: "Hobbies & sports", lessons: [
+        { id: "l1", name: "Sports", icon: "⚽",
+          vocab: [["calcio","soccer"],["basket","basketball"],["tennis","tennis"],["nuoto","swimming"],["correre","to run"],["palestra","gym"],["squadra","team"],["partita","match"]],
+          phrases: [["Gioco a calcio il sabato.","I play soccer on Saturdays."],["Vado in palestra tre volte a settimana.","I go to the gym three times a week."]] },
+        { id: "l2", name: "Hobbies", icon: "🎨",
+          vocab: [["leggere","to read"],["cantare","to sing"],["ballare","to dance"],["cucinare","to cook"],["dipingere","to paint"],["giocare","to play"],["viaggiare","to travel"],["fotografia","photography"]],
+          phrases: [["Mi piace leggere romanzi.","I like reading novels."],["Suono la chitarra dall'infanzia.","I've played guitar since childhood."]] }
+      ]},
+      { id: "u2", name: "Shopping", lessons: [
+        { id: "l1", name: "Clothes", icon: "👕",
+          vocab: [["camicia","shirt"],["pantaloni","pants"],["scarpe","shoes"],["vestito","dress"],["cappotto","coat"],["cappello","hat"],["sciarpa","scarf"],["taglia","size"]],
+          phrases: [["Avete questa camicia in un'altra taglia?","Do you have this shirt in another size?"],["Mi piacciono queste scarpe.","I like these shoes."]] },
+        { id: "l2", name: "At the shop", icon: "🛍️",
+          vocab: [["prezzo","price"],["cassa","cash register"],["saldi","sale"],["sconto","discount"],["camerino","fitting room"],["scontrino","receipt"],["carta","card"],["contanti","cash"]],
+          phrases: [["Quanto costa?","How much does it cost?"],["Accettate la carta?","Do you accept cards?"]] }
+      ]}
+    ]},
+    { id: "s6", name: "Work & Study", icon: "💼", level: "advanced", units: [
+      { id: "u1", name: "Work life", lessons: [
+        { id: "l1", name: "Jobs", icon: "👔",
+          vocab: [["medico","doctor"],["insegnante","teacher"],["ingegnere","engineer"],["avvocato","lawyer"],["giornalista","journalist"],["designer","designer"],["scienziato","scientist"],["artista","artist"]],
+          phrases: [["Lavoro come ingegnere.","I work as an engineer."],["Mio padre è medico.","My father is a doctor."]] },
+        { id: "l2", name: "Office", icon: "🏢",
+          vocab: [["ufficio","office"],["riunione","meeting"],["capo","boss"],["collega","colleague"],["stipendio","salary"],["progetto","project"],["scadenza","deadline"],["contratto","contract"]],
+          phrases: [["Ho una riunione alle dieci.","I have a meeting at ten."],["La scadenza è venerdì.","The deadline is Friday."]] }
+      ]},
+      { id: "u2", name: "Education", lessons: [
+        { id: "l1", name: "At school", icon: "🎓",
+          vocab: [["università","university"],["studente","student"],["esame","exam"],["materia","subject"],["aula","classroom"],["borsa di studio","scholarship"],["laurea","degree"],["corso","course"]],
+          phrases: [["Studio all'università.","I study at the university."],["Ho un esame domani.","I have an exam tomorrow."]] },
+        { id: "l2", name: "Subjects", icon: "📚",
+          vocab: [["matematica","math"],["storia","history"],["lingue","languages"],["scienze","sciences"],["letteratura","literature"],["arte","art"],["filosofia","philosophy"],["diritto","law"]],
+          phrases: [["Mi specializzo in letteratura.","I specialize in literature."],["Non mi piace la matematica.","I don't like math."]] }
+      ]}
+    ]},
+    { id: "s7", name: "Opinions & Emotions", icon: "💭", level: "advanced", units: [
+      { id: "u1", name: "Feelings", lessons: [
+        { id: "l1", name: "Emotions", icon: "😊",
+          vocab: [["felice","happy"],["triste","sad"],["arrabbiato","angry"],["spaventato","scared"],["sorpreso","surprised"],["orgoglioso","proud"],["annoiato","bored"],["nervoso","nervous"]],
+          phrases: [["Sono molto felice oggi.","I'm very happy today."],["Sono nervoso per l'esame.","I'm nervous about the exam."]] },
+        { id: "l2", name: "Expressing feelings", icon: "💗",
+          vocab: [["sentire","to feel"],["preoccuparsi","to worry"],["amare","to love"],["odiare","to hate"],["temere","to fear"],["sperare","to hope"],["fidarsi","to trust"],["mancare","to miss"]],
+          phrases: [["Mi preoccupo per il futuro.","I'm worried about the future."],["Mi manchi.","I miss you."]] }
+      ]},
+      { id: "u2", name: "Opinions & debate", lessons: [
+        { id: "l1", name: "Expressing opinions", icon: "🗣️",
+          vocab: [["credere","to believe"],["pensare","to think"],["sembrare","to seem"],["opinione","opinion"],["accordo","agreement"],["dipendere","to depend"],["ragione","reason"],["bugia","lie"]],
+          phrases: [["Penso che tu abbia ragione.","I think you're right."],["Secondo me, è vero.","In my opinion, it's true."]] },
+        { id: "l2", name: "Connectors", icon: "🔗",
+          vocab: [["tuttavia","however"],["quindi","therefore"],["sebbene","although"],["inoltre","moreover"],["per esempio","for example"],["d'altra parte","on the other hand"],["cioè","that is"],["in breve","in short"]],
+          phrases: [["È difficile; tuttavia, ne vale la pena.","It's hard; however, it's worth it."],["Per esempio, gli animali.","For example, animals."]] }
       ]}
     ]}
   ]
@@ -3801,13 +4301,15 @@ function buildDrillPool() {
     }
     return [...(langCloze[drillConfig.level] || [])];
   } else {
-    // vocab / reverse — pull from LESSONS, filter by level
-    const lessons = LESSONS[lang] || [];
-    const levelMap = { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" };
-    const wanted = levelMap[drillConfig.level];
-    const filtered = drillConfig.level === "mixed" ? lessons : lessons.filter(l => l.level === wanted);
+    // vocab / reverse — pull from CHAPTERS, filter by level
+    const chapters = CHAPTERS[lang] || [];
+    const filtered = drillConfig.level === "mixed"
+      ? chapters
+      : chapters.filter(s => (s.level || "beginner") === drillConfig.level);
     const words = [];
-    filtered.forEach(l => l.words.forEach(([t, e]) => words.push({ target: t, english: e })));
+    filtered.forEach(s => s.units.forEach(u => u.lessons.forEach(l =>
+      l.vocab.forEach(([t, e]) => words.push({ target: t, english: e }))
+    )));
     return words;
   }
 }
@@ -4019,6 +4521,12 @@ function nextDrillQuestion() {
 /* =================================================================
    Lessons — Chapter tree + Duolingo-style player
    ================================================================= */
+const LEVEL_META = {
+  beginner:     { name: "Beginner",     icon: "🌱", desc: "Get started with the essentials." },
+  intermediate: { name: "Intermediate", icon: "📚", desc: "Real conversations and everyday life." },
+  advanced:     { name: "Advanced",     icon: "🎓", desc: "Express ideas, opinions, and emotions." }
+};
+
 function renderChapterTree() {
   const lang = currentLang();
   const chapters = CHAPTERS[state.activeLanguage] || [];
@@ -4034,43 +4542,71 @@ function renderChapterTree() {
 
   const subtitleNode = $("lessons-subtitle");
   if (subtitleNode) {
-    subtitleNode.innerHTML = `${total} lessons across ${chapters.length} sections — <strong style="color:var(--accent);">${completed}</strong> complete${completed === 1 ? "" : "d"}.`;
+    subtitleNode.innerHTML = `${total} lessons across ${chapters.length} sections — <strong style="color:var(--accent);">${completed}</strong> complete${completed === 1 ? "" : "d"}. Each lesson runs 12-14 mixed exercises.`;
   }
 
-  $("chapter-tree").innerHTML = chapters.map(section => {
+  // Group sections by level
+  const groups = { beginner: [], intermediate: [], advanced: [] };
+  chapters.forEach(s => {
+    const lv = s.level || "beginner";
+    if (groups[lv]) groups[lv].push(s);
+  });
+
+  $("chapter-tree").innerHTML = ["beginner", "intermediate", "advanced"].map(lv => {
+    if (!groups[lv].length) return "";
+    const meta = LEVEL_META[lv];
+    let lvCount = 0, lvDone = 0;
+    groups[lv].forEach(s => s.units.forEach(u => u.lessons.forEach(l => {
+      lvCount++;
+      const fullId = `${s.id}-${u.id}-${l.id}`;
+      if (progress[fullId] && progress[fullId].stars > 0) lvDone++;
+    })));
+
     return `
-      <div class="section-block">
-        <div class="section-header">
-          <div class="section-icon">${section.icon}</div>
-          <div>
-            <div class="section-name">${escapeHtml(section.name)}</div>
-            <div class="section-meta">${section.units.length} unit${section.units.length === 1 ? "" : "s"}</div>
+      <div class="level-group">
+        <div class="level-header">
+          <div class="level-header-icon">${meta.icon}</div>
+          <div class="level-header-text">
+            <div class="level-header-title">${meta.name}</div>
+            <div class="level-header-sub">${escapeHtml(meta.desc)} · ${lvDone}/${lvCount} lessons complete</div>
           </div>
+          <div class="level-header-badge">${meta.name}</div>
         </div>
-        ${section.units.map(unit => `
-          <div class="unit-block">
-            <div class="unit-name">${escapeHtml(unit.name)}</div>
-            <div class="lesson-row">
-              ${unit.lessons.map(lesson => {
-                const fullId = `${section.id}-${unit.id}-${lesson.id}`;
-                const lp = progress[fullId] || { stars: 0 };
-                const isComplete = lp.stars > 0;
-                return `
-                  <button class="lesson-node ${isComplete ? "completed" : ""}" type="button" onclick="startPlayerLesson('${section.id}','${unit.id}','${lesson.id}')">
-                    <div class="lesson-node-icon">${lesson.icon || "📘"}</div>
-                    <div class="lesson-node-name">${escapeHtml(lesson.name)}</div>
-                    <div class="lesson-node-meta">
-                      <span>${lesson.vocab.length} words</span>
-                      <span class="lesson-stars">
-                        <span class="lesson-star ${lp.stars >= 1 ? "on" : ""}">★</span>
-                        <span class="lesson-star ${lp.stars >= 2 ? "on" : ""}">★</span>
-                        <span class="lesson-star ${lp.stars >= 3 ? "on" : ""}">★</span>
-                      </span>
-                    </div>
-                  </button>
-                `;
-              }).join("")}
+        ${groups[lv].map(section => `
+          <div class="section-block">
+            <div class="section-header">
+              <div class="section-icon">${section.icon}</div>
+              <div>
+                <div class="section-name">${escapeHtml(section.name)}</div>
+                <div class="section-meta">${section.units.length} unit${section.units.length === 1 ? "" : "s"} · ${section.units.reduce((sum, u) => sum + u.lessons.length, 0)} lessons</div>
+              </div>
             </div>
+            ${section.units.map(unit => `
+              <div class="unit-block">
+                <div class="unit-name">${escapeHtml(unit.name)}</div>
+                <div class="lesson-row">
+                  ${unit.lessons.map(lesson => {
+                    const fullId = `${section.id}-${unit.id}-${lesson.id}`;
+                    const lp = progress[fullId] || { stars: 0 };
+                    const isComplete = lp.stars > 0;
+                    return `
+                      <button class="lesson-node ${isComplete ? "completed" : ""}" type="button" onclick="startPlayerLesson('${section.id}','${unit.id}','${lesson.id}')">
+                        <div class="lesson-node-icon">${lesson.icon || "📘"}</div>
+                        <div class="lesson-node-name">${escapeHtml(lesson.name)}</div>
+                        <div class="lesson-node-meta">
+                          <span>${lesson.vocab.length} words</span>
+                          <span class="lesson-stars">
+                            <span class="lesson-star ${lp.stars >= 1 ? "on" : ""}">★</span>
+                            <span class="lesson-star ${lp.stars >= 2 ? "on" : ""}">★</span>
+                            <span class="lesson-star ${lp.stars >= 3 ? "on" : ""}">★</span>
+                          </span>
+                        </div>
+                      </button>
+                    `;
+                  }).join("")}
+                </div>
+              </div>
+            `).join("")}
           </div>
         `).join("")}
       </div>
